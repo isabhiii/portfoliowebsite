@@ -10,7 +10,7 @@ const translations = {
     nav_cta: "Kontaktieren",
     
     hero_badge: "Verfügbar für neue Herausforderungen",
-    hero_title_line2: 'Data Analyst <span class="accent-text">&</span> ML Engineer',
+    hero_title_line2: 'Datenanalyst <span class="accent-text">&</span> ML-Engineer',
     hero_sub: 'M.Sc. Electrical Engineering & IT · Entwicklung produktionsreifer ML-Systeme,<br>skalierbarer ETL-Pipelines & automatisierter Datenanalysen.',
     stat_ml_lbl: "ML-Modell-Genauigkeit",
     stat_exp_num: "3+ Jahre",
@@ -20,10 +20,10 @@ const translations = {
     
     about_label: "01 · Profil",
     about_title: 'Präzise Daten. Intelligente <span class="accent-text">Automatisierung.</span>',
-    about_p1: "Ich bin ein Data Analyst & Machine Learning Engineer mit einem Master of Science in Elektro- und Informationstechnik. Mein Fokus liegt auf dem Aufbau robuster und skalierbarer Pipelines an der Schnittstelle von Software, Hardware und maschinellem Lernen.",
+    about_p1: "Ich bin ein Datenanalyst & Machine Learning Engineer mit einem Master of Science in Elektro- und Informationstechnik. Mein Fokus liegt auf dem Aufbau robuster und skalierbarer Pipelines an der Schnittstelle von Software, Hardware und maschinellem Lernen.",
     about_p2: "Mit fundiertem Wissen in der Python-Entwicklung, relationalen Datenbanksystemen (SQL/Oracle) und moderner KI-Infrastruktur (wie RAG-Modellen und Vektorindizierung) löse ich komplexe Automatisierungs- und Systemoptimierungsprobleme für die Industrie.",
     profile_loc: "Deggendorf, Bayern, Deutschland",
-    profile_role: "Data Analyst & ML Engineer",
+    profile_role: "Datenanalyst & ML-Engineer",
     profile_degree: "M.Sc. Elektro- & Informationstechnik",
     profile_linkedin: "LinkedIn Profil",
     
@@ -113,7 +113,7 @@ const translations = {
     contact_card_desc: "Bevorzugen Sie den direkten Weg? Klicken Sie auf den Button unten, um mir eine E-Mail zu senden. Ich antworte in der Regel innerhalb von 24 Stunden.",
     contact_card_btn_txt: "E-Mail senden",
     
-    footer_text: "© 2026 Abhishek Kanani · Elektroingenieur & Data Analyst · Deutschland"
+    footer_text: "© 2026 Abhishek Kanani · Elektroingenieur & Datenanalyst · Deutschland"
   },
   en: {
     nav_about: "About",
