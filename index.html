@@ -1,561 +1,595 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Abhishek Kanani | Data Analyst &amp; Machine Learning Engineer</title>
-<meta name="description" content="Portfolio von Abhishek Kanani – Data Analyst &amp; Machine Learning Engineer. M.Sc. Electrical Engineering, Spezialisierung auf ETL-Pipelines, RAG-Systeme und Automatisierung.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Abhishek Kanani — Data Analyst & ML Engineer</title>
+  <meta name="description" content="Portfolio of Abhishek Kanani — Data Analyst & Machine Learning Engineer. M.Sc. Electrical Engineering, specialized in ETL pipelines, RAG systems and automation.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class="light-theme">
+<body>
 
-<nav id="navbar">
-  <div class="nav-inner">
-    <span class="nav-logo">AK<span class="dot">.</span></span>
-    <ul class="nav-links">
-      <li><a href="#about" data-i18n="nav_about">Über mich</a></li>
-      <li><a href="#experience" data-i18n="nav_experience">Erfahrung</a></li>
-      <li><a href="#skills" data-i18n="nav_skills">Skills</a></li>
-      <li><a href="#projects" data-i18n="nav_projects">Projekte</a></li>
-      <li><a href="#education" data-i18n="nav_education">Ausbildung</a></li>
-      <li><a href="#contact" data-i18n="nav_contact">Kontakt</a></li>
-    </ul>
-    <div class="nav-controls">
-      <button id="theme-toggle" class="control-btn" aria-label="Thema umschalten">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-      </button>
-      <button id="lang-toggle" class="control-btn" aria-label="Sprache wechseln">EN</button>
-    </div>
-    <a href="mailto:abhishekkanani10@gmail.com" class="nav-cta" data-i18n="nav_cta">Kontaktieren</a>
+  <!-- Background gradient blobs -->
+  <div class="bg-blobs" aria-hidden="true">
+    <div class="blob blob-tl"></div>
+    <div class="blob blob-tr"></div>
+    <div class="blob blob-bl"></div>
   </div>
-</nav>
 
-<!-- HERO SECTION -->
-<section id="hero">
-  <div class="hero-bg">
-    <div class="grid-lines"></div>
-    <div class="orb orb1"></div>
-    <div class="orb orb2"></div>
-    <div class="orb orb3"></div>
-  </div>
-  <div class="hero-content">
-    <div class="hero-badge">
-      <span class="badge-dot"></span>
-      <span data-i18n="hero_badge">Verfügbar für neue Herausforderungen</span>
-    </div>
-    <h1 class="hero-title">
-      <span class="line1">Abhishek Kanani</span>
-      <span class="line2" data-i18n="hero_title_line2" data-i18n-html="true">Data Analyst <span class="accent-text">&amp;</span> ML Engineer</span>
-    </h1>
-    <p class="hero-sub" data-i18n="hero_sub" data-i18n-html="true">
-      M.Sc. Electrical Engineering &amp; IT · Entwicklung produktionsreifer KI-Systeme,<br>
-      skalierbarer ETL-Pipelines &amp; automatisierter Data-Ops-Infrastrukturen.
-    </p>
-    <div class="hero-stats">
-      <div class="stat">
-        <span class="stat-num">92%</span>
-        <span class="stat-label" data-i18n="stat_ml_lbl">ML-Modell-Genauigkeit</span>
-      </div>
-      <div class="stat-divider"></div>
-      <div class="stat">
-        <span class="stat-num" data-i18n="stat_exp_num">3+ Jahre</span>
-        <span class="stat-label" data-i18n="stat_exp_lbl">Tech-Erfahrung</span>
-      </div>
-      <div class="stat-divider"></div>
-      <div class="stat">
-        <span class="stat-num">30+ FPS</span>
-        <span class="stat-label" data-i18n="stat_fps_lbl">Echtzeit-CV-Pipeline</span>
-      </div>
-    </div>
-    <div class="hero-ctas">
-      <a href="#projects" class="btn-primary" data-i18n="btn_view_projects">Projekte ansehen</a>
-      <a href="https://github.com/isabhiii" target="_blank" class="btn-ghost">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-        GitHub
+  <!-- ══════════════ NAVBAR ══════════════ -->
+  <nav id="navbar">
+    <div class="nav-wrap">
+      <a href="#hero" class="nav-logo">
+        <span class="logo-avatar">A</span>
+        Abhishek<span class="logo-dot">.</span>
       </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#experience" class="nav-link">Experience</a></li>
+        <li><a href="#projects" class="nav-link">Projects</a></li>
+        <li><a href="#skills" class="nav-link">Skills</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
     </div>
-  </div>
-  <div class="hero-scroll">
-    <div class="scroll-indicator"></div>
-  </div>
-</section>
+  </nav>
 
-<!-- ABOUT SECTION -->
-<section id="about">
-  <div class="container">
-    <div class="section-label" data-i18n="about_label">01 · Profil</div>
-    <div class="about-grid">
-      <div class="about-text">
-        <h2 data-i18n="about_title" data-i18n-html="true">Präzise Daten. Intelligente <span class="accent-text">Automatisierung.</span></h2>
-        <p data-i18n="about_p1">Ich bin ein Data Analyst &amp; Machine Learning Engineer mit einem Master of Science in Elektro- und Informationstechnik. Mein Fokus liegt auf dem Aufbau robuster und skalierbarer Pipelines an der Schnittstelle von Software, Hardware und maschinellem Lernen.</p>
-        <p data-i18n="about_p2">Mit fundiertem Wissen in der Python-Entwicklung, relationalen Datenbanksystemen (SQL/Oracle) und moderner KI-Infrastruktur (wie RAG-Modellen und Vektorindizierung) löse ich komplexe Automatisierungs- und Systemoptimierungsprobleme für die Industrie.</p>
-        <div class="about-tags">
-          <span>ETL-Pipelines</span>
-          <span>RAG-Systeme</span>
-          <span>Python-Automatisierung</span>
-          <span>Computer Vision</span>
-          <span>SQL &amp; Oracle DB</span>
-          <span>Test &amp; Validierung</span>
+  <!-- ══════════════ HERO ══════════════ -->
+  <section id="hero" class="hero-section">
+    <div class="hero-inner">
+      <h1 class="hero-heading">
+        Hey, <span class="hero-name" id="heroName">Abhishek</span> here<span class="cursor" id="cursor">|</span>
+      </h1>
+      <p class="hero-sub">
+        Data Analyst &amp; Machine Learning Engineer specialising in ETL pipelines,<br>
+        RAG systems and industrial automation at the intersection of data and AI.
+      </p>
+      <div class="hero-ctas">
+        <a href="mailto:abhishekkanani10@gmail.com" class="btn-dark">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Say Hi
+        </a>
+        <a href="https://github.com/isabhiii" target="_blank" class="btn-outline">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+
+    <!-- About card directly below buttons, inside the hero -->
+    <div class="container">
+      <div class="about-card" id="about">
+        <div class="about-card-left">
+          <div class="slash-label">/ ABOUT ME</div>
+          <h2 class="about-heading">
+            I build <em>intelligent systems</em> that actually work in the real world.
+          </h2>
+          <p class="about-body">
+            M.Sc. in Electrical Engineering &amp; IT (THD). I specialise in RAG pipelines, scalable ETL systems, and production-ready ML models: using Python, FastAPI, and LangChain.
+          </p>
+
+          <div class="tech-section">
+            <div class="tech-label">TECHNOLOGIES I WORK WITH</div>
+            <div class="tech-grid">
+              <div class="tech-col">
+                <div class="tech-item"><span class="arrow">›</span> Python</div>
+                <div class="tech-item"><span class="arrow">›</span> LangChain</div>
+                <div class="tech-item"><span class="arrow">›</span> SQL / Oracle DB</div>
+              </div>
+              <div class="tech-col">
+                <div class="tech-item"><span class="arrow">›</span> FastAPI</div>
+                <div class="tech-item"><span class="arrow">›</span> RAG Systems</div>
+                <div class="tech-item"><span class="arrow">›</span> Docker &amp; GitLab CI</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quote block -->
+          <div class="about-quote">
+            By night, I build strange little side-projects at the intersection of tech and art, because why not?
+          </div>
+        </div>
+        <div class="about-card-right">
+          <div class="about-photo-frame">
+            <img src="profile.jpg" alt="Abhishek Kanani" class="about-photo">
+          </div>
         </div>
       </div>
-      <div class="about-card">
-        <div class="card-inner">
-          <div class="profile-avatar">
-            <img src="profile.jpg" alt="Abhishek Kanani">
+    </div>
+  </section>
+
+  <!-- ══════════════ AI CHATBOT ══════════════ -->
+  <section id="chatbot" class="section chatbot-section">
+    <div class="container">
+      <div class="chatbot-layout">
+
+        <!-- Left: label + heading + desc -->
+        <div class="chatbot-left">
+          <div class="slash-label">/ AI CHATBOT</div>
+          <h2 class="chatbot-heading">Chat with<br><em>Me</em></h2>
+          <p class="chatbot-desc">Ask me anything about my work, projects, or skills.</p>
+          <div class="chatbot-online">
+            <span class="online-dot"></span>
+            <span>Online</span>
           </div>
-          <div class="profile-info">
-            <h3>Abhishek Kanani</h3>
-            <p class="role-tag" data-i18n="profile_role">Data Analyst &amp; ML Engineer</p>
+        </div>
+
+        <!-- Right: terminal window fills the grid column -->
+        <div class="chatbot-right">
+          <div class="chatbot-terminal" id="chatTerminal">
+
+            <!-- Window chrome bar -->
+            <div class="terminal-bar">
+              <div class="terminal-dots">
+                <span class="tdot tdot-red"></span>
+                <span class="tdot tdot-yellow"></span>
+                <span class="tdot tdot-green"></span>
+              </div>
+              <div class="terminal-title">ai// abhishek-bot</div>
+              <div class="terminal-count" id="msgCount">0/10</div>
+            </div>
+
+            <!-- Messages area — aurora canvas lives inside here -->
+            <div class="terminal-messages" id="chatMessages">
+              <canvas class="aurora-canvas" id="starsCanvas"></canvas>
+
+              <!-- Initial greeting -->
+              <div class="chat-msg chat-msg--bot">
+                <div class="chat-avatar">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+                </div>
+                <div class="chat-bubble">Hey There 👋, I Am Abhishek's Assistant. Have A Chat!</div>
+              </div>
+            </div>
+
+            <!-- Typing indicator -->
+            <div class="chat-typing" id="chatTyping" style="display:none;">
+              <span></span><span></span><span></span>
+            </div>
+
+            <!-- Input bar -->
+            <div class="terminal-input-bar">
+              <input type="text" id="chatInput" class="terminal-input" placeholder="Ask me anything..." autocomplete="off"/>
+              <button class="terminal-send" id="chatSend" aria-label="Send">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </button>
+            </div>
+
           </div>
-          <ul class="profile-details">
-            <li>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-              <span data-i18n="profile_loc">Deggendorf, Bayern, Deutschland</span>
-            </li>
-            <li>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-              <span data-i18n="profile_degree">M.Sc. Elektro- &amp; Informationstechnik</span>
-            </li>
-            <li>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-              <span>abhishekkanani10@gmail.com</span>
-            </li>
-            <li>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-              <span>github.com/isabhiii</span>
-            </li>
+        </div>
+
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ EXPERIENCE / EDUCATION ══════════════ -->
+  <section id="experience" class="section exp-section">
+    <div class="container">
+      <div class="exp-heading-row">
+        <span class="exp-slash">/</span>
+        <h2 class="exp-big-heading">experience</h2>
+      </div>
+
+      <div class="exp-layout">
+        <!-- Tab sidebar -->
+        <div class="exp-tabs" id="expTabs">
+          <div class="exp-tab active" data-tab="job1">TC Teisnach Optik</div>
+          <div class="exp-tab" data-tab="job2">Infineon Technologies</div>
+          <div class="exp-tab" data-tab="job3">Rosenberger Hochfrequenz</div>
+          <div class="exp-tab" data-tab="edu1">Education (M.Sc.)</div>
+          <div class="exp-tab" data-tab="edu2">Education (B.Tech.)</div>
+        </div>
+
+        <!-- Content panels -->
+        <div class="exp-content" id="expContent">
+
+          <div class="exp-panel active" data-panel="job1">
+            <h3 class="exp-role-title">
+              Graduate Research Assistant
+              <span class="exp-company-link">@ TC Teisnach Optik</span>
+            </h3>
+            <div class="exp-meta">Jul 2024 – Sep 2025 · Teisnach, Germany</div>
+            <ul class="exp-bullets">
+              <li><span class="arrow">›</span> Developed and implemented automated quality control pipelines using Computer Vision algorithms, achieving +60% efficiency gain.</li>
+              <li><span class="arrow">›</span> Created technical documentation for system validation and QA protocols.</li>
+              <li><span class="arrow">›</span> Master's thesis: Image Evaluation for Subsurface Damage Detection using advanced image processing techniques.</li>
+              <li><span class="arrow">›</span> Collaborated with cross-functional teams on hardware-software integration for optical inspection systems.</li>
+            </ul>
+          </div>
+
+          <div class="exp-panel" data-panel="job2">
+            <h3 class="exp-role-title">
+              Data Analyst Working Student
+              <span class="exp-company-link">@ Infineon Technologies</span>
+            </h3>
+            <div class="exp-meta">May 2023 – Feb 2024 · Munich, Germany</div>
+            <ul class="exp-bullets">
+              <li><span class="arrow">›</span> Optimised complex Oracle database systems supporting critical manufacturing lines — reduced query latency by 90%.</li>
+              <li><span class="arrow">›</span> Performed comprehensive statistical data validations using SQL and R to verify automated workflows.</li>
+              <li><span class="arrow">›</span> Built Power BI dashboards translating raw data into actionable KPI reports for leadership teams.</li>
+              <li><span class="arrow">›</span> Designed and maintained ETL pipelines for real-time production data ingestion.</li>
+            </ul>
+          </div>
+
+          <div class="exp-panel" data-panel="job3">
+            <h3 class="exp-role-title">
+              Python Developer Intern &amp; Analyst
+              <span class="exp-company-link">@ Rosenberger Hochfrequenz</span>
+            </h3>
+            <div class="exp-meta">Sep 2022 – Mar 2023 · Fridolfing, Germany</div>
+            <ul class="exp-bullets">
+              <li><span class="arrow">›</span> Performed high-precision electromagnetic field simulations using ANSYS HFSS.</li>
+              <li><span class="arrow">›</span> Developed Python automation scripts for RF analysis workflows — achieved 3× processing speed improvement.</li>
+              <li><span class="arrow">›</span> Automated data extraction and report generation from simulation results.</li>
+            </ul>
+          </div>
+
+          <div class="exp-panel" data-panel="edu1">
+            <h3 class="exp-role-title">
+              M.Sc. Electrical Engineering &amp; IT
+              <span class="exp-company-link">@ Technische Hochschule Deggendorf</span>
+            </h3>
+            <div class="exp-meta">Oct 2021 – Mar 2025 · Deggendorf, Germany</div>
+            <ul class="exp-bullets">
+              <li><span class="arrow">›</span> Specialised in machine learning, embedded systems, and industrial automation.</li>
+              <li><span class="arrow">›</span> Thesis: Image Evaluation for Subsurface Damage Detection — full computer vision pipeline from scratch.</li>
+              <li><span class="arrow">›</span> Developed expertise in signal processing, neural networks, and sensor data analysis.</li>
+            </ul>
+          </div>
+
+          <div class="exp-panel" data-panel="edu2">
+            <h3 class="exp-role-title">
+              B.Tech. Mechatronics
+              <span class="exp-company-link">@ Ganpat University</span>
+            </h3>
+            <div class="exp-meta">Jul 2015 – Jun 2019 · Gujarat, India</div>
+            <ul class="exp-bullets">
+              <li><span class="arrow">›</span> Focused on robotics, embedded systems (C/C++), and industrial automation.</li>
+              <li><span class="arrow">›</span> Hands-on experience with PLC programming and mechatronic system design.</li>
+              <li><span class="arrow">›</span> Graduated with honours — top percentile in core engineering subjects.</li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ PROJECTS (DARK) ══════════════ -->
+  <section id="projects" class="projects-section">
+    <div class="container">
+      <div class="projects-header">
+        <div>
+          <div class="proj-heading-row">
+            <h2 class="projects-heading">
+              Projects <span class="projects-heading-accent">I Have Worked On</span>
+            </h2>
+          </div>
+          <p class="projects-sub">Check GitHub for more exciting projects</p>
+        </div>
+        <a href="https://github.com/isabhiii" target="_blank" class="btn-outline-light">
+          GitHub
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+        </a>
+      </div>
+
+
+      <div class="proj-grid">
+
+        <!-- Card 1 -->
+        <div class="proj-card">
+          <div class="proj-card-header">
+            <div>
+              <div class="proj-name">Manufacturing Quality RAG</div>
+              <div class="proj-category">RETRIEVAL-AUGMENTED GENERATION · FASTAPI</div>
+            </div>
+            <svg class="proj-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </div>
+          <ul class="proj-bullets">
+            <li><span class="proj-arrow">›</span> Production RAG system querying manufacturing docs in &lt;1 second</li>
+            <li><span class="proj-arrow">›</span> Custom pipeline with ChromaDB + LangChain semantic search</li>
+            <li><span class="proj-arrow">›</span> Prompt-tuned for context-aware, accurate responses</li>
           </ul>
-          <a href="https://www.linkedin.com/in/abhishek-kanani/" target="_blank" class="btn-primary full-w">
-            <svg style="margin-right:4px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
-            <span data-i18n="profile_linkedin">LinkedIn Profil</span>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- JOB EXPERIENCE SECTION -->
-<section id="experience">
-  <div class="container">
-    <div class="section-label" data-i18n="exp_label">02 · Berufsweg</div>
-    <h2 data-i18n="exp_title">Praxiserfahrung</h2>
-    <div class="exp-grid">
-
-      <!-- Graduate Research Assistant -->
-      <div class="exp-card">
-        <div class="exp-header">
-          <h3 class="exp-title" data-i18n="exp_job1_title">Graduate Research Assistant – Computer Vision &amp; System Optimization</h3>
-          <span class="exp-period">07/2024 – 09/2025</span>
-        </div>
-        <div class="exp-company" data-i18n="exp_job1_comp">Technologiecampus Teisnach Optik | Teisnach, Deutschland</div>
-        <ul class="exp-bullets">
-          <li data-i18n="exp_job1_b1">Entwicklung und Implementierung automatisierter Pipelines für die Qualitätskontrolle mithilfe modernster Computer-Vision-Algorithmen, wodurch die Prüfeffizienz um 60% gesteigert wurde.</li>
-          <li data-i18n="exp_job1_b2">Erstellung detaillierter und lückenloser technischer Dokumentationen für die Systemvalidierung sowie Ausarbeitung strenger Qualitätssicherungsprotokolle nach Industriestandard.</li>
-          <li data-i18n="exp_job1_b3">Optimierung von Bildverarbeitungsalgorithmen zur Oberflächenanalyse und Fehlordnungsdetektion.</li>
-        </ul>
-        <div class="exp-tags">
-          <span>Computer Vision</span>
-          <span>Systemoptimierung</span>
-          <span>Bildverarbeitung</span>
-          <span>Qualitätssicherung</span>
-          <span>GitLab CI/CD</span>
-        </div>
-      </div>
-
-      <!-- Infineon Technologies -->
-      <div class="exp-card">
-        <div class="exp-header">
-          <h3 class="exp-title" data-i18n="exp_job2_title">Data Analyst Working Student</h3>
-          <span class="exp-period">05/2023 – 02/2024</span>
-        </div>
-        <div class="exp-company" data-i18n="exp_job2_comp">Infineon Technologies AG | Regensburg, Deutschland</div>
-        <ul class="exp-bullets">
-          <li data-i18n="exp_job2_b1">Optimierung komplexer Oracle-Datenbanksysteme zur Unterstützung kritischer Halbleiter-Fertigungslinien; Senkung der Abfrage-Latenzzeiten um 90% durch strategisches SQL-Query-Tuning und Indexierung.</li>
-          <li data-i18n="exp_job2_b2">Durchführung umfassender statistischer Datenvalidierungen mittels SQL und R zur Verifizierung automatisierter Fertigungsworkflows.</li>
-          <li data-i18n="exp_job2_b3">Systematische Fehleranalyse und Behebung kritischer Störungen an der Schnittstelle zwischen Hardware und Produktions-Software.</li>
-        </ul>
-        <div class="exp-tags">
-          <span>Oracle DB</span>
-          <span>SQL / PL-SQL</span>
-          <span>R</span>
-          <span>Datenvalidierung</span>
-          <span>Fertigungsdaten</span>
-          <span>Troubleshooting</span>
-        </div>
-      </div>
-
-      <!-- Rosenberger Hochfrequenztechnik -->
-      <div class="exp-card">
-        <div class="exp-header">
-          <h3 class="exp-title" data-i18n="exp_job3_title">Python Developer Intern &amp; Analyst</h3>
-          <span class="exp-period">09/2022 – 03/2023</span>
-        </div>
-        <div class="exp-company" data-i18n="exp_job3_comp">Rosenberger Hochfrequenztechnik GmbH | Fridolfing, Deutschland</div>
-        <ul class="exp-bullets">
-          <li data-i18n="exp_job3_b1">Durchführung hochpräziser elektromagnetischer Feldsimulationen mit ANSYS HFSS sowie Wellenausbreitungsanalysen zur HF-Komponenten- und Geometrieoptimierung.</li>
-          <li data-i18n="exp_job3_b2">Entwicklung maßgeschneiderter Python-Skripte und Automatisierungstools für HF-Analyse-Workflows, wodurch die Verarbeitungsgeschwindigkeit um das Dreifache (3x) gesteigert wurde.</li>
-          <li data-i18n="exp_job3_b3">Konzeption und Implementierung eines internen Wissensmanagementsystems auf Basis des Python-Dash-Frameworks zur Verwaltung von Hochfrequenz-Dokumentationen.</li>
-          <li data-i18n="exp_job3_b4">Fehlerbehebung an komplexen Hochfrequenz- und Mikrowellensystemen inklusive Signalintegritätsbewertungen und Root-Cause-Analysen.</li>
-        </ul>
-        <div class="exp-tags">
-          <span>Python</span>
-          <span>ANSYS HFSS</span>
-          <span>HF- &amp; Mikrowellentechnik</span>
-          <span>Dash Framework</span>
-          <span>Signalintegrität</span>
-          <span>Automatisierung</span>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- SKILLS SECTION -->
-<section id="skills">
-  <div class="container">
-    <div class="section-label" data-i18n="skills_label">03 · Kompetenzen</div>
-    <h2 data-i18n="skills_title">Expertise &amp; Tools</h2>
-    <div class="skills-grid">
-      
-      <!-- Skill Group 1 -->
-      <div class="skill-group">
-        <div class="skill-group-header">
-          <div class="skill-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14a9 3 0 0 0 18 0V5"></path><path d="M3 12a9 3 0 0 0 18 0"></path></svg>
+          <div class="proj-stats">
+            <span class="proj-stat">&lt;1s retrieval · FastAPI · Docker</span>
           </div>
-          <h3 data-i18n="skills_g1_title">Software-Entwicklung &amp; Data Ops</h3>
-        </div>
-        <div class="skill-pills">
-          <span>Python (Expert)</span>
-          <span>SQL / PL-SQL</span>
-          <span>Oracle DB</span>
-          <span>GitLab CI/CD</span>
-          <span>R</span>
-          <span>Dash / FastAPI</span>
-          <span data-i18n="skills_etl">ETL-Automatisierung</span>
-          <span>Linux</span>
-        </div>
-      </div>
-
-      <!-- Skill Group 2 -->
-      <div class="skill-group">
-        <div class="skill-group-header">
-          <div class="skill-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="15" x2="23" y2="15"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="15" x2="4" y2="15"></line></svg>
-          </div>
-          <h3 data-i18n="skills_g2_title">HF-Technik &amp; Validierung</h3>
-        </div>
-        <div class="skill-pills">
-          <span>HFSS (ANSYS)</span>
-          <span data-i18n="skills_rf">RF-Systemanalyse</span>
-          <span data-i18n="skills_welle">Wellenausbreitung</span>
-          <span data-i18n="skills_mess">Messelektronik</span>
-          <span data-i18n="skills_signal">Signalintegrität</span>
-          <span data-i18n="skills_methodik">Testmethodik-Design</span>
-          <span>Root-Cause-Analysis</span>
-        </div>
-      </div>
-
-      <!-- Skill Group 3 -->
-      <div class="skill-group">
-        <div class="skill-group-header">
-          <div class="skill-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-          </div>
-          <h3 data-i18n="skills_g3_title">KI &amp; Bildverarbeitung</h3>
-        </div>
-        <div class="skill-pills">
-          <span>Computer Vision</span>
-          <span>OpenCV (DNN)</span>
-          <span>Scikit-learn</span>
-          <span data-i18n="skills_stat">Statistische Analyse</span>
-          <span data-i18n="skills_vector">Vektorindizierung</span>
-          <span data-i18n="skills_rag">RAG-Systeme</span>
-          <span>Feature Engineering</span>
-        </div>
-      </div>
-
-      <!-- Skill Group 4 -->
-      <div class="skill-group">
-        <div class="skill-group-header">
-          <div class="skill-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
-          </div>
-          <h3 data-i18n="skills_g4_title">Business Intelligence</h3>
-        </div>
-        <div class="skill-pills">
-          <span>Tableau</span>
-          <span>Power BI</span>
-          <span>Dashboards</span>
-          <span data-i18n="skills_kpi">KPI-Metriken</span>
-          <span data-i18n="skills_model">Datenmodellierung</span>
-          <span data-i18n="skills_report">Berichtswesen</span>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Proficiency bars -->
-    <div class="proficiency">
-      <h3 data-i18n="skills_core_title">Kernkompetenzen</h3>
-      <div class="bars">
-        <div class="bar-row">
-          <span class="bar-label" data-i18n="bar1_lbl">Python (Automatisierung)</span>
-          <div class="bar-track"><div class="bar-fill" style="--w:96%"></div></div>
-          <span class="bar-pct">96%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label" data-i18n="bar2_lbl">SQL / Relationale DB</span>
-          <div class="bar-track"><div class="bar-fill" style="--w:90%"></div></div>
-          <span class="bar-pct">90%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label" data-i18n="bar3_lbl">ANSYS HFSS Simulation</span>
-          <div class="bar-track"><div class="bar-fill" style="--w:88%"></div></div>
-          <span class="bar-pct">88%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label" data-i18n="bar4_lbl">Computer Vision (OpenCV)</span>
-          <div class="bar-track"><div class="bar-fill" style="--w:85%"></div></div>
-          <span class="bar-pct">85%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label" data-i18n="bar5_lbl" data-i18n-html="true">Tableau &amp; Power BI</span>
-          <div class="bar-track"><div class="bar-fill" style="--w:82%"></div></div>
-          <span class="bar-pct">82%</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- PROJECTS SECTION -->
-<section id="projects">
-  <div class="container">
-    <div class="section-label" data-i18n="proj_label">04 · Projekte</div>
-    <h2 data-i18n="proj_title">Ausgewählte Arbeiten</h2>
-    <div class="projects-grid">
-
-      <!-- Manufacturing Quality RAG -->
-      <div class="project-card featured">
-        <div class="featured-left">
-          <div class="project-tag" data-i18n="proj1_tag">Featured · Production System</div>
-          <h3>Manufacturing Quality RAG</h3>
-          <p data-i18n="proj1_desc">Produktionsbereites RAG-System (Retrieval-Augmented Generation) mit FastAPI und ChromaDB, das Dokumente aus großen Fertigungsdatenbanken in weniger als einer Sekunde abfragt. Unterstützt mehrere LLM-Provider und bietet ein interaktives Streamlit-Frontend.</p>
-          <div class="project-tech">
-            <span>Python</span><span>FastAPI</span><span>LangChain</span><span>ChromaDB</span><span>Docker</span><span>Streamlit</span>
+          <div class="proj-actions">
+            <a href="https://github.com/isabhiii" target="_blank" class="proj-btn">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+              Code
+            </a>
           </div>
         </div>
-        <div class="featured-right">
-          <div class="project-metrics">
-            <div class="metric">
-              <span class="metric-val">&lt; 1.0s</span>
-              <span class="metric-lbl" data-i18n="proj_metric_resp">Antwortzeit</span>
-            </div>
-            <div class="metric">
-              <span class="metric-val">Multi-LLM</span>
-              <span class="metric-lbl" data-i18n="proj_metric_arch">Architektur</span>
-            </div>
-          </div>
-          <a href="https://github.com/isabhiii/Manufacturing-Quality-RAG" target="_blank" class="project-link">
-            <span data-i18n="proj_link_featured">GitHub Repository ansehen</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-          </a>
-        </div>
-      </div>
 
-      <!-- Reddit Stock Sentiment -->
-      <div class="project-card">
-        <div class="project-tag" data-i18n="proj2_tag">NLP · Sentiment Analysis</div>
-        <h3>Reddit Stock Sentiment Analyzer</h3>
-        <p data-i18n="proj2_desc">Echtzeit-NLP-Pipeline, die die Marktstimmung und Ticker-spezifische Trends auf Reddit analysiert, um datengestützte Signale aus Social-Media-Diskussionen abzuleiten.</p>
-        <div class="project-tech">
-          <span>Python</span><span>NLTK</span><span>Reddit API</span><span>Pandas</span>
-        </div>
-        <a href="https://github.com/isabhiii/Reddit-Stock-Sentiment-Analyzer" target="_blank" class="project-link">
-          <span data-i18n="proj_link_repo">GitHub Repository</span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-        </a>
-      </div>
-
-      <!-- Vehicle Sales Prediction -->
-      <div class="project-card">
-        <div class="project-tag" data-i18n="proj3_tag">ML · 92% R² Genauigkeit</div>
-        <h3>ML Vehicle Sales Prediction</h3>
-        <p data-i18n="proj3_desc">Hochpräzises Vorhersagemodell für Fahrzeugverkaufszahlen. Verwendet XGBoost mit fortgeschrittenem Feature Engineering und erzielt eine R²-Genauigkeit von 92%.</p>
-        <div class="project-tech">
-          <span>XGBoost</span><span>Scikit-learn</span><span>Pandas</span><span>Jupyter</span>
-        </div>
-        <a href="https://github.com/isabhiii/ML-Vehicle-Sales-Prediction" target="_blank" class="project-link">
-          <span data-i18n="proj_link_repo">GitHub Repository</span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-        </a>
-      </div>
-
-      <!-- Object Detection DNN -->
-      <div class="project-card">
-        <div class="project-tag" data-i18n="proj4_tag">CV · 30+ FPS Echtzeit</div>
-        <h3>Object Detection using DNN</h3>
-        <p data-i18n="proj4_desc">Echtzeit-Objekterkennungssystem mit tiefen neuronalen Netzen (DNN) und OpenCV. Entwickelt für die Analyse städtischer Szenen mit über 30 Bildern pro Sekunde.</p>
-        <div class="project-tech">
-          <span>Python</span><span>OpenCV</span><span>Deep Learning</span><span>TensorFlow</span>
-        </div>
-        <a href="https://github.com/isabhiii/Object-Detection-using-DNN" target="_blank" class="project-link">
-          <span data-i18n="proj_link_repo">GitHub Repository</span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-        </a>
-      </div>
-
-      <!-- Power BI Dashboards -->
-      <div class="project-card">
-        <div class="project-tag" data-i18n="proj5_tag">Business Intelligence</div>
-        <h3>Power BI Dashboard Suite</h3>
-        <p data-i18n="proj5_desc">Interaktive KPI-Dashboards zur Übersetzung von Rohdaten in verständliche, geschäftsrelevante Trends und Reports für die Unternehmensführung.</p>
-        <div class="project-tech">
-          <span>Power BI</span><span>DAX</span><span>SQL</span><span>Datenmodellierung</span>
-        </div>
-        <a href="https://github.com/isabhiii/Power-BI-Dashboard" target="_blank" class="project-link">
-          <span data-i18n="proj_link_repo">GitHub Repository</span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-        </a>
-      </div>
-
-      <!-- COVID-19 Visualization -->
-      <div class="project-card">
-        <div class="project-tag" data-i18n="proj6_tag">Data Visualisation</div>
-        <h3>COVID-19 Visualization Suite</h3>
-        <p data-i18n="proj6_desc">Umfassende epidemiologische Analyse mit interaktiven Tableau-Dashboards zur Visualisierung globaler Impfquoten und Infektionstrends.</p>
-        <div class="project-tech">
-          <span>Tableau</span><span>SQL</span><span>Data Engineering</span>
-        </div>
-        <a href="https://github.com/isabhiii/COVID-19-Data-Visualization-Suite" target="_blank" class="project-link">
-          <span data-i18n="proj_link_repo">GitHub Repository</span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-        </a>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- EDUCATION SECTION -->
-<section id="education">
-  <div class="container">
-    <div class="section-label" data-i18n="edu_label">05 · Ausbildung</div>
-    <h2 data-i18n="edu_title">Akademischer Werdegang</h2>
-    <div class="edu-grid">
-
-      <!-- Deggendorf Institute of Technology -->
-      <div class="edu-card">
-        <div class="edu-period">10/2021 – 03/2025</div>
-        <h3 data-i18n="edu1_degree">Master of Science: Elektro- und Informationstechnik</h3>
-        <div class="edu-org" data-i18n="edu1_org">Technische Hochschule Deggendorf | Deggendorf, Deutschland</div>
-        <p data-i18n="edu1_thesis" data-i18n-html="true"><strong>Masterarbeit:</strong> Image Evaluation for Subsurface Damage Detection (Bildbewertung zur Erkennung von Defekten unter der Oberfläche – Technologiecampus Teisnach Optik)</p>
-        <p style="margin-top:0.5rem;" data-i18n="edu1_focus" data-i18n-html="true"><strong>Schwerpunkte:</strong> Digitale Signalverarbeitung (DSP), Software-Engineering für eingebettete Systeme, Datenverarbeitung &amp; Analyse.</p>
-        <div class="edu-tags">
-          <span>Signalverarbeitung</span>
-          <span>Software Engineering</span>
-          <span>Bildverarbeitung</span>
-        </div>
-      </div>
-
-      <!-- Ganpat University -->
-      <div class="edu-card">
-        <div class="edu-period">07/2015 – 06/2019</div>
-        <h3 data-i18n="edu2_degree">Bachelor of Technology: Mechatronik</h3>
-        <div class="edu-org" data-i18n="edu2_org">Ganpat University | Gujarat, Indien</div>
-        <p data-i18n="edu2_focus" data-i18n-html="true"><strong>Fokus:</strong> Robotik, Embedded Systems (C/C++), industrielle Automatisierungssysteme und Steuerungstechnik.</p>
-        <div class="edu-tags">
-          <span>Mechatronik</span>
-          <span>Embedded Systems</span>
-          <span>Robotik</span>
-          <span>Automatisierung</span>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- CONTACT SECTION -->
-<section id="contact">
-  <div class="container">
-    <div class="section-label" data-i18n="contact_label">06 · Kontakt</div>
-    <div class="contact-wrap">
-      <div class="contact-text">
-        <h2 data-i18n="contact_title" data-i18n-html="true">Lassen Sie uns etwas <br><span class="accent-text">bewegen.</span></h2>
-        <p data-i18n="contact_desc">Ich bin offen für Vollzeitstellen, Kooperationen und interessante Projekte in den Bereichen Data Engineering, AI Systems und Business Intelligence auf dem deutschsprachigen Markt.</p>
-        
-        <div class="contact-links">
-          
-          <a href="mailto:abhishekkanani10@gmail.com" class="contact-item">
-            <div class="contact-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-            </div>
+        <!-- Card 2 -->
+        <div class="proj-card">
+          <div class="proj-card-header">
             <div>
-              <div class="contact-type" data-i18n="contact_email_lbl">E-Mail</div>
-              <div class="contact-val">abhishekkanani10@gmail.com</div>
+              <div class="proj-name">Reddit Stock Sentiment</div>
+              <div class="proj-category">NLP · SENTIMENT ANALYSIS · PYTHON</div>
             </div>
-          </a>
-
-          <a href="https://www.linkedin.com/in/abhishek-kanani/" target="_blank" class="contact-item">
-            <div class="contact-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
-            </div>
-            <div>
-              <div class="contact-type" data-i18n="contact_linkedin_lbl">LinkedIn</div>
-              <div class="contact-val">linkedin.com/in/abhishek-kanani</div>
-            </div>
-          </a>
-
-          <a href="https://github.com/isabhiii" target="_blank" class="contact-item">
-            <div class="contact-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-            </div>
-            <div>
-              <div class="contact-type" data-i18n="contact_github_lbl">GitHub</div>
-              <div class="contact-val">github.com/isabhiii</div>
-            </div>
-          </a>
-
+            <svg class="proj-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <ul class="proj-bullets">
+            <li><span class="proj-arrow">›</span> Real-time NLP pipeline streaming Reddit posts</li>
+            <li><span class="proj-arrow">›</span> Ticker extraction + VADER sentiment scoring</li>
+            <li><span class="proj-arrow">›</span> Per-ticker sentiment indices updated every minute</li>
+          </ul>
+          <div class="proj-stats">
+            <span class="proj-stat">NLTK · PRAW · Pandas · Matplotlib</span>
+          </div>
+          <div class="proj-actions">
+            <a href="https://github.com/isabhiii" target="_blank" class="proj-btn">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+              Code
+            </a>
+          </div>
         </div>
+
+        <!-- Card 3 -->
+        <div class="proj-card">
+          <div class="proj-card-header">
+            <div>
+              <div class="proj-name">ML Vehicle Sales Prediction</div>
+              <div class="proj-category">XGBOOST · SCIKIT-LEARN · OPTUNA</div>
+            </div>
+            <svg class="proj-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          </div>
+          <ul class="proj-bullets">
+            <li><span class="proj-arrow">›</span> Gradient-boosted regression on multi-year automotive data</li>
+            <li><span class="proj-arrow">›</span> Feature engineering with seasonal + economic indicators</li>
+            <li><span class="proj-arrow">›</span> Hyperparameter tuning via Optuna achieving 92% R²</li>
+          </ul>
+          <div class="proj-stats">
+            <span class="proj-stat">92% R² accuracy · XGBoost · Pandas</span>
+          </div>
+          <div class="proj-actions">
+            <a href="https://github.com/isabhiii" target="_blank" class="proj-btn">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+              Code
+            </a>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="proj-card">
+          <div class="proj-card-header">
+            <div>
+              <div class="proj-name">Object Detection DNN</div>
+              <div class="proj-category">COMPUTER VISION · OPENCV · PYTORCH</div>
+            </div>
+            <svg class="proj-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <ul class="proj-bullets">
+            <li><span class="proj-arrow">›</span> Real-time object detection at 30+ FPS on CPU</li>
+            <li><span class="proj-arrow">›</span> YOLOv5-derived DNN with configurable class filtering</li>
+            <li><span class="proj-arrow">›</span> ONNX export for lightweight deployment</li>
+          </ul>
+          <div class="proj-stats">
+            <span class="proj-stat">30+ FPS · OpenCV · ONNX · Python</span>
+          </div>
+          <div class="proj-actions">
+            <a href="https://github.com/isabhiii" target="_blank" class="proj-btn">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+              Code
+            </a>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="proj-card">
+          <div class="proj-card-header">
+            <div>
+              <div class="proj-name">COVID-19 Viz Suite</div>
+              <div class="proj-category">TABLEAU · POWER BI · SQL</div>
+            </div>
+            <svg class="proj-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          </div>
+          <ul class="proj-bullets">
+            <li><span class="proj-arrow">›</span> Epidemiological analysis of global COVID-19 trends</li>
+            <li><span class="proj-arrow">›</span> Interactive Tableau dashboards with geo-mapping</li>
+            <li><span class="proj-arrow">›</span> Power BI KPI suite for executive reporting</li>
+          </ul>
+          <div class="proj-stats">
+            <span class="proj-stat">Tableau · Power BI · DAX · SQL</span>
+          </div>
+          <div class="proj-actions">
+            <a href="https://github.com/isabhiii" target="_blank" class="proj-btn">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+              Code
+            </a>
+          </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="proj-card">
+          <div class="proj-card-header">
+            <div>
+              <div class="proj-name">Power BI Dashboard Suite</div>
+              <div class="proj-category">BUSINESS INTELLIGENCE · DAX · SQL</div>
+            </div>
+            <svg class="proj-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          </div>
+          <ul class="proj-bullets">
+            <li><span class="proj-arrow">›</span> Interactive KPI dashboards for manufacturing leadership</li>
+            <li><span class="proj-arrow">›</span> Complex DAX measures for multi-dimensional analysis</li>
+            <li><span class="proj-arrow">›</span> Automated data refresh from Oracle DB sources</li>
+          </ul>
+          <div class="proj-stats">
+            <span class="proj-stat">Power BI · DAX · Oracle DB · SQL</span>
+          </div>
+          <div class="proj-actions">
+            <a href="https://github.com/isabhiii" target="_blank" class="proj-btn">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+              Code
+            </a>
+          </div>
+        </div>
+
       </div>
+    </div>
+  </section>
 
-      <div class="contact-card-box">
-        <div class="contact-card-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-            <polyline points="22,6 12,13 2,6"></polyline>
-          </svg>
+  <!-- ══════════════ SKILLS ACCORDION ══════════════ -->
+  <section id="skills" class="section skills-section">
+    <div class="container">
+      <div class="skills-heading-row">
+        <h2 class="skills-heading">Technical Arsenal</h2>
+      </div>
+      <p class="skills-sub">The tools and frameworks I use to build intelligent systems.</p>
+
+      <div class="accordion" id="accordion">
+
+        <div class="acc-item">
+          <button class="acc-trigger" data-acc="acc1">
+            <span>What is my core Data & ML stack?</span>
+            <svg class="acc-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="acc-body" id="acc1">
+            <div class="acc-content">
+              <div class="acc-pills-grid">
+                <span class="acc-pill accent">Python (Expert)</span>
+                <span class="acc-pill accent">SQL / PL-SQL</span>
+                <span class="acc-pill accent">Oracle DB</span>
+                <span class="acc-pill">Pandas</span>
+                <span class="acc-pill">NumPy</span>
+                <span class="acc-pill">Scikit-learn</span>
+                <span class="acc-pill">XGBoost</span>
+                <span class="acc-pill">Jupyter</span>
+                <span class="acc-pill">R</span>
+              </div>
+            </div>
+          </div>
         </div>
-        <h3 data-i18n="contact_card_title">Direkt kontaktieren</h3>
-        <p data-i18n="contact_card_desc">Bevorzugen Sie den direkten Weg? Klicken Sie auf den Button unten, um mir eine E-Mail zu senden. Ich antworte in der Regel innerhalb von 24 Stunden.</p>
-        <a href="mailto:abhishekkanani10@gmail.com?subject=Anfrage%20über%20Portfolio" class="btn-primary full-w contact-direct-btn" id="submit-btn">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-          <span data-i18n="contact_card_btn_txt">E-Mail senden</span>
+
+        <div class="acc-item">
+          <button class="acc-trigger" data-acc="acc2">
+            <span>How do I handle AI & RAG Systems?</span>
+            <svg class="acc-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="acc-body" id="acc2">
+            <div class="acc-content">
+              <div class="acc-pills-grid">
+                <span class="acc-pill accent">LangChain</span>
+                <span class="acc-pill accent">ChromaDB</span>
+                <span class="acc-pill accent">RAG Systems</span>
+                <span class="acc-pill">FastAPI</span>
+                <span class="acc-pill">Vector Indexing</span>
+                <span class="acc-pill">OpenCV (DNN)</span>
+                <span class="acc-pill">PyTorch</span>
+                <span class="acc-pill">ONNX</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="acc-item">
+          <button class="acc-trigger" data-acc="acc3">
+            <span>What about DevOps & Data Engineering?</span>
+            <svg class="acc-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="acc-body" id="acc3">
+            <div class="acc-content">
+              <div class="acc-pills-grid">
+                <span class="acc-pill accent">Docker</span>
+                <span class="acc-pill accent">GitLab CI/CD</span>
+                <span class="acc-pill">ETL Pipelines</span>
+                <span class="acc-pill">Git</span>
+                <span class="acc-pill">Linux</span>
+                <span class="acc-pill">Dash</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="acc-item">
+          <button class="acc-trigger" data-acc="acc4">
+            <span>Visualisation & Business Intelligence?</span>
+            <svg class="acc-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="acc-body" id="acc4">
+            <div class="acc-content">
+              <div class="acc-pills-grid">
+                <span class="acc-pill accent">Power BI</span>
+                <span class="acc-pill accent">Tableau</span>
+                <span class="acc-pill">DAX</span>
+                <span class="acc-pill">Matplotlib</span>
+                <span class="acc-pill">Plotly</span>
+                <span class="acc-pill">Seaborn</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="acc-item">
+          <button class="acc-trigger" data-acc="acc5">
+            <span>Want to see one of these side-projects?</span>
+            <svg class="acc-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="acc-body" id="acc5">
+            <div class="acc-content">
+              <div class="about-featured" style="margin-top: 0.5rem; background: rgba(99,102,241,0.04);">
+                <div class="about-featured-inner">
+                  <img src="krishna-icon.png" alt="Word of Supreme app icon" class="about-featured-app-icon">
+                  <div class="about-featured-text">
+                    <p class="about-featured-title">Word of Supreme: <em>Bhagavad Gītā</em></p>
+                    <p class="about-featured-desc">A beautifully crafted app bringing timeless wisdom: verse by verse.</p>
+                  </div>
+                  <div class="about-featured-links">
+                    <a href="https://wordofsupreme.com/" target="_blank" class="af-link af-link-web">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                      Website
+                    </a>
+                    <a href="https://apps.apple.com/app/id6761356771" target="_blank" class="af-link af-link-ios">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                      App Store
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ FOOTER / CONTACT ══════════════ -->
+  <footer id="contact" class="site-footer">
+    <div class="footer-wrap">
+      <div class="footer-left">
+        <h3 class="footer-cta">Reach out to me</h3>
+      </div>
+      <div class="footer-right">
+        <a href="mailto:abhishekkanani10@gmail.com" class="footer-email">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          abhishekkanani10@gmail.com
         </a>
+        <div class="footer-socials">
+          <a href="https://www.linkedin.com/in/abhishek-kanani/" target="_blank" class="footer-icon" aria-label="LinkedIn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          </a>
+          <a href="https://github.com/isabhiii" target="_blank" class="footer-icon" aria-label="GitHub">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          </a>
+          <a href="https://www.instagram.com/is_abhii" target="_blank" class="footer-icon" aria-label="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+        </div>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-inner">
-    <span class="nav-logo">AK<span class="dot">.</span></span>
-    <p data-i18n="footer_text">© 2026 Abhishek Kanani · Elektroingenieur &amp; Data Analyst · Deutschland</p>
-    <div class="footer-links">
-      <a href="https://github.com/isabhiii" target="_blank">GitHub</a>
-      <a href="https://www.linkedin.com/in/abhishek-kanani/" target="_blank">LinkedIn</a>
-      <a href="mailto:abhishekkanani10@gmail.com">E-Mail</a>
+    <div class="footer-bottom">
+      <p>Created By Abhishek Kanani</p>
+      <p>All rights reserved ©</p>
     </div>
-  </div>
-</footer>
+  </footer>
 
-<script src="app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
