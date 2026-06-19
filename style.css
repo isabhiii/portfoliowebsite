@@ -807,7 +807,7 @@ button { border: none; cursor: pointer; font: inherit; background: none; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center top; /* crop to show face/upper area */
+  object-position: center; /* center the logo icon */
   display: block;
   border-radius: 50%;
 }
