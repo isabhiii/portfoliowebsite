@@ -1,4 +1,4 @@
-// Trigger rebuild to load new Vercel environment variables
+// Rebuild trigger: load saved Vercel environment variables
 export default async function handler(req, res) {
   // Enforce POST method
   if (req.method !== 'POST') {
