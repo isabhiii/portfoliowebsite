@@ -23,10 +23,17 @@
   <!-- ══════════════ NAVBAR ══════════════ -->
   <nav id="navbar">
     <div class="nav-wrap">
-      <a href="#hero" class="nav-logo">
-        <span class="logo-avatar">A</span>
-        Abhishek<span class="logo-dot">.</span>
-      </a>
+      <div class="nav-left">
+        <a href="#hero" class="nav-logo">
+          <span class="logo-avatar">A</span>
+          Abhishek<span class="logo-dot">.</span>
+        </a>
+        <button id="gameModeToggle" class="btn-game-toggle">
+          <span class="game-toggle-dot"></span>
+          <span class="game-text">GAME MODE: OFF</span>
+        </button>
+        <div id="gameScoreboard" class="game-scoreboard">0/5</div>
+      </div>
       <ul class="nav-links" id="navLinks">
         <li><a href="#experience" class="nav-link">Experience</a></li>
         <li><a href="#projects" class="nav-link">Projects</a></li>
@@ -42,14 +49,14 @@
   <!-- ══════════════ HERO ══════════════ -->
   <section id="hero" class="hero-section">
     <div class="hero-inner">
-      <h1 class="hero-heading">
+      <h1 class="hero-heading game-obstacle">
         Hey, <span class="hero-name" id="heroName">Abhishek</span> here<span class="cursor" id="cursor">|</span>
       </h1>
-      <p class="hero-sub">
+      <p class="hero-sub game-obstacle">
         Data Analyst &amp; Machine Learning Engineer specialising in ETL pipelines,<br>
         RAG systems and industrial automation at the intersection of data and AI.
       </p>
-      <div class="hero-ctas">
+      <div class="hero-ctas game-obstacle">
         <a href="mailto:abhishekkanani10@gmail.com" class="btn-dark">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
           Say Hi
@@ -66,14 +73,14 @@
       <div class="about-card" id="about">
         <div class="about-card-left">
           <div class="slash-label">/ ABOUT ME</div>
-          <h2 class="about-heading">
+          <h2 class="about-heading game-obstacle">
             I build <em>intelligent systems</em> that actually work in the real world.
           </h2>
-          <p class="about-body">
+          <p class="about-body game-obstacle">
             M.Sc. in Electrical Engineering &amp; IT (THD). I specialise in RAG pipelines, scalable ETL systems, and production-ready ML models: using Python, FastAPI, and LangChain.
           </p>
 
-          <div class="tech-section">
+          <div class="tech-section game-obstacle">
             <div class="tech-label">TECHNOLOGIES I WORK WITH</div>
             <div class="tech-grid">
               <div class="tech-col">
@@ -90,12 +97,12 @@
           </div>
 
           <!-- Quote block -->
-          <div class="about-quote">
+          <div class="about-quote game-obstacle">
             By night, I build strange little side-projects at the intersection of tech and art, because why not?
           </div>
         </div>
         <div class="about-card-right">
-          <div class="about-photo-frame">
+          <div class="about-photo-frame game-obstacle">
             <img src="profile.jpg" alt="Abhishek Kanani" class="about-photo">
           </div>
         </div>
@@ -591,5 +598,6 @@
   </footer>
 
   <script src="app.js"></script>
+  <script src="game.js"></script>
 </body>
 </html>
