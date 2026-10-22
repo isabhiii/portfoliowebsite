@@ -1044,6 +1044,20 @@ button { border: none; cursor: pointer; font: inherit; background: none; }
   font-weight: 600;
   display: inline;
 }
+a.exp-company-link:hover {
+  text-decoration: underline;
+}
+
+.exp-repo-link {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: opacity 0.15s ease;
+}
+.exp-repo-link:hover {
+  opacity: 0.8;
+}
 
 .exp-meta {
   font-size: 0.75rem;

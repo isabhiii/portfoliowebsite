@@ -25,20 +25,20 @@ Speciality: AI/ML engineering, RAG pipelines, scalable ETL systems, production-r
 Email: abhishekkanani10@gmail.com | GitHub: github.com/isabhiii | LinkedIn: linkedin.com/in/abhishek-kanani | Instagram: instagram.com/is_abhii
 
 === WORK EXPERIENCE ===
-1. TC Teisnach Optik — Built data pipelines and ML-driven quality control systems for optical manufacturing.
+1. Raycast — Open Source Contributor & Extension Developer. Contributed 15+ merged PRs across official Raycast extensions including Apple Reminders, Apple Mail, Music, and Quick Event using TypeScript, React, Swift, and AppleScript.
 2. Infineon Technologies — Worked on production ETL pipelines and Power BI dashboards for semiconductor operations.
-3. Rosenberger Hochfrequenz — Delivered data analytics and reporting solutions for high-frequency tech manufacturing.
+3. TC Teisnach Optik — Built data pipelines and ML-driven quality control systems for optical manufacturing.
+4. Rosenberger Hochfrequenz — Delivered data analytics and reporting solutions for high-frequency tech manufacturing.
 
 === EDUCATION ===
 • M.Sc. Electrical Engineering & IT — Technische Hochschule Deggendorf (THD), Germany
 • B.Tech — Previous university in India
 
 === TECHNICAL SKILLS ===
-Languages: Python, SQL, JavaScript
+Languages: Python, SQL, JavaScript, TypeScript
 ML/AI: LangChain, RAG (Retrieval-Augmented Generation), ChromaDB, NLTK, scikit-learn, XGBoost, Optuna, YOLOv5, ONNX, PyTorch
 Data: Pandas, Matplotlib, Seaborn, Plotly, DAX, Power BI, Tableau
-Backend/DevOps: FastAPI, Docker, GitLab CI, Oracle DB
-Tools: Git, VS Code
+Backend/DevOps/Tools: FastAPI, Docker, GitLab CI, Oracle DB, React, Raycast API, Git, VS Code
 
 === PROJECTS ===
 1. Manufacturing Quality RAG — Production RAG system querying manufacturing docs in <1 second using ChromaDB + LangChain. Stack: Python, FastAPI, Docker.
