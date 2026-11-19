@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=66">
+  <link rel="stylesheet" href="style.css?v=69">
   <script>
     try {
       if (localStorage.getItem('theme') === 'dark') {
@@ -20,6 +20,173 @@
 </head>
 <body>
   <canvas id="clickSparkCanvas" aria-hidden="true"></canvas>
+
+  <!-- ══════════════ SKY HORIZON HEADER (Bimanshu-inspired) ══════════════ -->
+  <div class="sky-banner" id="skyBanner" aria-hidden="true">
+    <canvas id="skyStarsCanvas" class="sky-stars-canvas"></canvas>
+    <div class="sky-haze"></div>
+
+    <!-- Drifting daytime clouds -->
+    <div class="sky-clouds">
+      <div class="sky-cloud-lane" style="top: 9%; --lane-dur: 117s; --lane-delay: -38s;">
+        <div class="sky-cloud" style="width: 30%; opacity: 0.85;"></div>
+      </div>
+      <div class="sky-cloud-lane" style="top: 21%; --lane-dur: 89s; --lane-delay: -71s;">
+        <div class="sky-cloud is-flipped" style="width: 19%; opacity: 0.65;"></div>
+      </div>
+      <div class="sky-cloud-lane" style="top: 31%; --lane-dur: 103s; --lane-delay: -12s;">
+        <div class="sky-cloud" style="width: 24%; opacity: 0.55;"></div>
+      </div>
+      <div class="sky-cloud-lane" style="top: 15%; --lane-dur: 73s; --lane-delay: -55s;">
+        <div class="sky-cloud is-flipped" style="width: 15%; opacity: 0.45;"></div>
+      </div>
+    </div>
+
+    <!-- Sun & Moon Celestial Orbit -->
+    <div class="sky-orbit">
+      <!-- Daytime Sun -->
+      <div class="sky-body sky-sun">
+        <div class="sky-sun-halo"></div>
+        <div class="sky-sun-disk"></div>
+      </div>
+
+      <!-- Twilight / Night Craters Moon -->
+      <div class="sky-body sky-moon">
+        <div class="sky-moon-halo"></div>
+        <svg class="sky-moon-svg" viewBox="-22 -22 44 44" aria-hidden="true">
+          <defs>
+            <clipPath id="sky-moon-phase-clip">
+              <path d="M0 -20 A20 20 0 0 1 0 20 A10.5 20 0 0 1 0 -20 Z"></path>
+            </clipPath>
+          </defs>
+          <circle r="20" class="sky-moon-dark"></circle>
+          <g clip-path="url(#sky-moon-phase-clip)">
+            <circle r="20" class="sky-moon-lit"></circle>
+            <g class="sky-moon-mare">
+              <ellipse cx="-6" cy="-6" rx="6.5" ry="5"></ellipse>
+              <ellipse cx="5" cy="-8.5" rx="4" ry="3"></ellipse>
+              <ellipse cx="3.5" cy="3" rx="5.5" ry="4.5"></ellipse>
+              <ellipse cx="-4.5" cy="9" rx="3.5" ry="2.6"></ellipse>
+              <circle cx="10" cy="5" r="1.8"></circle>
+            </g>
+          </g>
+          <circle r="19.65" fill="none" stroke-width="0.7" class="sky-moon-rim"></circle>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ HANGING PENDANT LAMP & VERLET PULL CORD ══════════════ -->
+  <aside class="pull-lamp-aside" aria-label="Day and night lamp">
+    <div class="pull-lamp-cone" aria-hidden="true"></div>
+    <svg
+      id="pullLampSvg"
+      class="pull-lamp-svg"
+      viewBox="0 0 140 220"
+      width="140"
+      height="220"
+      aria-hidden="true"
+    >
+      <defs>
+        <radialGradient id="lamp-bulb-glass" cx="0.38" cy="0.62" r="0.7">
+          <stop offset="0%" stop-color="#fffdf8" />
+          <stop offset="100%" stop-color="#ded8cc" />
+        </radialGradient>
+        <radialGradient id="lamp-bulb-lit" cx="0.5" cy="0.55" r="0.65">
+          <stop offset="0%" stop-color="#ffffff" />
+          <stop offset="55%" stop-color="#ffe58f" />
+          <stop offset="100%" stop-color="#f59e0b" />
+        </radialGradient>
+        <radialGradient id="lamp-bulb-glow" cx="70" cy="53" r="24" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="rgba(255, 232, 148, 0.88)" />
+          <stop offset="45%" stop-color="rgba(251, 191, 36, 0.36)" />
+          <stop offset="100%" stop-color="rgba(251, 191, 36, 0)" />
+        </radialGradient>
+        <linearGradient id="lamp-shade-grad" x1="0" y1="0" x2="1" y2="0.35">
+          <stop offset="0%" class="lamp-shade-hi" />
+          <stop offset="55%" class="lamp-shade-mid" />
+          <stop offset="100%" class="lamp-shade-lo" />
+        </linearGradient>
+        <radialGradient id="lamp-bead-grad" cx="0.35" cy="0.3" r="0.7">
+          <stop offset="0%" class="lamp-bead-hi" />
+          <stop offset="68%" class="lamp-bead-mid" />
+          <stop offset="100%" class="lamp-bead-lo" />
+        </radialGradient>
+      </defs>
+
+      <!-- Ceiling wire -->
+      <line class="lamp-wire" x1="70" y1="0" x2="70" y2="18" stroke-width="1.6" />
+
+      <!-- Brass ceiling cap & ring -->
+      <rect class="lamp-brass-cap" x="65" y="16" width="10" height="7" rx="1.8" />
+      <rect class="lamp-brass-ring" x="63" y="21.5" width="14" height="3.2" rx="1.5" />
+
+      <!-- Under-shade inner rim & bulb -->
+      <ellipse class="lamp-inner-rim" cx="70" cy="49.5" rx="26" ry="2.2" />
+      <circle class="lamp-bulb-unlit" cx="70" cy="51.8" r="6" fill="url(#lamp-bulb-glass)" />
+
+      <!-- Lit bulb & warm bloom (visible in dark mode) -->
+      <g class="lamp-lit-group">
+        <circle cx="70" cy="53" r="24" fill="url(#lamp-bulb-glow)" />
+        <ellipse class="lamp-inner-lit" cx="70" cy="49.5" rx="26" ry="2.2" />
+        <circle cx="70" cy="51.8" r="6" fill="url(#lamp-bulb-lit)" />
+      </g>
+
+      <!-- Terracotta pendant shade -->
+      <path
+        class="lamp-shade-body"
+        fill="url(#lamp-shade-grad)"
+        d="M63.5 23.5 h13 c1.2 0 2.2 0.8 2.6 1.9 c2.5 8.5 8.1 16.2 17.2 20.4 c1.8 0.8 1.3 2.8 -0.6 2.8 H44.3 c-1.9 0 -2.4 -2 -0.6 -2.8 c9.1 -4.2 14.7 -11.9 17.2 -20.4 c0.4 -1.1 1.4 -1.9 2.6 -1.9 Z"
+      />
+      <!-- Specular highlight sheen on shade -->
+      <path
+        class="lamp-shade-sheen"
+        d="M60 31 C57 37.5 52.5 42 47.2 45"
+        fill="none"
+        stroke-width="1.4"
+        stroke-linecap="round"
+      />
+      <!-- Cord eyelet under right side of shade -->
+      <circle class="lamp-eyelet" cx="85" cy="48.5" r="1.3" />
+
+      <!-- Verlet physics pull cord path -->
+      <path
+        id="pullCordPath"
+        class="pull-cord-line"
+        d="M85 49.5 L85 117.5"
+        fill="none"
+        stroke-linecap="round"
+        stroke-width="1.5"
+      />
+      <!-- Wide transparent hit area along the cord -->
+      <path
+        id="pullCordHit"
+        class="pull-cord-hit"
+        d="M85 49.5 L85 117.5"
+        fill="none"
+        stroke="transparent"
+        stroke-width="24"
+        pointer-events="stroke"
+      />
+
+      <!-- Wooden/brass pull bead at end of cord -->
+      <g id="pullCordBead" class="pull-cord-bead" transform="translate(85 117.5)">
+        <circle class="pull-bead-hit" fill="transparent" r="22" />
+        <circle class="pull-bead-ring" cx="0" cy="6" r="10" fill="none" stroke-width="1.5" />
+        <ellipse class="pull-bead-body" cx="0" cy="6" rx="6.2" ry="6.8" fill="url(#lamp-bead-grad)" />
+      </g>
+    </svg>
+    <div id="pullLampHint" class="pull-lamp-hint" aria-hidden="true">Pull to call it a night</div>
+    <button
+      id="pullLampA11yBtn"
+      type="button"
+      class="sr-only"
+      role="switch"
+      aria-checked="false"
+      aria-label="Toggle day and night theme"
+    ></button>
+  </aside>
+
   <main class="page-main">
 
     <!-- ══════════════ HEADER & SECTION NAV (DesignerDada style) ══════════════ -->
@@ -39,31 +206,6 @@
           <span class="separator" aria-hidden="true">/</span>
           <button class="language-more-button" type="button" data-language-open data-sound="press" aria-haspopup="dialog" aria-expanded="false" aria-label="More languages">+</button>
         </div>
-        <button id="themeToggle" class="theme-switch" type="button" aria-label="Dark theme" aria-pressed="false">
-          <svg id="themeIcon" class="theme-switch-icon" aria-hidden="true" fill="none" height="14" width="14" viewBox="0 0 24 24">
-            <mask id="kokonut-moon-mask">
-              <rect fill="white" height="32" width="32" x="-4" y="-4" />
-              <circle class="theme-bite" cx="17" cy="7" data-part="bite" fill="black" r="7.5" />
-            </mask>
-            <g mask="url(#kokonut-moon-mask)">
-              <circle class="theme-disc" cx="12" cy="12" data-part="disc" fill="currentColor" r="4.75" />
-            </g>
-            <g stroke="currentColor" stroke-linecap="round" stroke-width="2">
-              <line class="theme-ray" data-index="0" data-part="ray" x1="19.5" y1="12" x2="22" y2="12" />
-              <line class="theme-ray" data-index="1" data-part="ray" x1="17.3" y1="17.3" x2="19.07" y2="19.07" />
-              <line class="theme-ray" data-index="2" data-part="ray" x1="12" y1="19.5" x2="12" y2="22" />
-              <line class="theme-ray" data-index="3" data-part="ray" x1="6.7" y1="17.3" x2="4.93" y2="19.07" />
-              <line class="theme-ray" data-index="4" data-part="ray" x1="4.5" y1="12" x2="2" y2="12" />
-              <line class="theme-ray" data-index="5" data-part="ray" x1="6.7" y1="6.7" x2="4.93" y2="4.93" />
-              <line class="theme-ray" data-index="6" data-part="ray" x1="12" y1="4.5" x2="12" y2="2" />
-              <line class="theme-ray" data-index="7" data-part="ray" x1="17.3" y1="6.7" x2="19.07" y2="4.93" />
-            </g>
-          </svg>
-          <span id="themeLabels" aria-hidden="true" class="theme-switch-labels">
-            <span class="theme-label-light" data-part="label">Light</span>
-            <span class="theme-label-dark" data-part="label">Dark</span>
-          </span>
-        </button>
       </nav>
     </header>
 
@@ -483,6 +625,6 @@
   </div>
 
   <div id="copyToast" class="copy-toast"></div>
-  <script src="app.js?v=67"></script>
+  <script src="app.js?v=69"></script>
 </body>
 </html>

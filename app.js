@@ -62,6 +62,7 @@ const FAVORITES = [
    ══════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
+  initSkyStars();
   initTabs();
   initEmailCopy();
   initFavorites();
@@ -73,11 +74,13 @@ document.addEventListener('DOMContentLoaded', () => {
   initLanguageSwitcher();
 });
 
-/* ── Theme (KokonutUI SwitchButton: Circular View Transition + WAAPI Icon Morph) ── */
+/* ── Theme (KokonutUI SwitchButton + Verlet Pull Cord Lamp + Circular View Transition) ── */
 function initTheme() {
   const toggleBtn = document.getElementById('themeToggle');
   const iconEl = document.getElementById('themeIcon');
   const labelsEl = document.getElementById('themeLabels');
+  const a11yBtn = document.getElementById('pullLampA11yBtn');
+  const hintEl = document.getElementById('pullLampHint');
   const root = document.documentElement;
 
   const EASE_OUT = 'cubic-bezier(0.23, 1, 0.32, 1)';
@@ -86,13 +89,66 @@ function initTheme() {
   const ANIMATED_PROPS = ['opacity', 'scale', 'translate', 'filter'];
 
   let revealRunning = false;
+  let audioCtx = null;
+  let noiseBuf = null;
 
   const prefersReducedMotion = () =>
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  function playPullChainClick(toDark) {
+    try {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return;
+      if (!audioCtx) audioCtx = new Ctx();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const now = audioCtx.currentTime;
+
+      if (!noiseBuf) {
+        const len = Math.floor(audioCtx.sampleRate * 0.02);
+        noiseBuf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
+        const data = noiseBuf.getChannelData(0);
+        for (let i = 0; i < len; i++) {
+          const env = Math.pow(1 - i / len, 3);
+          data[i] = (Math.random() * 2 - 1) * env;
+        }
+      }
+
+      const master = audioCtx.createGain();
+      master.gain.value = 0.12;
+      master.connect(audioCtx.destination);
+
+      // Crisp metallic chain click noise
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = noiseBuf;
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.value = toDark ? 3400 : 2600;
+      filter.Q.value = 1.2;
+      noise.connect(filter);
+      filter.connect(master);
+      noise.start(now);
+
+      // Mechanical switch triangle transient
+      const osc = audioCtx.createOscillator();
+      const oscGain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(toDark ? 2200 : 1700, now);
+      osc.frequency.exponentialRampToValueAtTime(toDark ? 1400 : 1100, now + 0.03);
+      oscGain.gain.setValueAtTime(0.0001, now);
+      oscGain.gain.linearRampToValueAtTime(0.35, now + 0.002);
+      oscGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.045);
+      osc.connect(oscGain);
+      oscGain.connect(master);
+      osc.start(now);
+      osc.stop(now + 0.046);
+    } catch {}
+  }
+
   const syncAria = () => {
     const isDark = root.classList.contains('dark');
-    toggleBtn.setAttribute('aria-pressed', String(isDark));
+    if (toggleBtn) toggleBtn.setAttribute('aria-pressed', String(isDark));
+    if (a11yBtn) a11yBtn.setAttribute('aria-checked', String(isDark));
+    if (hintEl) hintEl.textContent = isDark ? 'Pull for morning' : 'Pull to call it a night';
     root.style.colorScheme = isDark ? 'dark' : 'light';
   };
 
@@ -139,7 +195,7 @@ function initTheme() {
     }
   }
 
-  function revealFrom(button, apply) {
+  function revealFromPoint(x, y, apply) {
     if (
       typeof document.startViewTransition !== 'function' ||
       prefersReducedMotion() ||
@@ -150,9 +206,6 @@ function initTheme() {
       return;
     }
 
-    const rect = button.getBoundingClientRect();
-    const x = rect.left + rect.width / 2;
-    const y = rect.top + rect.height / 2;
     const radius = Math.hypot(
       Math.max(x, window.innerWidth - x),
       Math.max(y, window.innerHeight - y)
@@ -181,7 +234,7 @@ function initTheme() {
             ],
           },
           {
-            duration: 500,
+            duration: 540,
             easing: EASE_REVEAL,
             pseudoElement: '::view-transition-new(root)',
           }
@@ -197,8 +250,11 @@ function initTheme() {
       });
   }
 
-  toggleBtn.addEventListener('click', () => {
+  function triggerThemeToggle(originEl, playChainSound = false) {
     const nextDark = !root.classList.contains('dark');
+    if (playChainSound) {
+      playPullChainClick(nextDark);
+    }
     const apply = () => {
       const parts = [
         ...(iconEl ? iconEl.querySelectorAll('[data-part]') : []),
@@ -211,8 +267,565 @@ function initTheme() {
       morph(before, nextDark);
     };
 
-    revealFrom(toggleBtn, apply);
+    if (originEl) {
+      const target =
+        originEl.querySelector && originEl.querySelector('.pull-bead-body')
+          ? originEl.querySelector('.pull-bead-body')
+          : originEl;
+      const rect = target.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+      revealFromPoint(x, y, apply);
+    } else {
+      apply();
+    }
+  }
+
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      triggerThemeToggle(toggleBtn, false);
+    });
+  }
+
+  // Initialize KokonutUI Verlet physics pull cord on the top-right lamp
+  initVerletPullCord({
+    onToggle: (beadEl) => triggerThemeToggle(beadEl, true),
+    prefersReducedMotion,
   });
+}
+
+/* ── KokonutUI Verlet Pull Cord Simulation (@dorianbaffier) ── */
+function initVerletPullCord({ onToggle, prefersReducedMotion }) {
+  const aside = document.querySelector('.pull-lamp-aside');
+  const svg = document.getElementById('pullLampSvg');
+  const cordEl = document.getElementById('pullCordPath');
+  const hitEl = document.getElementById('pullCordHit');
+  const beadEl = document.getElementById('pullCordBead');
+  const hintEl = document.getElementById('pullLampHint');
+  const a11yBtn = document.getElementById('pullLampA11yBtn');
+
+  if (!aside || !svg || !cordEl || !hitEl || !beadEl) return;
+
+  const WIDTH = 140;
+  const HEIGHT = 220;
+  const ANCHOR = { x: 85, y: 49.5 };
+  const LINKS = 12;
+  const LINK = 5.65;
+  const STEP = 1 / 120;
+  const GRAVITY = 1400;
+  const DAMPING = 0.991;
+  const MAX_SPEED = 4;
+  const BEND_MIN = LINK * 1.9;
+  const BEND_STIFFNESS = 0.8;
+  const ITERATIONS = 14;
+  const CLICK_PULL = 18;
+  const MAX_STRETCH = 32;
+  const REST_EPSILON = 0.015;
+  const REST_STEPS = 24;
+
+  function damp(distance, max) {
+    return max * (1 - Math.exp(-distance / max));
+  }
+
+  function haptic() {
+    if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+      try {
+        navigator.vibrate(8);
+      } catch {}
+    }
+  }
+
+  function restingChain() {
+    const xs = new Float64Array(LINKS + 1);
+    const ys = new Float64Array(LINKS + 1);
+    for (let i = 0; i <= LINKS; i++) {
+      xs[i] = ANCHOR.x;
+      ys[i] = ANCHOR.y + i * LINK;
+    }
+    return { xs, ys };
+  }
+
+  const REST = restingChain();
+
+  function cordPath(xs, ys) {
+    let d = `M${xs[0].toFixed(2)} ${ys[0].toFixed(2)}`;
+    for (let i = 1; i < xs.length - 1; i++) {
+      const mx = (xs[i] + xs[i + 1]) / 2;
+      const my = (ys[i] + ys[i + 1]) / 2;
+      d += ` Q${xs[i].toFixed(2)} ${ys[i].toFixed(2)} ${mx.toFixed(2)} ${my.toFixed(2)}`;
+    }
+    const n = xs.length - 1;
+    d += ` L${xs[n].toFixed(2)} ${ys[n].toFixed(2)}`;
+    return d;
+  }
+
+  const sim = {
+    xs: Float64Array.from(REST.xs),
+    ys: Float64Array.from(REST.ys),
+    pxs: Float64Array.from(REST.xs),
+    pys: Float64Array.from(REST.ys),
+    raf: 0,
+    last: 0,
+    carry: 0,
+    still: 0,
+    held: -1,
+    targetX: 0,
+    targetY: 0,
+    downX: 0,
+    downY: 0,
+    maxDragDist: 0,
+    toggledOnThisPull: false,
+    armed: true,
+  };
+
+  function relax(a, b, length, bend) {
+    const { xs, ys, held } = sim;
+    const aFixed = a === 0 || a === held;
+    const bFixed = b === held;
+    if (aFixed && bFixed) return;
+    const dx = xs[b] - xs[a];
+    const dy = ys[b] - ys[a];
+    const dist = Math.hypot(dx, dy) || 0.0001;
+    if (bend && dist >= length) return;
+    const diff = ((dist - length) / dist) * (bend ? BEND_STIFFNESS : 1);
+    let wa = 0.5;
+    if (aFixed) wa = 0;
+    else if (bFixed) wa = 1;
+    xs[a] += dx * diff * wa;
+    ys[a] += dy * diff * wa;
+    xs[b] -= dx * diff * (1 - wa);
+    ys[b] -= dy * diff * (1 - wa);
+  }
+
+  function draw() {
+    const { xs, ys } = sim;
+    const d = cordPath(xs, ys);
+    cordEl.setAttribute('d', d);
+    hitEl.setAttribute('d', d);
+    const n = LINKS;
+    const angle = (Math.atan2(xs[n] - xs[n - 1], ys[n] - ys[n - 1]) * 180) / Math.PI;
+    beadEl.setAttribute(
+      'transform',
+      `translate(${xs[n].toFixed(2)} ${ys[n].toFixed(2)}) rotate(${(-angle).toFixed(2)})`
+    );
+    if (hintEl) {
+      hintEl.style.top = `${(ys[n] + 6).toFixed(1)}px`;
+    }
+  }
+
+  function integrate() {
+    const { xs, ys, pxs, pys } = sim;
+    let moved = 0;
+    for (let i = 1; i <= LINKS; i++) {
+      if (i === sim.held) continue;
+      let vx = (xs[i] - pxs[i]) * DAMPING;
+      let vy = (ys[i] - pys[i]) * DAMPING;
+      const speed = Math.hypot(vx, vy);
+      if (speed > MAX_SPEED) {
+        vx *= MAX_SPEED / speed;
+        vy *= MAX_SPEED / speed;
+      }
+      pxs[i] = xs[i];
+      pys[i] = ys[i];
+      xs[i] += vx;
+      ys[i] += vy + GRAVITY * STEP * STEP;
+      moved = Math.max(moved, Math.abs(vx) + Math.abs(vy));
+    }
+    if (sim.held > 0) {
+      const i = sim.held;
+      moved = Math.max(
+        moved,
+        Math.abs(sim.targetX - xs[i]) + Math.abs(sim.targetY - ys[i])
+      );
+      pxs[i] = xs[i];
+      pys[i] = ys[i];
+      xs[i] = sim.targetX;
+      ys[i] = sim.targetY;
+    }
+    return moved;
+  }
+
+  function constrain() {
+    for (let k = 0; k < ITERATIONS; k++) {
+      for (let i = 0; i < LINKS; i++) {
+        relax(i, i + 1, LINK, false);
+      }
+      for (let i = 0; i + 2 <= LINKS; i++) {
+        relax(i, i + 2, BEND_MIN, true);
+      }
+    }
+  }
+
+  function step() {
+    const moved = integrate();
+    constrain();
+    return moved;
+  }
+
+  function tick(now) {
+    sim.raf = 0;
+    const elapsed = sim.last ? Math.min((now - sim.last) / 1000, 0.05) : STEP;
+    sim.last = now;
+    sim.carry += elapsed;
+    let moved = 0;
+    while (sim.carry >= STEP) {
+      moved = Math.max(moved, step());
+      sim.carry -= STEP;
+    }
+    draw();
+    sim.still = moved < REST_EPSILON ? sim.still + 1 : 0;
+    if (sim.held > 0 || sim.still < REST_STEPS) {
+      sim.raf = requestAnimationFrame(tick);
+    } else {
+      sim.last = 0;
+    }
+  }
+
+  function wake() {
+    sim.still = 0;
+    if (!sim.raf) {
+      sim.raf = requestAnimationFrame(tick);
+    }
+  }
+
+  function localPoint(event) {
+    const rect = svg.getBoundingClientRect();
+    return {
+      x: ((event.clientX - rect.left) / rect.width) * WIDTH,
+      y: ((event.clientY - rect.top) / rect.height) * HEIGHT,
+    };
+  }
+
+  function reach(index, x, y) {
+    const dx = x - ANCHOR.x;
+    const dy = y - ANCHOR.y;
+    const dist = Math.hypot(dx, dy) || 0.0001;
+    const length = index * LINK;
+    if (dist <= length) {
+      return { x, y, pull: 0 };
+    }
+    const allowed = length + damp(dist - length, MAX_STRETCH);
+    return {
+      x: ANCHOR.x + (dx / dist) * allowed,
+      y: ANCHOR.y + (dy / dist) * allowed,
+      pull: dy > 0 ? (allowed - length) * (dy / dist) : 0,
+    };
+  }
+
+  function handlePointerDown(event) {
+    if (sim.held > 0) return;
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+    event.preventDefault();
+    const point = localPoint(event);
+    let nearest = LINKS;
+    let best = Number.POSITIVE_INFINITY;
+    for (let i = 1; i <= LINKS; i++) {
+      const d = Math.hypot(sim.xs[i] - point.x, sim.ys[i] - point.y);
+      if (d < best) {
+        best = d;
+        nearest = i;
+      }
+    }
+    try {
+      svg.setPointerCapture(event.pointerId);
+    } catch {}
+    sim.held = nearest;
+    sim.targetX = sim.xs[nearest];
+    sim.targetY = sim.ys[nearest];
+    sim.downX = point.x;
+    sim.downY = point.y;
+    sim.maxDragDist = 0;
+    sim.toggledOnThisPull = false;
+    sim.armed = true;
+    aside.classList.add('is-grabbing');
+    wake();
+  }
+
+  function handlePointerMove(event) {
+    if (sim.held < 0) return;
+    const point = localPoint(event);
+    const dragDist = Math.hypot(point.x - sim.downX, point.y - sim.downY);
+    if (dragDist > sim.maxDragDist) {
+      sim.maxDragDist = dragDist;
+    }
+    const target = reach(sim.held, point.x, point.y);
+    sim.targetX = target.x;
+    sim.targetY = target.y;
+
+    aside.classList.toggle('is-armed', sim.armed && target.pull > CLICK_PULL * 0.65);
+
+    if (sim.armed && target.pull > CLICK_PULL) {
+      sim.armed = false;
+      sim.toggledOnThisPull = true;
+      aside.classList.remove('is-armed');
+      haptic();
+      onToggle(beadEl);
+    } else if (!sim.armed && target.pull < CLICK_PULL * 0.4) {
+      sim.armed = true;
+    }
+    wake();
+  }
+
+  function handlePointerUp() {
+    if (sim.held < 0) return;
+    const wasQuickClick = !sim.toggledOnThisPull && sim.maxDragDist < 5;
+    sim.held = -1;
+    aside.classList.remove('is-grabbing', 'is-armed');
+
+    if (wasQuickClick) {
+      haptic();
+      onToggle(beadEl);
+      if (!prefersReducedMotion()) {
+        // Give the cord a crisp downward tug & swing on click
+        sim.pys[LINKS] = sim.ys[LINKS] - 4.2;
+        sim.pxs[LINKS] = sim.xs[LINKS] - 1.4;
+      }
+    }
+
+    if (prefersReducedMotion()) {
+      sim.xs.set(REST.xs);
+      sim.ys.set(REST.ys);
+      sim.pxs.set(REST.xs);
+      sim.pys.set(REST.ys);
+      draw();
+      return;
+    }
+    wake();
+  }
+
+  hitEl.addEventListener('pointerdown', handlePointerDown);
+  beadEl.addEventListener('pointerdown', handlePointerDown);
+  svg.addEventListener('pointermove', handlePointerMove);
+  svg.addEventListener('pointerup', handlePointerUp);
+  svg.addEventListener('pointercancel', handlePointerUp);
+  svg.addEventListener('lostpointercapture', handlePointerUp);
+
+  // Subtle hover sway & tooltip visibility when cursor brushes the bead/cord
+  function onHoverEnter(event) {
+    aside.classList.add('is-hovered');
+    if (event.pointerType === 'mouse' && sim.held < 0 && !prefersReducedMotion()) {
+      const nudge = Math.max(-1.6, Math.min(1.6, (event.movementX || 6) * 0.08));
+      sim.pxs[LINKS] = sim.xs[LINKS] - nudge;
+      wake();
+    }
+  }
+
+  function onHoverLeave() {
+    aside.classList.remove('is-hovered');
+  }
+
+  hitEl.addEventListener('pointerenter', onHoverEnter);
+  beadEl.addEventListener('pointerenter', onHoverEnter);
+  hitEl.addEventListener('pointerleave', onHoverLeave);
+  beadEl.addEventListener('pointerleave', onHoverLeave);
+
+  if (a11yBtn) {
+    a11yBtn.addEventListener('focus', () => {
+      aside.classList.add('is-focused');
+    });
+    a11yBtn.addEventListener('blur', () => {
+      aside.classList.remove('is-focused');
+    });
+    a11yBtn.addEventListener('click', () => {
+      onToggle(beadEl);
+      if (!prefersReducedMotion()) {
+        sim.pys[LINKS] = sim.ys[LINKS] - 4.5;
+        wake();
+      }
+    });
+  }
+
+  draw();
+
+  // Gentle initial sway 700ms after page load so the cord feels alive
+  if (!prefersReducedMotion()) {
+    setTimeout(() => {
+      if (sim.held < 0) {
+        sim.pxs[LINKS] = sim.xs[LINKS] - 1.3;
+        wake();
+      }
+    }, 700);
+  }
+}
+
+/* ── Twilight & Night Sky Stars Canvas + Shooting Stars ── */
+function initSkyStars() {
+  const canvas = document.getElementById('skyStarsCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  const STAR_COLORS = [
+    '255,255,255',
+    '255,255,255',
+    '255,250,240',
+    '248,248,246',
+    '255,244,228',
+  ];
+  const rand = (min, max) => min + Math.random() * (max - min);
+
+  let width = 0;
+  let height = 0;
+  let stars = [];
+  let meteors = [];
+  let nextAutoMeteorAt = performance.now() + rand(6000, 12000);
+
+  function buildStars() {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    width = Math.max(1, Math.floor(rect.width));
+    height = Math.max(1, Math.floor(rect.height));
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const count = Math.round(Math.min(200, Math.max(110, (width * height) / 4800)));
+    stars = Array.from({ length: count }, () => {
+      const bright = Math.random() < 0.085;
+      return {
+        x: Math.random(),
+        y: Math.pow(Math.random(), 1.45) * 0.86,
+        r: bright ? rand(1.1, 1.55) : rand(0.38, 0.98),
+        alpha: bright ? rand(0.82, 1) : rand(0.35, 0.88),
+        depth: rand(0.16, 0.58),
+        speed: (Math.PI * 2) / rand(3200, 8800),
+        offset: rand(0, Math.PI * 2),
+        color: STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)],
+      };
+    });
+  }
+
+  function spawnMeteor(now, originX, originY) {
+    if (!width || !height) return;
+    const hasOrigin = typeof originX === 'number' && typeof originY === 'number';
+    const goRight = hasOrigin
+      ? originX < width * 0.52
+        ? true
+        : originX > width * 0.68
+          ? false
+          : Math.random() < 0.5
+      : Math.random() < 0.5;
+
+    const angle = rand(0.25, 0.52);
+    const dist = width * rand(0.22, 0.34);
+    const startX = hasOrigin
+      ? Math.max(24, Math.min(width - 24, originX))
+      : width * (goRight ? rand(0.1, 0.45) : rand(0.55, 0.9));
+    const startY = hasOrigin
+      ? Math.max(12, Math.min(height * 0.52, originY))
+      : height * rand(0.06, 0.3);
+
+    meteors.push({
+      x: startX,
+      y: startY,
+      dx: Math.cos(angle) * dist * (goRight ? 1 : -1),
+      dy: Math.sin(angle) * dist,
+      start: now,
+      duration: rand(750, 980),
+      length: rand(74, 122),
+    });
+  }
+
+  function drawMeteors(now) {
+    for (let i = meteors.length - 1; i >= 0; i--) {
+      const m = meteors[i];
+      const t = (now - m.start) / m.duration;
+      if (t >= 1) {
+        meteors.splice(i, 1);
+        continue;
+      }
+      if (t < 0) continue;
+
+      const ease = 1 - Math.pow(1 - t, 2);
+      const hx = m.x + m.dx * ease;
+      const hy = m.y + m.dy * ease;
+      const dist = Math.hypot(m.dx, m.dy) || 1;
+      const tailLen = m.length * (1 - t * 0.4);
+      const tx = hx - (m.dx / dist) * tailLen;
+      const ty = hy - (m.dy / dist) * tailLen;
+      const fade = Math.sin(Math.PI * t);
+
+      const grad = ctx.createLinearGradient(hx, hy, tx, ty);
+      grad.addColorStop(0, `rgba(255, 255, 255, ${(0.95 * fade).toFixed(3)})`);
+      grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = 1.45;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(hx, hy);
+      ctx.lineTo(tx, ty);
+      ctx.stroke();
+
+      // Subtle glowing head on the shooting star
+      ctx.fillStyle = `rgba(255, 255, 255, ${(0.9 * fade).toFixed(3)})`;
+      ctx.beginPath();
+      ctx.arc(hx, hy, 1.3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  function render(now) {
+    ctx.clearRect(0, 0, width, height);
+
+    for (let i = 0; i < stars.length; i++) {
+      const s = stars[i];
+      const twinkle = 1 - s.depth * (0.5 + 0.5 * Math.sin(now * s.speed + s.offset));
+      const a = s.alpha * twinkle;
+      const sx = s.x * width;
+      const sy = s.y * height;
+
+      if (s.r > 1.05) {
+        ctx.fillStyle = `rgba(${s.color}, ${(a * 0.18).toFixed(3)})`;
+        ctx.beginPath();
+        ctx.arc(sx, sy, s.r * 3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = `rgba(${s.color}, ${a.toFixed(3)})`;
+        ctx.beginPath();
+        ctx.arc(sx, sy, s.r, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        ctx.fillStyle = `rgba(${s.color}, ${a.toFixed(3)})`;
+        const size = s.r * 2;
+        ctx.fillRect(sx - s.r, sy - s.r, size, size);
+      }
+    }
+
+    const isDark = document.documentElement.classList.contains('dark');
+    if (isDark && meteors.length === 0 && now > nextAutoMeteorAt) {
+      spawnMeteor(now);
+      nextAutoMeteorAt = now + rand(12000, 22000);
+    }
+
+    if (meteors.length > 0) {
+      drawMeteors(now);
+    }
+
+    requestAnimationFrame(render);
+  }
+
+  // Clicking anywhere in the top sky banner or header menu in dark mode spawns a shooting star
+  window.addEventListener('pointerdown', (e) => {
+    if (!document.documentElement.classList.contains('dark')) return;
+    if (e.target && e.target.closest && e.target.closest('.pull-lamp-aside')) return;
+
+    const headerEl = document.querySelector('.site-header');
+    const headerBottom = headerEl ? headerEl.getBoundingClientRect().bottom : height;
+    const skyRect = canvas.getBoundingClientRect();
+    const maxClickY = Math.max(skyRect.bottom, headerBottom);
+
+    if (e.clientY <= maxClickY) {
+      const clickX = e.clientX - skyRect.left;
+      const clickY = e.clientY - skyRect.top;
+      const spawnY = clickY <= height * 0.48 ? clickY : rand(height * 0.08, height * 0.28);
+      spawnMeteor(performance.now(), clickX, spawnY);
+      nextAutoMeteorAt = performance.now() + rand(12000, 22000);
+    }
+  });
+
+  buildStars();
+  window.addEventListener('resize', buildStars, { passive: true });
+  requestAnimationFrame(render);
 }
 
 /* ── Section Tabs (Home / Favorites / Photography) ── */
