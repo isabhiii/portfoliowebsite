@@ -841,7 +841,7 @@ function initTabs() {
   const navTabs = document.querySelectorAll('.nav-tab');
   const panels = document.querySelectorAll('.tab-panel');
   const headerEl = document.querySelector('.site-header');
-  const siteNav = document.querySelector('.site-nav');
+  const siteNav = document.querySelector('.top-nav');
   let currentActiveTab = null;
 
   // Two-spring stretchy underline (Tab Pill physics: leading edge stiff, trailing edge soft)
