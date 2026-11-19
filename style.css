@@ -1512,6 +1512,10 @@ html.dark .row-icon img {
 .social-icon-link {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
   color: var(--primary-text);
   opacity: 0.85;
   transition: opacity 0.15s ease;
