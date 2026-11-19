@@ -2,11 +2,12 @@
    DATA: ALL 34 FAVORITES FROM DESIGNERDADA.COM
    ══════════════════════════════════════════════ */
 const FAVORITES = [
-  { title: 'Anthropic', desc: 'AI company I trust', domain: 'anthropic.com', faviconDomain: 'www.anthropic.com', href: 'https://www.anthropic.com/', category: 'Apps', preview: 'https://cdn.sanity.io/images/599r6htc/regionalized/b08d37520f7d5ad8d6562975b5932dd2d9a862bb-1200x630.gif?w=1200&q=70&fit=max&auto=format' },
+  { title: 'Anthropic', desc: 'AI company I trust', domain: 'anthropic.com', faviconDomain: 'www.anthropic.com', href: 'https://www.anthropic.com/', category: 'Apps', preview: 'https://assets.claude.com/6d4a0d28992ade92d6fa63646fd9c9d318245c6c.jpg' },
   { title: 'Raycast', desc: 'My Shortcut to Everything', domain: 'raycast.com', faviconDomain: 'www.raycast.com', href: 'https://www.raycast.com/', category: 'Apps', preview: 'https://www.raycast.com/opengraph-image-pwu6ef.png?opengraph-image.1f-98etzkaz5s.png' },
   { title: 'What Human Memory Teaches Us About Building AI Memory', desc: '', domain: 'moderndata101.substack.com', faviconDomain: 'moderndata101.substack.com', href: 'https://moderndata101.substack.com/p/memory-blueprint-for-ai', category: 'Blogs', preview: 'https://substackcdn.com/image/fetch/$s_!mqCF!,w_1200,h_675,c_fill,f_jpg,q_auto:good,fl_progressive:steep,g_auto/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F6ee6d47e-83a8-41c9-8d3f-2d0623855c68_1565x891.png' },
   { title: 'Python', desc: 'favourite coding language', domain: 'python.org', faviconDomain: 'www.python.org', href: 'https://www.python.org/', category: 'Apps', preview: 'https://www.python.org/static/opengraph-icon-200x200.png' },
   { title: 'Dhurandhar', desc: 'Based on Incredible true event', domain: 'netflix.com', faviconDomain: 'www.netflix.com', href: 'https://www.netflix.com/de-en/title/82156122', category: 'Movies', preview: 'https://occ-0-8336-2773.1.nflxso.net/dnm/api/v6/6AYY37jfdO6hpXcMjf9Yu5cnmO0/AAAABQSpyGF5vVvn0CHkaK29kxqUmAZb2nEIYs1uezqtwSnNp7qg7ykmnN0_tt6cr6GY0oXMwEvTJsiTmv3s0Eu5Zom9I-PJI_o8nXvE.jpg?r=db9' },
+  { title: 'RenameMail', desc: 'Keeps my Gmail inbox sane', domain: 'renamemail.com', faviconDomain: 'www.renamemail.com', icon: 'renamemail-icon.png', href: 'https://renamemail.com/', category: 'Apps', preview: 'https://renamemail.vercel.app/og-image.png' },
   { title: 'Making softwares', desc: 'illustrated tech manual', domain: 'makingsoftware.com', faviconDomain: 'www.makingsoftware.com', href: 'https://www.makingsoftware.com/', category: 'Blogs', preview: 'https://s0.wp.com/mshots/v1/https%3A%2F%2Fwww.makingsoftware.com%2F?w=600' },
   { title: 'Developing Taste', desc: '', domain: 'emilkowal.ski', faviconDomain: 'emilkowal.ski', href: 'https://emilkowal.ski/ui/developing-taste', category: 'Blogs', preview: 'https://emilkowal.ski/ui/developing-taste/opengraph-image.jpg?504f64db8768edb1' },
   { title: 'time.fyi', desc: 'Loved the landing page. Clear, concise, and direct!', domain: 'time.fyi', faviconDomain: 'time.fyi', href: 'https://time.fyi/', category: 'Design', preview: 'https://time.fyi/og.png' },
@@ -1065,7 +1066,7 @@ function initFavorites() {
       <a href="${item.href}" target="_blank" rel="noopener noreferrer nofollow" data-title="${item.title.replace(/"/g, '&quot;')}" data-category="${item.category}" class="fav-row">
         <div class="fav-row-left">
           <div class="fav-icon-wrap">
-            <img src="https://www.google.com/s2/favicons?domain=${item.faviconDomain}&sz=32" alt="${item.displayTitle.replace(/"/g, '&quot;')} favicon" width="20" height="20" loading="lazy">
+            <img src="${item.icon || `https://www.google.com/s2/favicons?domain=${item.faviconDomain}&sz=32`}" alt="${item.displayTitle.replace(/"/g, '&quot;')} favicon" width="20" height="20" loading="lazy">
           </div>
           <div class="fav-text-wrap">
             <span class="fav-title">${item.displayTitle}</span>${item.displayDesc ? `
@@ -2456,6 +2457,19 @@ function initLanguageSwitcher() {
       pt: 'A empresa de IA em que confio',
       nl: 'AI-bedrijf dat ik vertrouw',
       ar: 'شركة الذكاء الاصطناعي التي أثق بها'
+    },
+    'Keeps my Gmail inbox sane': {
+      de: 'Hält meinen Gmail-Posteingang übersichtlich',
+      hi: 'मेरे Gmail इनबॉक्स को व्यवस्थित रखता है',
+      fr: 'Garde ma boîte Gmail bien organisée',
+      es: 'Mantiene mi bandeja de Gmail en orden',
+      zh: '让我的 Gmail 收件箱保持井然有序',
+      ja: 'Gmailの受信トレイをすっきり整理してくれる',
+      ko: '내 Gmail 받은편지함을 깔끔하게 유지해 주는 도구',
+      it: 'Mantiene in ordine la mia casella Gmail',
+      pt: 'Mantém minha caixa de entrada do Gmail organizada',
+      nl: 'Houdt mijn Gmail-inbox overzichtelijk',
+      ar: 'يبقي بريد Gmail الخاص بي منظماً'
     },
     'My Shortcut to Everything': {
       de: 'Mein Shortcut für alles',
