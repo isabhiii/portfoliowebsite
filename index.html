@@ -3,620 +3,486 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Abhishek Kanani — Data Analyst, ML Engineer &amp; Open Source Contributor</title>
+  <title>Abhishek Kanani</title>
   <link rel="icon" type="image/png" href="favicon.png">
-  <meta name="description" content="Portfolio of Abhishek Kanani — Data Analyst, Machine Learning Engineer &amp; Open Source Contributor @ Raycast. M.Sc. Electrical Engineering, specialized in ETL pipelines, RAG systems, and developer tooling.">
+  <meta name="description" content="Abhishek Kanani — Data Analyst, ML Engineer & Open Source Contributor @ Raycast.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=66">
+  <script>
+    try {
+      if (localStorage.getItem('theme') === 'dark') {
+        document.documentElement.classList.add('dark');
+      }
+    } catch (e) {}
+  </script>
 </head>
 <body>
+  <canvas id="clickSparkCanvas" aria-hidden="true"></canvas>
+  <main class="page-main">
 
-  <!-- Background gradient blobs -->
-  <div class="bg-blobs" aria-hidden="true">
-    <div class="blob blob-tl"></div>
-    <div class="blob blob-tr"></div>
-    <div class="blob blob-bl"></div>
+    <!-- ══════════════ HEADER & SECTION NAV (DesignerDada style) ══════════════ -->
+    <header class="site-header gutter-x">
+      <a href="#home" class="avatar-pop" aria-label="Abhishek Kanani">
+        <img src="profile.jpg" alt="Abhishek Kanani" class="header-avatar">
+      </a>
+      <div class="header-name">Abhishek Kanani <span class="aka">aka</span> @isabhiii</div>
+      <nav class="top-nav" aria-label="Main navigation">
+        <a href="#home" class="nav-tab active" data-tab="home" aria-current="page" data-i18n="navHome">Home</a>
+        <a href="#favorites" class="nav-tab" data-tab="favorites" data-i18n="navFavorites">Favorites</a>
+        <a href="#photography" class="nav-tab" data-tab="photography" data-i18n="navPhotography">Photography</a>
+        <div class="language-options" aria-label="Language options">
+          <button class="is-active" type="button" data-lang="en" data-sound="press" aria-pressed="true">EN</button>
+          <span class="separator" aria-hidden="true">/</span>
+          <button type="button" data-lang="de" data-sound="press" aria-pressed="false">DE</button>
+          <span class="separator" aria-hidden="true">/</span>
+          <button class="language-more-button" type="button" data-language-open data-sound="press" aria-haspopup="dialog" aria-expanded="false" aria-label="More languages">+</button>
+        </div>
+        <button id="themeToggle" class="theme-switch" type="button" aria-label="Dark theme" aria-pressed="false">
+          <svg id="themeIcon" class="theme-switch-icon" aria-hidden="true" fill="none" height="14" width="14" viewBox="0 0 24 24">
+            <mask id="kokonut-moon-mask">
+              <rect fill="white" height="32" width="32" x="-4" y="-4" />
+              <circle class="theme-bite" cx="17" cy="7" data-part="bite" fill="black" r="7.5" />
+            </mask>
+            <g mask="url(#kokonut-moon-mask)">
+              <circle class="theme-disc" cx="12" cy="12" data-part="disc" fill="currentColor" r="4.75" />
+            </g>
+            <g stroke="currentColor" stroke-linecap="round" stroke-width="2">
+              <line class="theme-ray" data-index="0" data-part="ray" x1="19.5" y1="12" x2="22" y2="12" />
+              <line class="theme-ray" data-index="1" data-part="ray" x1="17.3" y1="17.3" x2="19.07" y2="19.07" />
+              <line class="theme-ray" data-index="2" data-part="ray" x1="12" y1="19.5" x2="12" y2="22" />
+              <line class="theme-ray" data-index="3" data-part="ray" x1="6.7" y1="17.3" x2="4.93" y2="19.07" />
+              <line class="theme-ray" data-index="4" data-part="ray" x1="4.5" y1="12" x2="2" y2="12" />
+              <line class="theme-ray" data-index="5" data-part="ray" x1="6.7" y1="6.7" x2="4.93" y2="4.93" />
+              <line class="theme-ray" data-index="6" data-part="ray" x1="12" y1="4.5" x2="12" y2="2" />
+              <line class="theme-ray" data-index="7" data-part="ray" x1="17.3" y1="6.7" x2="19.07" y2="4.93" />
+            </g>
+          </svg>
+          <span id="themeLabels" aria-hidden="true" class="theme-switch-labels">
+            <span class="theme-label-light" data-part="label">Light</span>
+            <span class="theme-label-dark" data-part="label">Dark</span>
+          </span>
+        </button>
+      </nav>
+    </header>
+
+    <!-- ══════════════ HOME TAB (Ruru.build style) ══════════════ -->
+    <section id="panel-home" class="tab-panel active">
+
+      <article>
+        <h1 class="intro-title gutter-x" style="margin-bottom: 14px;" data-i18n="introTitle">I'm Abhishek</h1>
+
+        <div class="intro-body gutter-x">
+          <span class="intro-p hi" data-i18n="introGreeting">Hi, Guten Tag, नमस्ते</span>
+
+          <span class="intro-p">
+            <span data-i18n="introLead">I'm a</span> <span class="hi" data-i18n="introRole">Data Analyst &amp; ML Engineer</span>. <span data-i18n="introLove">I love</span>
+            <span class="inline-tech"><span class="inline-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z"/></svg></span>AI</span>,
+            <span class="hi" data-i18n="introDataAuto">Data, Automation</span> <span data-i18n="introAndWord">and</span>
+            <span class="hi" data-i18n="introOpenSource">Open Source</span>.
+            <span data-i18n="introMsc">As well as holding an M.Sc. from</span>
+            <span class="inline-tech"><span class="inline-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span>THD</span> <span data-i18n="introGermany">Germany.</span>
+            <span data-i18n="introBuilding">While building</span>
+            <span class="inline-tech">
+              <span class="inline-icon"><img src="wos-icon.png" alt="Word of Supreme" style="border-radius:3px;"></span>
+              <a href="https://wordofsupreme.com/" target="_blank" rel="noreferrer" class="inline-arrow-link">Word of Supreme <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
+            </span>
+            <span data-i18n="introAndWord2">and</span>
+            <span class="inline-tech">
+              <span class="inline-icon"><img src="renamemail-icon.png" alt="RenameMail" style="border-radius:3px;"></span>
+              <a href="https://renamemail.com/" target="_blank" rel="noreferrer" class="inline-arrow-link">RenameMail <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
+            </span>.
+          </span>
+
+          <span class="intro-p">
+            <span data-i18n="introSystems">I build data systems that don't break</span> <span class="strike" data-i18n="introMostDays">(most days)</span>, <span data-i18n="introBackend">mostly in data &amp; backend with</span>
+            <span class="inline-tech"><span class="inline-icon"><svg viewBox="0 0 24 24" fill="#3776AB"><path d="M12 2c-2.6 0-4.5.9-4.5 2.7v2.3h4.5v.8H6c-1.8 0-3.5 1.3-3.5 4.2s1.5 4.2 3.5 4.2h2v-2.1c0-1.9 1.6-3.4 3.5-3.4h4.5c1.5 0 2.5-1.1 2.5-2.6V4.7C18.5 2.9 15.6 2 12 2zm-2 2.2c.5 0 .9.4.9.9s-.4.9-.9.9-.9-.4-.9-.9.4-.9.9-.9z"/><path fill="#FFD43B" d="M12 22c2.6 0 4.5-.9 4.5-2.7V17H12v-.8h6c1.8 0 3.5-1.3 3.5-4.2S20 7.8 18 7.8h-2v2.1c0 1.9-1.6 3.4-3.5 3.4H8c-1.5 0-2.5 1.1-2.5 2.6v3.4C5.5 21.1 8.4 22 12 22zm2-2.2c-.5 0-.9-.4-.9-.9s.4-.9.9-.9.9.4.9.9-.4.9-.9.9z"/></svg></span>Python</span>,
+            <span class="inline-tech"><span class="inline-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#e11d48" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/></svg></span>SQL</span>,
+            <span class="inline-tech"><span class="inline-icon"><svg viewBox="0 0 24 24" fill="#009688"><path d="M12 2L2 19.5h20L12 2zm0 4.8l6.2 10.7H5.8L12 6.8z"/></svg></span>FastAPI</span>, <span data-i18n="introAndWord3">and</span>
+            <span class="inline-tech"><span class="inline-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>LangChain</span>.
+            <span data-i18n="introInfra">For BI &amp; infra, I use</span>
+            <span class="inline-tech"><span class="inline-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#E97627" stroke-width="2" stroke-linecap="round"><path d="M12 2v6M9 5h6"/><path stroke="#1F77B4" d="M12 16v6M9 19h6"/><path stroke="#5B8DBE" d="M5 9v6M2 12h6"/><path stroke="#C43E29" d="M19 9v6M16 12h6"/><path stroke="#59A14F" d="M12 9v6M9 12h6"/></svg></span>Tableau</span>,
+            <span class="inline-tech"><span class="inline-icon"><svg viewBox="0 0 24 24" fill="#F2C811"><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="7" width="4" height="14" rx="1"/><rect x="17" y="3" width="4" height="18" rx="1"/></svg></span>Power BI</span>,
+            <span class="inline-tech"><span class="inline-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2496ED" stroke-width="2"><path d="M2 13h20M6 13v-3h4v3M10 13V9h4v4M14 13v-3h4v3"/><path d="M4 13c0 5 4 7 9 7s8-3 9-7"/></svg></span>Docker</span>, <span data-i18n="introAndWord4">and</span>
+            <span class="inline-tech"><span class="inline-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg></span>RAG</span>.
+          </span>
+
+          <span class="intro-p">
+            <span data-i18n="introTooling">Lately, I've been heavily focused on macOS developer tooling and open source with</span>
+            <span class="inline-tech"><span class="inline-icon"><svg viewBox="0 0 28 28" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M7 18.079V21L0 14L1.46 12.54L7 18.081V18.079ZM9.921 21H7L14 28L15.46 26.54L9.921 21ZM26.535 15.462L27.996 14L13.996 0L12.538 1.466L18.077 7.004H14.73L10.864 3.146L9.404 4.606L11.809 7.01H10.129V17.876H20.994V16.196L23.399 18.6L24.859 17.14L20.994 13.274V9.927L26.535 15.462ZM7.73 6.276L6.265 7.738L7.833 9.304L9.294 7.844L7.73 6.276ZM20.162 18.708L18.702 20.17L20.268 21.738L21.73 20.276L20.162 18.708ZM4.596 9.41L3.134 10.872L7 14.738V11.815L4.596 9.41ZM16.192 21.006H13.268L17.134 24.872L18.596 23.41L16.192 21.006Z" fill="#FF6363"/></svg></span>Raycast</span>,
+            <span class="inline-tech"><span class="inline-icon"><svg viewBox="0 0 24 24" fill="#3178C6"><rect x="2" y="2" width="20" height="20" rx="3"/><path d="M10.5 11v7M7.5 11h6M16.5 11c-1.5 0-2.5.8-2.5 2s1 1.7 2.5 2 2.5.8 2.5 2-1 2-2.5 2" stroke="#fff" stroke-width="1.6" fill="none"/></svg></span>TypeScript</span>, <span data-i18n="introAndWord5">and</span>
+            <span class="inline-tech"><span class="inline-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="1.7"><circle cx="12" cy="12" r="2" fill="#06b6d4"/><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/></svg></span>React</span>.
+          </span>
+
+          <span class="intro-p">
+            <span data-i18n="introBesides">Besides, I love</span> <span class="hi" data-i18n="introInterests">Photography, Minimal Design</span> <span data-i18n="introAndWord6">and</span> <span class="hi" data-i18n="introEngineering">Engineering</span>, <span data-i18n="introAlways">I'm always looking for new things to learn and new people to meet.</span>
+          </span>
+
+          <span class="intro-p">
+            <span data-i18n="introOpen">Open to work on data, AI, or engineering roles — connect on</span>
+            <a href="https://www.linkedin.com/in/abhishek-kanani/" target="_blank" rel="noreferrer" class="inline-tech dashed-link">
+              <span class="inline-icon"><svg viewBox="0 0 256 256"><path d="M218.123 218.127h-37.931v-59.403c0-14.165-.253-32.4-19.728-32.4-19.756 0-22.779 15.434-22.779 31.369v60.43h-37.93V95.967h36.413v16.694h.51a39.907 39.907 0 0 1 35.928-19.733c38.445 0 45.533 25.288 45.533 58.186l-.016 67.013ZM56.955 79.27c-12.157.002-22.014-9.852-22.016-22.009-.002-12.157 9.851-22.014 22.008-22.016 12.157-.003 22.014 9.851 22.016 22.008A22.013 22.013 0 0 1 56.955 79.27m18.966 138.858H37.95V95.967h37.97v122.16ZM237.033.018H18.89C8.58-.098.125 8.161-.001 18.471v219.053c.122 10.315 8.576 18.582 18.89 18.474h218.144c10.336.128 18.823-8.139 18.966-18.474V18.454c-.147-10.33-8.635-18.588-18.966-18.453" fill="#0A66C2"/></svg></span>LinkedIn
+            </a>
+            <span data-i18n="introOrMail">or drop a mail</span>
+            <a href="mailto:abhishekkanani10@gmail.com" class="inline-tech" aria-label="Send email" title="Send email">
+              <span class="inline-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg></span>
+            </a>
+          </span>
+
+          <div class="signoff-row">
+            <span id="signoffText" data-i18n="signoff">~ shipping...</span>
+            <button id="dotBtn" class="dot-btn" aria-label="Status toggle"></button>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── GITHUB ACTIVITY BAR (ch.sh style) ── -->
+      <section class="github-bar-section gutter-x" aria-label="GitHub contributions">
+        <div class="github-bar-header">
+          <a href="https://github.com/isabhiii" target="_blank" rel="noreferrer noopener" class="github-bar-link">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+            <span>github.com/isabhiii</span>
+          </a>
+          <span id="githubTotal" class="github-bar-total">30d activity</span>
+        </div>
+        <div id="githubBars" class="github-bars"></div>
+      </section>
+
+      <div class="divider"></div>
+
+      <!-- ── WORK ── -->
+      <div class="ruru-section">
+        <span class="ruru-section-label gutter-x" data-i18n="sectionWork">Work</span>
+        <div class="ruru-list">
+
+          <a href="https://github.com/raycast/extensions/pulls?q=is%3Apr+author%3Aisabhiii" target="_blank" rel="noreferrer" class="ruru-row">
+            <div class="ruru-row-left">
+              <span class="row-icon">
+                <svg viewBox="0 0 28 28" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M7 18.079V21L0 14L1.46 12.54L7 18.081V18.079ZM9.921 21H7L14 28L15.46 26.54L9.921 21ZM26.535 15.462L27.996 14L13.996 0L12.538 1.466L18.077 7.004H14.73L10.864 3.146L9.404 4.606L11.809 7.01H10.129V17.876H20.994V16.196L23.399 18.6L24.859 17.14L20.994 13.274V9.927L26.535 15.462ZM7.73 6.276L6.265 7.738L7.833 9.304L9.294 7.844L7.73 6.276ZM20.162 18.708L18.702 20.17L20.268 21.738L21.73 20.276L20.162 18.708ZM4.596 9.41L3.134 10.872L7 14.738V11.815L4.596 9.41ZM16.192 21.006H13.268L17.134 24.872L18.596 23.41L16.192 21.006Z" fill="currentColor"/></svg>
+              </span>
+              <span class="row-title">Raycast</span>
+              <span class="row-desc">~ Open Source Contributor</span>
+            </div>
+            <div class="ruru-row-right">
+              <div class="row-meta"><span>open source -</span><span>Mar 2026–Present</span></div>
+              <div class="row-hover-domain">raycast.com <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></div>
+            </div>
+          </a>
+
+          <a href="https://www.infineon.com" target="_blank" rel="noreferrer" class="ruru-row">
+            <div class="ruru-row-left">
+              <span class="row-icon">
+                <img src="infineon-logo.png" alt="Infineon Technologies">
+              </span>
+              <span class="row-title">Infineon Technologies</span>
+              <span class="row-desc">~ Data Analyst</span>
+            </div>
+            <div class="ruru-row-right">
+              <div class="row-meta"><span>working student -</span><span>24 mo</span></div>
+              <div class="row-hover-domain">infineon.com <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></div>
+            </div>
+          </a>
+
+          <a href="https://www.th-deg.de" target="_blank" rel="noreferrer" class="ruru-row">
+            <div class="ruru-row-left">
+              <span class="row-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>
+              </span>
+              <span class="row-title">TC Teisnach Optik</span>
+              <span class="row-desc">~ Graduate Research Assistant</span>
+            </div>
+            <div class="ruru-row-right">
+              <div class="row-meta"><span>research -</span><span>7 mo</span></div>
+              <div class="row-hover-domain">th-deg.de <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></div>
+            </div>
+          </a>
+
+          <a href="https://www.rosenberger.com" target="_blank" rel="noreferrer" class="ruru-row">
+            <div class="ruru-row-left">
+              <span class="row-icon">
+                <img src="rosenberger-logo.png" alt="Rosenberger">
+              </span>
+              <span class="row-title">Rosenberger</span>
+              <span class="row-desc">~ Python Developer Intern &amp; Analyst</span>
+            </div>
+            <div class="ruru-row-right">
+              <div class="row-meta"><span>internship -</span><span>7 mo</span></div>
+              <div class="row-hover-domain">rosenberger.com <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></div>
+            </div>
+          </a>
+
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- ── PRODUCTS ── -->
+      <div class="ruru-section">
+        <span class="ruru-section-label gutter-x" data-i18n="sectionProducts">Products</span>
+        <div class="ruru-list">
+
+          <a href="https://wordofsupreme.com/" target="_blank" rel="noreferrer" class="ruru-row">
+            <div class="ruru-row-left">
+              <span class="row-icon">
+                <img src="wos-icon.png" alt="Word of Supreme" style="width:14px;height:14px;border-radius:3px;background:none;padding:0;">
+              </span>
+              <span class="row-title">Word of Supreme</span>
+              <span class="row-desc">~ Minimalist Bhagavad Gītā iOS app</span>
+            </div>
+            <div class="ruru-row-right">
+              <div class="stack-icons">
+                <svg viewBox="0 0 24 24" fill="currentColor" title="iOS"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                <svg viewBox="0 0 24 24" fill="currentColor" title="Swift"><path d="M13.68 2.02c2.59 1.82 4.28 4.54 4.28 7.59 0 1.41-.35 2.74-.96 3.91 1.43 1.27 2.46 3.01 2.46 4.98 0 .25-.02.49-.06.73-.89-.85-2.03-1.41-3.3-1.49-1.15 1.38-2.97 2.26-5.02 2.26-3.79 0-7.01-2.65-8.58-6.41 1.72 1.17 3.74 1.85 5.91 1.85.56 0 1.11-.05 1.65-.14C6.59 13.5 3.63 10.17 2 6.08c2.29 1.99 4.93 3.62 7.77 4.78C7.07 8.43 4.92 5.47 3.55 2.2c2.99 2.66 6.46 4.8 10.22 6.26-.06-2.28-.14-4.51-.09-6.44z"/></svg>
+              </div>
+              <div class="row-hover-domain">wordofsupreme.com <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></div>
+            </div>
+          </a>
+
+          <a href="https://renamemail.com/" target="_blank" rel="noreferrer" class="ruru-row">
+            <div class="ruru-row-left">
+              <span class="row-icon">
+                <img src="renamemail-icon.png" alt="RenameMail" style="width:14px;height:14px;border-radius:3px;background:none;padding:0;">
+              </span>
+              <span class="row-title">RenameMail</span>
+              <span class="row-desc">~ Turn your Gmail into a visual tracker &amp; pipeline.</span>
+            </div>
+            <div class="ruru-row-right">
+              <div class="stack-icons">
+                <svg viewBox="0 0 24 24" fill="currentColor" title="Chrome"><path d="M12 0C8.21 0 4.831 1.757 2.632 4.501l3.953 6.848A5.454 5.454 0 0 1 12 6.545h10.691A12 12 0 0 0 12 0zM1.931 5.47A11.943 11.943 0 0 0 0 12c0 6.012 4.42 10.991 10.189 11.864l3.953-6.847a5.45 5.45 0 0 1-6.865-2.29zm13.342 2.166a5.446 5.446 0 0 1 1.45 7.09l.002.001h-.002l-5.344 9.257c.206.01.413.016.621.016 6.627 0 12-5.373 12-12 0-1.54-.29-3.011-.818-4.364zM12 16.364a4.364 4.364 0 1 1 0-8.728 4.364 4.364 0 0 1 0 8.728Z"/></svg>
+                <svg viewBox="0 0 24 24" fill="currentColor" title="Firefox"><path d="M22.91 7.916c-.503-1.212-1.525-2.519-2.323-2.933a12.1 12.1 0 0 1 1.174 3.512l.002.012c-1.312-3.275-3.54-4.597-5.365-7.475-.092-.146-.184-.293-.273-.449a3.5 3.5 0 0 1-.12-.222A2 2 0 0 1 15.84 0a.064.064 0 0 0-.055-.033.09.09 0 0 0-.048.013l-.013.008-.014.006.004-.007C12.785 1.703 11.8 4.827 11.71 6.39a5.8 5.8 0 0 0-3.204 1.24 3.5 3.5 0 0 0-.301-.227 5.4 5.4 0 0 1-.032-2.852 8.7 8.7 0 0 0-2.81 2.172h-.005c-.463-.586-.43-2.521-.404-2.927a2 2 0 0 0-.375.199 8.7 8.7 0 0 0-1.158.993 10.5 10.5 0 0 0-1.107 1.326 10.1 10.1 0 0 0-1.607 3.634l-.016.077q-.041.201-.07.405a9 9 0 0 0-.114.677v.039A11.4 11.4 0 0 0 .5 11.839v.044A11.484 11.484 0 0 0 23.3 13.84c.019-.148.035-.298.05-.448a11.8 11.8 0 0 0-.44-5.476M9.38 17.074c.054.026.105.054.16.079l.008.005zm10.67-4.53zM8.516 5.951c.044-.039.092-.073.136-.11z"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" title="Web"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              </div>
+              <div class="row-hover-domain">renamemail.com <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></div>
+            </div>
+          </a>
+
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- ── PROJECTS ── -->
+      <div class="ruru-section">
+        <span class="ruru-section-label gutter-x" data-i18n="sectionProjects">Projects</span>
+        <div class="ruru-list">
+
+          <a href="https://raycast.com/raycast/apple-reminders" target="_blank" rel="noreferrer" class="ruru-row">
+            <div class="ruru-row-left">
+              <span class="row-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              </span>
+              <span class="row-title">Apple Reminders (Raycast)</span>
+              <span class="row-desc">~ Recurrence, calendar events, priorities &amp; tags PRs.</span>
+            </div>
+            <div class="ruru-row-right">
+              <div class="stack-icons">
+                <svg viewBox="0 0 24 24" fill="currentColor" title="TypeScript"><path d="M3 3h18v18H3V3zm8 8v7h2v-7h2.5V9.5h-7V11H11zm5.5 4.2c-.8-.2-1.2-.5-1.2-1s.4-.8 1.1-.8c.6 0 1 .2 1.4.5l.9-1.2c-.6-.5-1.3-.8-2.3-.8-1.6 0-2.7.9-2.7 2.2 0 1.4.9 2 2.4 2.4.9.2 1.2.5 1.2 1s-.5.9-1.3.9c-.8 0-1.4-.3-1.9-.8l-1 1.2c.7.6 1.7 1 2.9 1 1.7 0 2.9-.9 2.9-2.3 0-1.3-.8-2-2.4-2.3z"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" title="React"><circle cx="12" cy="12" r="2" fill="currentColor"/><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/></svg>
+              </div>
+              <div class="row-hover-domain">raycast.com <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></div>
+            </div>
+          </a>
+
+          <a href="https://github.com/isabhiii/Manufacturing-Quality-RAG" target="_blank" rel="noreferrer" class="ruru-row">
+            <div class="ruru-row-left">
+              <span class="row-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              </span>
+              <span class="row-title">Manufacturing Quality RAG</span>
+              <span class="row-desc">~ Sub-second semantic doc search with ChromaDB.</span>
+            </div>
+            <div class="ruru-row-right">
+              <div class="stack-icons">
+                <svg viewBox="0 0 24 24" fill="currentColor" title="Python"><path d="M11.914 2C6.83 2 7.15 4.205 7.15 4.205l.006 2.286h4.847v.687H5.236S2 6.81 2 11.908c0 5.098 2.823 4.918 2.823 4.918h1.684v-2.365s-.091-2.823 2.778-2.823h4.79s2.69.043 2.69-2.598V4.671S17.174 2 11.914 2zm-2.66 1.54a.87.87 0 1 1 0 1.74.87.87 0 0 1 0-1.74z"/><path d="M12.086 22c5.084 0 4.764-2.205 4.764-2.205l-.006-2.286h-4.847v-.687h6.767S22 17.19 22 12.092c0-5.098-2.823-4.918-2.823-4.918h-1.684v2.365s.091 2.823-2.778 2.823h-4.79s-2.69-.043-2.69 2.598v4.369S6.826 22 12.086 22zm2.66-1.54a.87.87 0 1 1 0-1.74.87.87 0 0 1 0 1.74z" opacity="0.6"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" title="Docker"><path d="M2 13h20M6 13v-3h4v3M10 13V9h4v4M14 13v-3h4v3"/><path d="M4 13c0 5 4 7 9 7s8-3 9-7"/></svg>
+              </div>
+              <div class="row-hover-domain">isabhiii/rag <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></div>
+            </div>
+          </a>
+
+          <a href="https://github.com/isabhiii/ML-Vehicle-Sales-Prediction" target="_blank" rel="noreferrer" class="ruru-row">
+            <div class="ruru-row-left">
+              <span class="row-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+              </span>
+              <span class="row-title">ML Vehicle Sales</span>
+              <span class="row-desc">~ Gradient-boosted regression at 92% R² accuracy.</span>
+            </div>
+            <div class="ruru-row-right">
+              <div class="stack-icons">
+                <svg viewBox="0 0 24 24" fill="currentColor" title="Python"><path d="M11.914 2C6.83 2 7.15 4.205 7.15 4.205l.006 2.286h4.847v.687H5.236S2 6.81 2 11.908c0 5.098 2.823 4.918 2.823 4.918h1.684v-2.365s-.091-2.823 2.778-2.823h4.79s2.69.043 2.69-2.598V4.671S17.174 2 11.914 2zm-2.66 1.54a.87.87 0 1 1 0 1.74.87.87 0 0 1 0-1.74z"/><path d="M12.086 22c5.084 0 4.764-2.205 4.764-2.205l-.006-2.286h-4.847v-.687h6.767S22 17.19 22 12.092c0-5.098-2.823-4.918-2.823-4.918h-1.684v2.365s.091 2.823-2.778 2.823h-4.79s-2.69-.043-2.69 2.598v4.369S6.826 22 12.086 22zm2.66-1.54a.87.87 0 1 1 0-1.74.87.87 0 0 1 0 1.74z" opacity="0.6"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" title="ML"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+              </div>
+              <div class="row-hover-domain">isabhiii/ml-sales <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></div>
+            </div>
+          </a>
+
+          <a href="https://github.com/isabhiii/Object-Detection-using-DNN" target="_blank" rel="noreferrer" class="ruru-row">
+            <div class="ruru-row-left">
+              <span class="row-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+              </span>
+              <span class="row-title">Object Detection DNN</span>
+              <span class="row-desc">~ Real-time 30+ FPS CPU object detection via ONNX.</span>
+            </div>
+            <div class="ruru-row-right">
+              <div class="stack-icons">
+                <svg viewBox="0 0 24 24" fill="currentColor" title="Python"><path d="M11.914 2C6.83 2 7.15 4.205 7.15 4.205l.006 2.286h4.847v.687H5.236S2 6.81 2 11.908c0 5.098 2.823 4.918 2.823 4.918h1.684v-2.365s-.091-2.823 2.778-2.823h4.79s2.69.043 2.69-2.598V4.671S17.174 2 11.914 2zm-2.66 1.54a.87.87 0 1 1 0 1.74.87.87 0 0 1 0-1.74z"/><path d="M12.086 22c5.084 0 4.764-2.205 4.764-2.205l-.006-2.286h-4.847v-.687h6.767S22 17.19 22 12.092c0-5.098-2.823-4.918-2.823-4.918h-1.684v2.365s.091 2.823-2.778 2.823h-4.79s-2.69-.043-2.69 2.598v4.369S6.826 22 12.086 22zm2.66-1.54a.87.87 0 1 1 0-1.74.87.87 0 0 1 0 1.74z" opacity="0.6"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" title="Vision"><circle cx="12" cy="12" r="3"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/></svg>
+              </div>
+              <div class="row-hover-domain">isabhiii/dnn <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></div>
+            </div>
+          </a>
+
+          <a href="https://github.com/isabhiii/Reddit-Stock-Sentiment-Analyzer" target="_blank" rel="noreferrer" class="ruru-row">
+            <div class="ruru-row-left">
+              <span class="row-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              </span>
+              <span class="row-title">Reddit Stock Sentiment</span>
+              <span class="row-desc">~ Real-time NLP ticker sentiment streaming pipeline.</span>
+            </div>
+            <div class="ruru-row-right">
+              <div class="stack-icons">
+                <svg viewBox="0 0 24 24" fill="currentColor" title="Python"><path d="M11.914 2C6.83 2 7.15 4.205 7.15 4.205l.006 2.286h4.847v.687H5.236S2 6.81 2 11.908c0 5.098 2.823 4.918 2.823 4.918h1.684v-2.365s-.091-2.823 2.778-2.823h4.79s2.69.043 2.69-2.598V4.671S17.174 2 11.914 2zm-2.66 1.54a.87.87 0 1 1 0 1.74.87.87 0 0 1 0-1.74z"/><path d="M12.086 22c5.084 0 4.764-2.205 4.764-2.205l-.006-2.286h-4.847v-.687h6.767S22 17.19 22 12.092c0-5.098-2.823-4.918-2.823-4.918h-1.684v2.365s.091 2.823-2.778 2.823h-4.79s-2.69-.043-2.69 2.598v4.369S6.826 22 12.086 22zm2.66-1.54a.87.87 0 1 1 0-1.74.87.87 0 0 1 0 1.74z" opacity="0.6"/></svg>
+              </div>
+              <div class="row-hover-domain">isabhiii/sentiment <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></div>
+            </div>
+          </a>
+
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- ── FOOTER SOCIALS (Ruru style) ── -->
+      <footer class="ruru-footer gutter-x">
+        <div class="social-icons-group">
+          <a href="https://www.linkedin.com/in/abhishek-kanani/" target="_blank" rel="noreferrer noopener" class="social-icon-link" aria-label="LinkedIn">
+            <svg viewBox="0 0 256 256" fill="currentColor"><path d="M218.123 218.127h-37.931v-59.403c0-14.165-.253-32.4-19.728-32.4-19.756 0-22.779 15.434-22.779 31.369v60.43h-37.93V95.967h36.413v16.694h.51a39.907 39.907 0 0 1 35.928-19.733c38.445 0 45.533 25.288 45.533 58.186l-.016 67.013ZM56.955 79.27c-12.157.002-22.014-9.852-22.016-22.009-.002-12.157 9.851-22.014 22.008-22.016 12.157-.003 22.014 9.851 22.016 22.008A22.013 22.013 0 0 1 56.955 79.27m18.966 138.858H37.95V95.967h37.97v122.16ZM237.033.018H18.89C8.58-.098.125 8.161-.001 18.471v219.053c.122 10.315 8.576 18.582 18.89 18.474h218.144c10.336.128 18.823-8.139 18.966-18.474V18.454c-.147-10.33-8.635-18.588-18.966-18.453"/></svg>
+          </a>
+          <div class="v-divider"></div>
+          <a href="https://github.com/isabhiii" target="_blank" rel="noreferrer noopener" class="social-icon-link" aria-label="GitHub">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          </a>
+          <div class="v-divider"></div>
+          <a href="https://www.instagram.com/is_abhii/" target="_blank" rel="noreferrer noopener" class="social-icon-link" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+          </a>
+        </div>
+        <a href="https://www.linkedin.com/in/abhishek-kanani/" target="_blank" rel="noreferrer noopener" class="follow-link">
+          <span data-i18n="followMe">Follow Me</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+        </a>
+      </footer>
+
+    </section>
+
+    <!-- ══════════════ FAVORITES TAB (DesignerDada pixel-by-pixel) ══════════════ -->
+    <section id="panel-favorites" class="tab-panel gutter-x">
+      <p class="fav-intro" data-i18n="favIntro">
+        I love discovering great things, whether it's a beautifully designed product, an inspiring person, or a website I keep coming back to. This is my collection of those gems I find on the internet and in the real world. Everything here has caught my attention and stuck with me for one reason or another.
+      </p>
+
+      <div class="fav-controls" role="search">
+        <div class="fav-search-wrap">
+          <svg class="fav-search-icon" viewBox="0 0 16 16" fill="none">
+            <path d="M11.3333 11.3333L14 14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+            <path d="M12.6667 7.33333C12.6667 4.38781 10.2789 2 7.33333 2C4.38781 2 2 4.38781 2 7.33333C2 10.2789 4.38781 12.6667 7.33333 12.6667C10.2789 12.6667 12.6667 10.2789 12.6667 7.33333Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+          </svg>
+          <input id="favSearch" type="search" placeholder="Search links" class="fav-search-input" aria-label="Search favorites">
+        </div>
+
+        <div class="fav-dropdown-wrap">
+          <button id="sortBtn" class="fav-filter-btn" aria-label="Sort favorites">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg>
+            <span id="sortLabel">Latest</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div id="sortMenu" class="fav-dropdown-menu">
+            <button class="fav-dropdown-item selected" data-val="Latest">Latest</button>
+            <button class="fav-dropdown-item" data-val="Oldest">Oldest</button>
+            <button class="fav-dropdown-item" data-val="A–Z">A–Z</button>
+          </div>
+        </div>
+
+        <div class="fav-dropdown-wrap">
+          <button id="catBtn" class="fav-filter-btn" aria-label="Filter by category">
+            <span id="catLabel">All</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div id="catMenu" class="fav-dropdown-menu">
+            <button class="fav-dropdown-item selected" data-val="All">All</button>
+            <button class="fav-dropdown-item" data-val="Design">Design</button>
+            <button class="fav-dropdown-item" data-val="Apps">Apps</button>
+            <button class="fav-dropdown-item" data-val="Movies">Movies</button>
+            <button class="fav-dropdown-item" data-val="Typography">Typography</button>
+            <button class="fav-dropdown-item" data-val="People">People</button>
+            <button class="fav-dropdown-item" data-val="Blogs">Blogs</button>
+            <button class="fav-dropdown-item" data-val="Hardware">Hardware</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="fav-list-wrap">
+        <div id="favPreview" class="fav-preview" aria-hidden="true">
+          <div id="favPreviewCard" class="fav-preview-card">
+            <div id="favPreviewInner" class="fav-preview-inner"></div>
+          </div>
+        </div>
+        <div id="favList" class="fav-list"></div>
+      </div>
+    </section>
+
+    <!-- ══════════════ PHOTOGRAPHY TAB (DesignerDada style) ══════════════ -->
+    <section id="panel-photography" class="tab-panel gutter-x">
+      <div class="photo-intro">
+        <p>There's something about shooting film that forces you to slow down. With my different Phone's camera throughout my life, there's no chimping at the back of the screen to check if I nailed it. That constraint is the whole point. I've found that limitations make me a better photographer.</p>
+        <p>Most of what you'll see here is street photography, candid moments and quiet scenes I stumbled into while walking around with no particular agenda. It has a texture and honesty to it. These photos aren't perfect, but they're real.</p>
+      </div>
+      <div class="photo-grid-breakout">
+        <div id="photoGrid" class="photo-grid"></div>
+      </div>
+    </section>
+
+    <!-- ══════════════ JAMIE WIXON STYLE FOOTER ══════════════ -->
+    <footer class="wixon-footer" aria-label="Site footer">
+      <div class="wixon-footer-meta">
+        <span class="wixon-footer-copy">©2026 Abhishek Kanani</span>
+        <span class="wixon-footer-rights">All rights reserved</span>
+      </div>
+      <a href="#top" class="wixon-footer-wordmark-link" aria-label="Back to top">
+        <div class="wixon-footer-wordmark-letters" aria-hidden="true" data-wordmark="ABHISHEK KANANI"></div>
+      </a>
+    </footer>
+
+  </main>
+
+  <div class="language-modal" data-language-modal aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="language-modal-title">
+    <div class="language-modal-panel" data-language-panel>
+      <div class="language-modal-header">
+        <h2 class="language-modal-title" id="language-modal-title">Translate</h2>
+        <button class="language-modal-close" type="button" data-language-close data-sound="press" aria-label="Close language picker">×</button>
+      </div>
+      <div class="language-search-wrap">
+        <input class="language-search" type="search" data-language-search placeholder="Search languages" autocomplete="off" autocapitalize="none" spellcheck="false" />
+      </div>
+      <div class="language-list" data-language-list role="listbox" aria-label="Available languages"></div>
+    </div>
   </div>
 
-  <!-- ══════════════ NAVBAR ══════════════ -->
-  <nav id="navbar">
-    <div class="nav-wrap">
-      <div class="nav-left">
-        <a href="#hero" class="nav-logo">
-          <span class="logo-avatar">A</span>
-          Abhishek<span class="logo-dot">.</span>
-        </a>
-        <button id="gameModeToggle" class="btn-game-toggle">
-          <span class="game-toggle-dot"></span>
-          <span class="game-text">GAME MODE: OFF</span>
-        </button>
-        <div id="gameScoreboard" class="game-scoreboard">0/5</div>
-      </div>
-      <ul class="nav-links" id="navLinks">
-        <li><a href="#experience" class="nav-link">Experience</a></li>
-        <li><a href="#projects" class="nav-link">Projects</a></li>
-        <li><a href="#skills" class="nav-link">Skills</a></li>
-        <li><a href="#contact" class="nav-link">Contact</a></li>
-      </ul>
-      <button class="hamburger" id="hamburger" aria-label="Menu">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-  </nav>
+  <div id="photoLightbox" class="photo-lightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Photo viewer">
+    <button id="photoLightboxClose" class="photo-lightbox-close" type="button" aria-label="Close photo">×</button>
+    <button id="photoLightboxPrev" class="photo-lightbox-nav prev" type="button" aria-label="Previous photo">‹</button>
+    <figure class="photo-lightbox-figure">
+      <img id="photoLightboxImg" src="" alt="">
+      <figcaption id="photoLightboxCaption" class="photo-lightbox-caption"></figcaption>
+    </figure>
+    <button id="photoLightboxNext" class="photo-lightbox-nav next" type="button" aria-label="Next photo">›</button>
+  </div>
 
-  <!-- ══════════════ HERO ══════════════ -->
-  <section id="hero" class="hero-section">
-    <div class="hero-inner">
-      <h1 class="hero-heading game-obstacle">
-        Hey, <span class="hero-name" id="heroName">Abhishek</span> here<span class="cursor" id="cursor">|</span>
-      </h1>
-      <p class="hero-sub game-obstacle">
-        Data Analyst &amp; Machine Learning Engineer · Open Source Contributor @ Raycast.<br>
-        Specialising in ETL pipelines, RAG systems, and developer automation.
-      </p>
-      <div class="hero-ctas game-obstacle">
-        <a href="mailto:abhishekkanani10@gmail.com" class="btn-dark">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          Say Hi
-        </a>
-        <a href="https://github.com/isabhiii" target="_blank" class="btn-outline">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-          GitHub
-        </a>
-      </div>
-    </div>
-
-    <!-- About card directly below buttons, inside the hero -->
-    <div class="container">
-      <div class="about-card" id="about">
-        <div class="about-card-left">
-          <div class="slash-label">/ ABOUT ME</div>
-          <h2 class="about-heading game-obstacle">
-            I build <em>intelligent systems</em> that actually work in the real world.
-          </h2>
-          <p class="about-body game-obstacle">
-            M.Sc. in Electrical Engineering &amp; IT (THD) and active Open Source Contributor at Raycast. I specialise in scalable ETL systems, RAG pipelines, and developer tooling across Python, TypeScript, and React.
-          </p>
-
-          <div class="tech-section game-obstacle">
-            <div class="tech-label">TECHNOLOGIES I WORK WITH</div>
-            <div class="tech-grid">
-              <div class="tech-col">
-                <div class="tech-item"><span class="arrow">›</span> Python &amp; TypeScript</div>
-                <div class="tech-item"><span class="arrow">›</span> LangChain &amp; RAG</div>
-                <div class="tech-item"><span class="arrow">›</span> SQL / Oracle DB</div>
-              </div>
-              <div class="tech-col">
-                <div class="tech-item"><span class="arrow">›</span> React &amp; Raycast API</div>
-                <div class="tech-item"><span class="arrow">›</span> FastAPI &amp; ETL</div>
-                <div class="tech-item"><span class="arrow">›</span> Docker &amp; GitLab CI</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Quote block -->
-          <div class="about-quote game-obstacle">
-            By night, I build strange little side-projects at the intersection of tech and art, because why not?
-          </div>
-        </div>
-        <div class="about-card-right">
-          <div class="about-photo-frame game-obstacle">
-            <img src="profile.jpg" alt="Abhishek Kanani" class="about-photo">
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══════════════ AI CHATBOT ══════════════ -->
-  <section id="chatbot" class="section chatbot-section">
-    <div class="container">
-      <div class="chatbot-layout">
-
-        <!-- Left: label + heading + desc -->
-        <div class="chatbot-left">
-          <div class="slash-label">/ AI CHATBOT</div>
-          <h2 class="chatbot-heading">Chat with<br><em>Me</em></h2>
-          <p class="chatbot-desc">Ask me anything about my work, projects, or skills.</p>
-          <div class="chatbot-online">
-            <span class="online-dot"></span>
-            <span>Online</span>
-          </div>
-        </div>
-
-        <!-- Right: terminal window fills the grid column -->
-        <div class="chatbot-right">
-          <div class="chatbot-terminal" id="chatTerminal">
-
-            <!-- Window chrome bar -->
-            <div class="terminal-bar">
-              <div class="terminal-dots">
-                <span class="tdot tdot-red"></span>
-                <span class="tdot tdot-yellow"></span>
-                <span class="tdot tdot-green"></span>
-              </div>
-              <div class="terminal-title">ai// abhishek-bot</div>
-              <div class="terminal-count" id="msgCount">0/10</div>
-            </div>
-
-            <!-- Messages area -->
-            <div class="terminal-messages" id="chatMessages">
-
-              <!-- Initial greeting -->
-              <div class="chat-msg chat-msg--bot">
-                <div class="chat-avatar chat-avatar--bot">
-                  <img src="bot-avatar.png" alt="Bot" />
-                </div>
-                <div class="chat-bubble">Hey There 👋, I Am Abhishek's Assistant. Have A Chat!</div>
-              </div>
-            </div>
-
-            <!-- Typing indicator -->
-            <div class="chat-typing" id="chatTyping" style="display:none;">
-              <span></span><span></span><span></span>
-            </div>
-
-            <!-- Input bar -->
-            <div class="terminal-input-bar">
-              <input type="text" id="chatInput" class="terminal-input" placeholder="Ask me anything..." autocomplete="off"/>
-              <button class="terminal-send" id="chatSend" aria-label="Send">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-              </button>
-            </div>
-
-          </div>
-        </div>
-
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ══════════════ EXPERIENCE / EDUCATION ══════════════ -->
-  <section id="experience" class="section exp-section">
-    <div class="container">
-      <div class="exp-heading-row">
-        <span class="exp-slash">/</span>
-        <h2 class="exp-big-heading">experience</h2>
-      </div>
-
-      <div class="exp-layout">
-        <!-- Tab sidebar -->
-        <div class="exp-tabs" id="expTabs">
-          <div class="exp-tab active" data-tab="job0">Raycast</div>
-          <div class="exp-tab" data-tab="job1">Infineon Technologies</div>
-          <div class="exp-tab" data-tab="job2">TC Teisnach Optik</div>
-          <div class="exp-tab" data-tab="job3">Rosenberger Hochfrequenz</div>
-          <div class="exp-tab" data-tab="edu1">Education (M.Sc.)</div>
-          <div class="exp-tab" data-tab="edu2">Education (B.Tech.)</div>
-        </div>
-
-        <!-- Content panels -->
-        <div class="exp-content" id="expContent">
-
-          <div class="exp-panel active" data-panel="job0">
-            <h3 class="exp-role-title">
-              Open Source Contributor &amp; Extension Developer
-              <a href="https://github.com/raycast/extensions" target="_blank" rel="noopener noreferrer" class="exp-company-link">@ Raycast</a>
-            </h3>
-            <div class="exp-meta">March 2026 – Present · Remote</div>
-            <ul class="exp-bullets">
-              <li><span class="arrow">›</span> <span><a href="https://raycast.com/raycast/apple-reminders" target="_blank" rel="noopener noreferrer" class="exp-repo-link">Apple Reminders</a>: Shipped 10+ core feature contributions including Create Calendar Event (<a href="https://github.com/raycast/extensions/pull/31545" target="_blank" rel="noopener noreferrer" class="exp-repo-link">PR #31545</a>), natural-language recurrence (<a href="https://github.com/raycast/extensions/pull/31512" target="_blank" rel="noopener noreferrer" class="exp-repo-link">PR #31512</a>), quick add from browser tab (<a href="https://github.com/raycast/extensions/pull/31436" target="_blank" rel="noopener noreferrer" class="exp-repo-link">PR #31436</a>) and email (<a href="https://github.com/raycast/extensions/pull/31525" target="_blank" rel="noopener noreferrer" class="exp-repo-link">PR #31525</a>), reminder priorities &amp; tags (<a href="https://github.com/raycast/extensions/pull/31384" target="_blank" rel="noopener noreferrer" class="exp-repo-link">PR #31384</a>), and configurable date-format preferences (<a href="https://github.com/raycast/extensions/pull/31491" target="_blank" rel="noopener noreferrer" class="exp-repo-link">PR #31491</a>).</span></li>
-              <li><span class="arrow">›</span> <span><a href="https://www.raycast.com/yug2005/mail" target="_blank" rel="noopener noreferrer" class="exp-repo-link">Apple Mail</a>: Engineered macOS Contacts recipient suggestions with keyboard navigation shortcuts (<code>⌘⇧T</code>, <code>⌘⇧C</code>, <code>⌘⇧B</code>) for composing emails (<a href="https://github.com/raycast/extensions/pull/31593" target="_blank" rel="noopener noreferrer" class="exp-repo-link">PR #31593</a>), backed by fast disk caching.</span></li>
-              <li><span class="arrow">›</span> <span><a href="https://www.raycast.com/fedevitaledev/music" target="_blank" rel="noopener noreferrer" class="exp-repo-link">Apple Music (Menu Bar Player)</a>: Implemented dynamic album cover artwork resolution (<a href="https://github.com/raycast/extensions/pull/31903" target="_blank" rel="noopener noreferrer" class="exp-repo-link">PR #31903</a>) using asynchronous multi-tier caching (disk, AppleScript, iTunes Search API) with low-memory native rendering.</span></li>
-              <li><span class="arrow">›</span> <span><a href="https://www.raycast.com/mblode/quick-event" target="_blank" rel="noopener noreferrer" class="exp-repo-link">Quick Event</a>: Extended calendar event creation with natural-language parsing for reminders and alarm scheduling (<a href="https://github.com/raycast/extensions/pull/31518" target="_blank" rel="noopener noreferrer" class="exp-repo-link">PR #31518</a>).</span></li>
-              <li><span class="arrow">›</span> <span><a href="https://github.com/raycast/extensions/pulls?q=is%3Apr+author%3Aisabhiii" target="_blank" rel="noopener noreferrer" class="exp-repo-link">Raycast Extensions Repository</a> (<a href="https://github.com/isabhiii/extensions" target="_blank" rel="noopener noreferrer" class="exp-repo-link">Fork</a>): Authored and merged 15+ community pull requests across TypeScript, React, and Swift / AppleScript system integrations.</span></li>
-            </ul>
-          </div>
-
-          <div class="exp-panel" data-panel="job1">
-            <h3 class="exp-role-title">
-              Data Analyst Working Student
-              <span class="exp-company-link">@ Infineon Technologies</span>
-            </h3>
-            <div class="exp-meta">May 2023 – March 2026 · Regensburg, Germany</div>
-            <ul class="exp-bullets">
-              <li><span class="arrow">›</span> Optimised complex Oracle database systems supporting critical manufacturing lines — reduced query latency by 90%.</li>
-              <li><span class="arrow">›</span> Performed comprehensive statistical data validations using SQL and R to verify automated workflows.</li>
-              <li><span class="arrow">›</span> Built Power BI dashboards translating raw data into actionable KPI reports for leadership teams.</li>
-              <li><span class="arrow">›</span> Designed and maintained ETL pipelines for real-time production data ingestion.</li>
-            </ul>
-          </div>
-
-          <div class="exp-panel" data-panel="job2">
-            <h3 class="exp-role-title">
-              Graduate Research Assistant
-              <span class="exp-company-link">@ TC Teisnach Optik</span>
-            </h3>
-            <div class="exp-meta">Jul 2024 – March 2026 · Teisnach, Germany</div>
-            <ul class="exp-bullets">
-              <li><span class="arrow">›</span> Developed and implemented automated quality control pipelines using Computer Vision algorithms, achieving +60% efficiency gain.</li>
-              <li><span class="arrow">›</span> Created technical documentation for system validation and QA protocols.</li>
-              <li><span class="arrow">›</span> Master's thesis: Image Evaluation for Subsurface Damage Detection using advanced image processing techniques.</li>
-              <li><span class="arrow">›</span> Collaborated with cross-functional teams on hardware-software integration for optical inspection systems.</li>
-            </ul>
-          </div>
-
-          <div class="exp-panel" data-panel="job3">
-            <h3 class="exp-role-title">
-              Python Developer Intern &amp; Analyst
-              <span class="exp-company-link">@ Rosenberger Hochfrequenz</span>
-            </h3>
-            <div class="exp-meta">Sep 2022 – Mar 2023 · Fridolfing, Germany</div>
-            <ul class="exp-bullets">
-              <li><span class="arrow">›</span> Performed high-precision electromagnetic field simulations using ANSYS HFSS.</li>
-              <li><span class="arrow">›</span> Developed Python automation scripts for RF analysis workflows — achieved 3× processing speed improvement.</li>
-              <li><span class="arrow">›</span> Automated data extraction and report generation from simulation results.</li>
-            </ul>
-          </div>
-
-          <div class="exp-panel" data-panel="edu1">
-            <h3 class="exp-role-title">
-              M.Sc. Electrical Engineering &amp; IT
-              <span class="exp-company-link">@ Technische Hochschule Deggendorf</span>
-            </h3>
-            <div class="exp-meta">Oct 2021 – Mar 2025 · Deggendorf, Germany</div>
-            <ul class="exp-bullets">
-              <li><span class="arrow">›</span> Specialised in machine learning, embedded systems, and industrial automation.</li>
-              <li><span class="arrow">›</span> Thesis: Image Evaluation for Subsurface Damage Detection — full computer vision pipeline from scratch.</li>
-              <li><span class="arrow">›</span> Developed expertise in signal processing, neural networks, and sensor data analysis.</li>
-            </ul>
-          </div>
-
-          <div class="exp-panel" data-panel="edu2">
-            <h3 class="exp-role-title">
-              B.Tech. Mechatronics
-              <span class="exp-company-link">@ Ganpat University</span>
-            </h3>
-            <div class="exp-meta">Jul 2015 – Jun 2019 · Gujarat, India</div>
-            <ul class="exp-bullets">
-              <li><span class="arrow">›</span> Focused on robotics, embedded systems (C/C++), and industrial automation.</li>
-              <li><span class="arrow">›</span> Hands-on experience with PLC programming and mechatronic system design.</li>
-              <li><span class="arrow">›</span> Graduated with honours — top percentile in core engineering subjects.</li>
-            </ul>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══════════════ PROJECTS (DARK) ══════════════ -->
-  <section id="projects" class="projects-section">
-    <div class="container">
-      <div class="projects-header">
-        <div>
-          <div class="proj-heading-row">
-            <h2 class="projects-heading">
-              Projects <span class="projects-heading-accent">I Have Worked On</span>
-            </h2>
-          </div>
-          <p class="projects-sub">Check GitHub for more exciting projects</p>
-        </div>
-        <a href="https://github.com/isabhiii" target="_blank" class="btn-outline-light">
-          GitHub
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-        </a>
-      </div>
-
-
-      <div class="proj-grid">
-
-        <!-- Card 1 -->
-        <div class="proj-card">
-          <div class="proj-card-header">
-            <div>
-              <div class="proj-name">Manufacturing Quality RAG</div>
-              <div class="proj-category">RETRIEVAL-AUGMENTED GENERATION · FASTAPI</div>
-            </div>
-            <svg class="proj-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          </div>
-          <ul class="proj-bullets">
-            <li><span class="proj-arrow">›</span> Production RAG system querying manufacturing docs in &lt;1 second</li>
-            <li><span class="proj-arrow">›</span> Custom pipeline with ChromaDB + LangChain semantic search</li>
-            <li><span class="proj-arrow">›</span> Prompt-tuned for context-aware, accurate responses</li>
-          </ul>
-          <div class="proj-stats">
-            <span class="proj-stat">&lt;1s retrieval · FastAPI · Docker</span>
-          </div>
-          <div class="proj-actions">
-            <a href="https://github.com/isabhiii/Manufacturing-Quality-RAG" target="_blank" class="proj-btn">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-              Code
-            </a>
-          </div>
-        </div>
-
-        <!-- Card 2 -->
-        <div class="proj-card">
-          <div class="proj-card-header">
-            <div>
-              <div class="proj-name">Reddit Stock Sentiment</div>
-              <div class="proj-category">NLP · SENTIMENT ANALYSIS · PYTHON</div>
-            </div>
-            <svg class="proj-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-          </div>
-          <ul class="proj-bullets">
-            <li><span class="proj-arrow">›</span> Real-time NLP pipeline streaming Reddit posts</li>
-            <li><span class="proj-arrow">›</span> Ticker extraction + VADER sentiment scoring</li>
-            <li><span class="proj-arrow">›</span> Per-ticker sentiment indices updated every minute</li>
-          </ul>
-          <div class="proj-stats">
-            <span class="proj-stat">NLTK · PRAW · Pandas · Matplotlib</span>
-          </div>
-          <div class="proj-actions">
-            <a href="https://github.com/isabhiii/Reddit-Stock-Sentiment-Analyzer" target="_blank" class="proj-btn">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-              Code
-            </a>
-          </div>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="proj-card">
-          <div class="proj-card-header">
-            <div>
-              <div class="proj-name">ML Vehicle Sales Prediction</div>
-              <div class="proj-category">XGBOOST · SCIKIT-LEARN · OPTUNA</div>
-            </div>
-            <svg class="proj-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-          </div>
-          <ul class="proj-bullets">
-            <li><span class="proj-arrow">›</span> Gradient-boosted regression on multi-year automotive data</li>
-            <li><span class="proj-arrow">›</span> Feature engineering with seasonal + economic indicators</li>
-            <li><span class="proj-arrow">›</span> Hyperparameter tuning via Optuna achieving 92% R²</li>
-          </ul>
-          <div class="proj-stats">
-            <span class="proj-stat">92% R² accuracy · XGBoost · Pandas</span>
-          </div>
-          <div class="proj-actions">
-            <a href="https://github.com/isabhiii/ML-Vehicle-Sales-Prediction" target="_blank" class="proj-btn">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-              Code
-            </a>
-          </div>
-        </div>
-
-        <!-- Card 4 -->
-        <div class="proj-card">
-          <div class="proj-card-header">
-            <div>
-              <div class="proj-name">Object Detection DNN</div>
-              <div class="proj-category">COMPUTER VISION · OPENCV · PYTORCH</div>
-            </div>
-            <svg class="proj-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-          </div>
-          <ul class="proj-bullets">
-            <li><span class="proj-arrow">›</span> Real-time object detection at 30+ FPS on CPU</li>
-            <li><span class="proj-arrow">›</span> YOLOv5-derived DNN with configurable class filtering</li>
-            <li><span class="proj-arrow">›</span> ONNX export for lightweight deployment</li>
-          </ul>
-          <div class="proj-stats">
-            <span class="proj-stat">30+ FPS · OpenCV · ONNX · Python</span>
-          </div>
-          <div class="proj-actions">
-            <a href="https://github.com/isabhiii/Object-Detection-using-DNN" target="_blank" class="proj-btn">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-              Code
-            </a>
-          </div>
-        </div>
-
-        <!-- Card 5 -->
-        <div class="proj-card">
-          <div class="proj-card-header">
-            <div>
-              <div class="proj-name">COVID-19 Viz Suite</div>
-              <div class="proj-category">TABLEAU · POWER BI · SQL</div>
-            </div>
-            <svg class="proj-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-          </div>
-          <ul class="proj-bullets">
-            <li><span class="proj-arrow">›</span> Epidemiological analysis of global COVID-19 trends</li>
-            <li><span class="proj-arrow">›</span> Interactive Tableau dashboards with geo-mapping</li>
-            <li><span class="proj-arrow">›</span> Power BI KPI suite for executive reporting</li>
-          </ul>
-          <div class="proj-stats">
-            <span class="proj-stat">Tableau · Power BI · DAX · SQL</span>
-          </div>
-          <div class="proj-actions">
-            <a href="https://github.com/isabhiii/COVID-19-Data-Visualization-Suite" target="_blank" class="proj-btn">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-              Code
-            </a>
-          </div>
-        </div>
-
-        <!-- Card 6 -->
-        <div class="proj-card">
-          <div class="proj-card-header">
-            <div>
-              <div class="proj-name">Power BI Dashboard Suite</div>
-              <div class="proj-category">BUSINESS INTELLIGENCE · DAX · SQL</div>
-            </div>
-            <svg class="proj-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-          </div>
-          <ul class="proj-bullets">
-            <li><span class="proj-arrow">›</span> Interactive KPI dashboards for manufacturing leadership</li>
-            <li><span class="proj-arrow">›</span> Complex DAX measures for multi-dimensional analysis</li>
-            <li><span class="proj-arrow">›</span> Automated data refresh from Oracle DB sources</li>
-          </ul>
-          <div class="proj-stats">
-            <span class="proj-stat">Power BI · DAX · Oracle DB · SQL</span>
-          </div>
-          <div class="proj-actions">
-            <a href="https://github.com/isabhiii/Power-BI-Dashboard" target="_blank" class="proj-btn">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-              Code
-            </a>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ══════════════ SKILLS ACCORDION ══════════════ -->
-  <section id="skills" class="section skills-section">
-    <div class="container">
-      <div class="skills-heading-row">
-        <h2 class="skills-heading">Technical Arsenal</h2>
-      </div>
-      <p class="skills-sub">The tools and frameworks I use to build intelligent systems.</p>
-
-      <div class="accordion" id="accordion">
-
-        <div class="acc-item">
-          <button class="acc-trigger" data-acc="acc1">
-            <span>What is my core Data & ML stack?</span>
-            <svg class="acc-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-          <div class="acc-body" id="acc1">
-            <div class="acc-content">
-              <div class="acc-pills-grid">
-                <span class="acc-pill accent">Python (Expert)</span>
-                <span class="acc-pill accent">SQL / PL-SQL</span>
-                <span class="acc-pill accent">Oracle DB</span>
-                <span class="acc-pill">Pandas</span>
-                <span class="acc-pill">NumPy</span>
-                <span class="acc-pill">Scikit-learn</span>
-                <span class="acc-pill">XGBoost</span>
-                <span class="acc-pill">Jupyter</span>
-                <span class="acc-pill">R</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="acc-item">
-          <button class="acc-trigger" data-acc="acc2">
-            <span>How do I handle AI & RAG Systems?</span>
-            <svg class="acc-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-          <div class="acc-body" id="acc2">
-            <div class="acc-content">
-              <div class="acc-pills-grid">
-                <span class="acc-pill accent">LangChain</span>
-                <span class="acc-pill accent">ChromaDB</span>
-                <span class="acc-pill accent">RAG Systems</span>
-                <span class="acc-pill">FastAPI</span>
-                <span class="acc-pill">Vector Indexing</span>
-                <span class="acc-pill">OpenCV (DNN)</span>
-                <span class="acc-pill">PyTorch</span>
-                <span class="acc-pill">ONNX</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="acc-item">
-          <button class="acc-trigger" data-acc="acc3">
-            <span>What about DevOps, Tooling &amp; Open Source?</span>
-            <svg class="acc-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-          <div class="acc-body" id="acc3">
-            <div class="acc-content">
-              <div class="acc-pills-grid">
-                <span class="acc-pill accent">Docker</span>
-                <span class="acc-pill accent">GitLab CI/CD</span>
-                <span class="acc-pill accent">Raycast API</span>
-                <span class="acc-pill">TypeScript</span>
-                <span class="acc-pill">React</span>
-                <span class="acc-pill">ETL Pipelines</span>
-                <span class="acc-pill">Git / GitHub PRs</span>
-                <span class="acc-pill">macOS / AppleScript</span>
-                <span class="acc-pill">Linux</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="acc-item">
-          <button class="acc-trigger" data-acc="acc4">
-            <span>Visualisation & Business Intelligence?</span>
-            <svg class="acc-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-          <div class="acc-body" id="acc4">
-            <div class="acc-content">
-              <div class="acc-pills-grid">
-                <span class="acc-pill accent">Power BI</span>
-                <span class="acc-pill accent">Tableau</span>
-                <span class="acc-pill">DAX</span>
-                <span class="acc-pill">Matplotlib</span>
-                <span class="acc-pill">Plotly</span>
-                <span class="acc-pill">Seaborn</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="acc-item">
-          <button class="acc-trigger" data-acc="acc5">
-            <span>Want to see one of these side-projects?</span>
-            <svg class="acc-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-          <div class="acc-body" id="acc5">
-            <div class="acc-content">
-              <div class="about-featured" style="margin-top: 0.5rem; background: rgba(99,102,241,0.04);">
-                <div class="about-featured-inner">
-                  <img src="krishna-icon.png" alt="Word of Supreme app icon" class="about-featured-app-icon">
-                  <div class="about-featured-text">
-                    <p class="about-featured-title">Word of Supreme: <em>Bhagavad Gītā</em></p>
-                    <p class="about-featured-desc">A beautifully crafted app bringing timeless wisdom: verse by verse.</p>
-                  </div>
-                  <div class="about-featured-links">
-                    <a href="https://wordofsupreme.com/" target="_blank" class="af-link af-link-web">
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                      Website
-                    </a>
-                    <a href="https://apps.apple.com/app/id6761356771" target="_blank" class="af-link af-link-ios">
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-                      App Store
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ══════════════ FOOTER / CONTACT ══════════════ -->
-  <footer id="contact" class="site-footer">
-    <div class="footer-wrap">
-      <div class="footer-left">
-        <h3 class="footer-cta">Reach out to me</h3>
-      </div>
-      <div class="footer-right">
-        <a href="mailto:abhishekkanani10@gmail.com" class="footer-email">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          abhishekkanani10@gmail.com
-        </a>
-        <div class="footer-socials">
-          <a href="https://www.linkedin.com/in/abhishek-kanani/" target="_blank" class="footer-icon" aria-label="LinkedIn">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-          </a>
-          <a href="https://github.com/isabhiii" target="_blank" class="footer-icon" aria-label="GitHub">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-          </a>
-          <a href="https://www.instagram.com/is_abhii" target="_blank" class="footer-icon" aria-label="Instagram">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-          </a>
-        </div>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>Created By Abhishek Kanani</p>
-      <p>All rights reserved ©</p>
-    </div>
-  </footer>
-
-  <script src="app.js"></script>
-  <script src="game.js"></script>
+  <div id="copyToast" class="copy-toast"></div>
+  <script src="app.js?v=67"></script>
 </body>
 </html>
