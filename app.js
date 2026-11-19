@@ -1370,7 +1370,7 @@ function initLanguageSwitcher() {
       introAndWord6: 'and',
       introEngineering: 'Engineering',
       introAlways: "I'm always looking for new things to learn and new people to meet.",
-      introOpen: 'Open to work on data, AI, or engineering roles — connect on',
+      introOpen: 'Open to work on data, AI, or engineering roles, connect on',
       introOrMail: 'or drop a',
       signoff: '~ shipping...',
       signoffQuerying: '~ querying...',
