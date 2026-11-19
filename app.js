@@ -61,6 +61,7 @@ const FAVORITES = [
    INITIALIZATION
    ══════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
+  initLanguageSwitcher();
   initTheme();
   initSkyStars();
   initTabs();
@@ -71,7 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initClickSpark();
   initGitHubBar();
   initWixonFooter();
-  initLanguageSwitcher();
 });
 
 /* ── Theme (KokonutUI SwitchButton + Verlet Pull Cord Lamp + Circular View Transition) ── */
@@ -148,9 +148,16 @@ function initTheme() {
     const isDark = root.classList.contains('dark');
     if (toggleBtn) toggleBtn.setAttribute('aria-pressed', String(isDark));
     if (a11yBtn) a11yBtn.setAttribute('aria-checked', String(isDark));
-    if (hintEl) hintEl.textContent = isDark ? 'Pull for morning' : 'Pull to call it a night';
+    if (hintEl) {
+      if (typeof window.__getTranslatedText === 'function') {
+        hintEl.textContent = window.__getTranslatedText(isDark ? 'pullLampMorning' : 'pullLampNight');
+      } else {
+        hintEl.textContent = isDark ? 'Pull for morning' : 'Pull to call it a night';
+      }
+    }
     root.style.colorScheme = isDark ? 'dark' : 'light';
   };
+  window.__syncLampAria = syncAria;
 
   if (localStorage.getItem('theme') === 'dark') {
     root.classList.add('dark');
@@ -832,28 +839,51 @@ function initSkyStars() {
 function initTabs() {
   const navTabs = document.querySelectorAll('.nav-tab');
   const panels = document.querySelectorAll('.tab-panel');
+  const headerEl = document.querySelector('.site-header');
 
-  function activateTab(name) {
+  function replayStaggerReveal(panel) {
+    const items = [
+      ...(headerEl ? [headerEl] : []),
+      ...panel.querySelectorAll('.animate-in'),
+    ];
+    items.forEach((el) => {
+      el.style.animation = 'none';
+    });
+    void document.body.offsetWidth;
+    items.forEach((el) => {
+      el.style.animation = '';
+    });
+  }
+
+  function activateTab(name, replay = false) {
     navTabs.forEach((t) => {
       const active = t.dataset.tab === name;
       t.classList.toggle('active', active);
       t.setAttribute('aria-current', active ? 'page' : 'false');
     });
     panels.forEach((p) => {
-      p.classList.toggle('active', p.id === `panel-${name}`);
+      const isTarget = p.id === `panel-${name}`;
+      p.classList.toggle('active', isTarget);
+      if (isTarget && replay) {
+        replayStaggerReveal(p);
+      }
     });
   }
 
   const hash = window.location.hash.replace('#', '');
-  if (['home', 'favorites', 'photography'].includes(hash)) {
-    activateTab(hash);
-  }
+  const initialTab = ['home', 'favorites', 'photography'].includes(hash) ? hash : 'home';
+  activateTab(initialTab, true);
+
+  window.addEventListener('pageshow', () => {
+    const activePanel = document.querySelector('.tab-panel.active');
+    if (activePanel) replayStaggerReveal(activePanel);
+  });
 
   navTabs.forEach((tab) => {
     tab.addEventListener('click', (e) => {
       e.preventDefault();
       const target = tab.dataset.tab;
-      activateTab(target);
+      activateTab(target, true);
       history.replaceState(null, '', target === 'home' ? '#' : `#${target}`);
     });
   });
@@ -861,7 +891,7 @@ function initTabs() {
   window.addEventListener('hashchange', () => {
     const h = window.location.hash.replace('#', '') || 'home';
     if (['home', 'favorites', 'photography'].includes(h)) {
-      activateTab(h);
+      activateTab(h, true);
     }
   });
 }
@@ -883,12 +913,19 @@ function initEmailCopy() {
   }
 
   if (dotBtn) {
-    const states = ['~ shipping...', '~ querying...', '~ building...', '~ caffeinated...'];
+    const stateKeys = ['signoff', 'signoffQuerying', 'signoffBuilding', 'signoffCaffeinated'];
+    const fallbackStates = ['~ shipping...', '~ querying...', '~ building...', '~ caffeinated...'];
     let idx = 0;
     dotBtn.addEventListener('click', () => {
-      idx = (idx + 1) % states.length;
+      idx = (idx + 1) % stateKeys.length;
       const signoffText = document.getElementById('signoffText');
-      if (signoffText) signoffText.textContent = states[idx];
+      if (signoffText) {
+        signoffText.dataset.i18n = stateKeys[idx];
+        signoffText.textContent =
+          typeof window.__getTranslatedText === 'function'
+            ? window.__getTranslatedText(stateKeys[idx])
+            : fallbackStates[idx];
+      }
     });
   }
 }
@@ -910,6 +947,22 @@ function initFavorites() {
   let currentSearch = '';
   let currentSort = 'Latest';
   let currentCat = 'All';
+
+  const SORT_I18N_KEYS = {
+    Latest: 'sortLatest',
+    Oldest: 'sortOldest',
+    'A–Z': 'sortAZ',
+  };
+  const CAT_I18N_KEYS = {
+    All: 'catAll',
+    Design: 'catDesign',
+    Apps: 'catApps',
+    Movies: 'catMovies',
+    Typography: 'catTypography',
+    People: 'catPeople',
+    Blogs: 'catBlogs',
+    Hardware: 'catHardware',
+  };
 
   // Pre-build preview image nodes for instant crossfade on hover
   const imgNodes = new Map();
@@ -956,7 +1009,17 @@ function initFavorites() {
   }
 
   function render() {
-    let items = FAVORITES.map((item, idx) => ({ ...item, idx }));
+    let items = FAVORITES.map((item, idx) => {
+      const displayTitle =
+        typeof window.__translateFavoriteTitle === 'function'
+          ? window.__translateFavoriteTitle(item.title)
+          : item.title;
+      const displayDesc =
+        typeof window.__translateFavoriteDesc === 'function'
+          ? window.__translateFavoriteDesc(item.desc)
+          : item.desc;
+      return { ...item, idx, displayTitle, displayDesc };
+    });
 
     if (currentCat !== 'All') {
       items = items.filter((item) => item.category === currentCat);
@@ -967,7 +1030,9 @@ function initFavorites() {
       items = items.filter(
         (item) =>
           item.title.toLowerCase().includes(q) ||
+          item.displayTitle.toLowerCase().includes(q) ||
           item.desc.toLowerCase().includes(q) ||
+          (item.displayDesc && item.displayDesc.toLowerCase().includes(q)) ||
           item.domain.toLowerCase().includes(q)
       );
     }
@@ -975,11 +1040,15 @@ function initFavorites() {
     if (currentSort === 'Oldest') {
       items.reverse();
     } else if (currentSort === 'A–Z') {
-      items.sort((a, b) => a.title.localeCompare(b.title));
+      items.sort((a, b) => a.displayTitle.localeCompare(b.displayTitle));
     }
 
     if (items.length === 0) {
-      listEl.innerHTML = `<div class="fav-empty">No matching favorites found.</div>`;
+      const emptyMsg =
+        typeof window.__getTranslatedText === 'function'
+          ? window.__getTranslatedText('favEmpty')
+          : 'No matching favorites found.';
+      listEl.innerHTML = `<div class="fav-empty">${emptyMsg}</div>`;
       previewEl.classList.remove('is-visible');
       return;
     }
@@ -990,12 +1059,12 @@ function initFavorites() {
       <a href="${item.href}" target="_blank" rel="noopener noreferrer nofollow" data-title="${item.title.replace(/"/g, '&quot;')}" data-category="${item.category}" class="fav-row">
         <div class="fav-row-left">
           <div class="fav-icon-wrap">
-            <img src="https://www.google.com/s2/favicons?domain=${item.faviconDomain}&sz=32" alt="${item.title} favicon" width="20" height="20" loading="lazy">
+            <img src="https://www.google.com/s2/favicons?domain=${item.faviconDomain}&sz=32" alt="${item.displayTitle.replace(/"/g, '&quot;')} favicon" width="20" height="20" loading="lazy">
           </div>
           <div class="fav-text-wrap">
-            <span class="fav-title">${item.title}</span>${item.desc ? `
+            <span class="fav-title">${item.displayTitle}</span>${item.displayDesc ? `
             <span class="fav-sep">/</span>
-            <span class="fav-desc">${item.desc}</span>` : ''}
+            <span class="fav-desc">${item.displayDesc}</span>` : ''}
           </div>
         </div>
         <span class="fav-domain">${item.domain}</span>
@@ -1003,6 +1072,8 @@ function initFavorites() {
       )
       .join('');
   }
+
+  window.__renderFavorites = render;
 
   // Hover-dimming + floating preview card tracking
   listEl.addEventListener('mouseover', (e) => {
@@ -1044,7 +1115,12 @@ function initFavorites() {
     const btn = e.target.closest('.fav-dropdown-item');
     if (!btn) return;
     currentSort = btn.dataset.val;
-    sortLabel.textContent = currentSort;
+    const i18nKey = SORT_I18N_KEYS[currentSort] || 'sortLatest';
+    sortLabel.dataset.i18n = i18nKey;
+    sortLabel.textContent =
+      typeof window.__getTranslatedText === 'function'
+        ? window.__getTranslatedText(i18nKey)
+        : currentSort;
     sortMenu.querySelectorAll('.fav-dropdown-item').forEach((b) => b.classList.toggle('selected', b === btn));
     sortMenu.classList.remove('open');
     render();
@@ -1054,7 +1130,12 @@ function initFavorites() {
     const btn = e.target.closest('.fav-dropdown-item');
     if (!btn) return;
     currentCat = btn.dataset.val;
-    catLabel.textContent = currentCat;
+    const i18nKey = CAT_I18N_KEYS[currentCat] || 'catAll';
+    catLabel.dataset.i18n = i18nKey;
+    catLabel.textContent =
+      typeof window.__getTranslatedText === 'function'
+        ? window.__getTranslatedText(i18nKey)
+        : currentCat;
     catMenu.querySelectorAll('.fav-dropdown-item').forEach((b) => b.classList.toggle('selected', b === btn));
     catMenu.classList.remove('open');
     render();
@@ -1210,6 +1291,9 @@ function initLanguageSwitcher() {
       navHome: 'Home',
       navFavorites: 'Favorites',
       navPhotography: 'Photography',
+      headerAka: 'aka',
+      pullLampMorning: 'Pull for morning',
+      pullLampNight: 'Pull to call it a night',
       introTitle: "I'm Abhishek",
       introGreeting: 'Hi, Guten Tag, नमस्ते',
       introLead: "I'm a",
@@ -1238,16 +1322,70 @@ function initLanguageSwitcher() {
       introOpen: 'Open to work on data, AI, or engineering roles — connect on',
       introOrMail: 'or drop a mail',
       signoff: '~ shipping...',
+      signoffQuerying: '~ querying...',
+      signoffBuilding: '~ building...',
+      signoffCaffeinated: '~ caffeinated...',
+      githubActivity30d: '30d activity',
+      githubContributionsYear: '{count} contributions in the last year',
+      githubNoContributions: 'No contributions',
+      githubContributionOne: '1 contribution',
+      githubContributionMany: '{count} contributions',
       sectionWork: 'Work',
+      workRaycastDesc: '~ Open Source Contributor',
+      workRaycastType: 'open source -',
+      workRaycastDate: 'Mar 2026–Present',
+      workInfineonDesc: '~ Data Analyst',
+      workInfineonType: 'working student -',
+      workInfineonDate: '24 mo',
+      workTeisnachDesc: '~ Graduate Research Assistant',
+      workTeisnachType: 'research -',
+      workTeisnachDate: '7 mo',
+      workRosenbergerDesc: '~ Python Developer Intern & Analyst',
+      workRosenbergerType: 'internship -',
+      workRosenbergerDate: '7 mo',
       sectionProducts: 'Products',
+      prodWosDesc: '~ Minimalist Bhagavad Gītā iOS app',
+      prodRenameMailDesc: '~ Turn your Gmail into a visual tracker & pipeline.',
       sectionProjects: 'Projects',
+      projRemindersTitle: 'Apple Reminders (Raycast)',
+      projRemindersDesc: '~ Recurrence, calendar events, priorities & tags PRs.',
+      projRagTitle: 'Manufacturing Quality RAG',
+      projRagDesc: '~ Sub-second semantic doc search with ChromaDB.',
+      projSalesTitle: 'ML Vehicle Sales',
+      projSalesDesc: '~ Gradient-boosted regression at 92% R² accuracy.',
+      projDnnTitle: 'Object Detection DNN',
+      projDnnDesc: '~ Real-time 30+ FPS CPU object detection via ONNX.',
+      projSentimentTitle: 'Reddit Stock Sentiment',
+      projSentimentDesc: '~ Real-time NLP ticker sentiment streaming pipeline.',
       followMe: 'Follow Me',
-      favIntro: "I love discovering great things, whether it's a beautifully designed product, an inspiring person, or a website I keep coming back to. This is my collection of those gems I find on the internet and in the real world. Everything here has caught my attention and stuck with me for one reason or another."
+      footerRights: 'All rights reserved',
+      modalTranslate: 'Translate',
+      modalSearchPlaceholder: 'Search languages',
+      modalNoLanguages: 'No languages found',
+      favIntro: "I love discovering great things, whether it's a beautifully designed product, an inspiring person, or a website I keep coming back to. This is my collection of those gems I find on the internet and in the real world. Everything here has caught my attention and stuck with me for one reason or another.",
+      favSearchPlaceholder: 'Search links',
+      favEmpty: 'No matching favorites found.',
+      sortLatest: 'Latest',
+      sortOldest: 'Oldest',
+      sortAZ: 'A–Z',
+      catAll: 'All',
+      catDesign: 'Design',
+      catApps: 'Apps',
+      catMovies: 'Movies',
+      catTypography: 'Typography',
+      catPeople: 'People',
+      catBlogs: 'Blogs',
+      catHardware: 'Hardware',
+      photoIntro1: "There's something about shooting film that forces you to slow down. With my different Phone's camera throughout my life, there's no chimping at the back of the screen to check if I nailed it. That constraint is the whole point. I've found that limitations make me a better photographer.",
+      photoIntro2: "Most of what you'll see here is street photography, candid moments and quiet scenes I stumbled into while walking around with no particular agenda. It has a texture and honesty to it. These photos aren't perfect, but they're real."
     },
     de: {
       navHome: 'Start',
       navFavorites: 'Favoriten',
       navPhotography: 'Fotografie',
+      headerAka: 'alias',
+      pullLampMorning: 'Ziehen für den Morgen',
+      pullLampNight: 'Ziehen für die Nacht',
       introTitle: 'Ich bin Abhishek',
       introGreeting: 'Hi, Guten Tag, नमस्ते',
       introLead: 'Ich bin',
@@ -1276,16 +1414,70 @@ function initLanguageSwitcher() {
       introOpen: 'Offen für Rollen in Data, KI oder Engineering — schreib mir auf',
       introOrMail: 'oder per E-Mail',
       signoff: '~ am Bauen...',
+      signoffQuerying: '~ am Abfragen...',
+      signoffBuilding: '~ am Entwickeln...',
+      signoffCaffeinated: '~ voller Koffein...',
+      githubActivity30d: '30T Aktivität',
+      githubContributionsYear: '{count} Beiträge im letzten Jahr',
+      githubNoContributions: 'Keine Beiträge',
+      githubContributionOne: '1 Beitrag',
+      githubContributionMany: '{count} Beiträge',
       sectionWork: 'Berufserfahrung',
+      workRaycastDesc: '~ Open-Source-Mitwirkender',
+      workRaycastType: 'Open Source -',
+      workRaycastDate: 'März 2026–Heute',
+      workInfineonDesc: '~ Datenanalyst',
+      workInfineonType: 'Werkstudent -',
+      workInfineonDate: '24 Mon.',
+      workTeisnachDesc: '~ Wissenschaftlicher Mitarbeiter',
+      workTeisnachType: 'Forschung -',
+      workTeisnachDate: '7 Mon.',
+      workRosenbergerDesc: '~ Python-Entwickler-Praktikant & Analyst',
+      workRosenbergerType: 'Praktikum -',
+      workRosenbergerDate: '7 Mon.',
       sectionProducts: 'Produkte',
+      prodWosDesc: '~ Minimalistische Bhagavad-Gītā iOS-App',
+      prodRenameMailDesc: '~ Verwandelt Gmail in einen visuellen Tracker & eine Pipeline.',
       sectionProjects: 'Projekte',
+      projRemindersTitle: 'Apple Erinnerungen (Raycast)',
+      projRemindersDesc: '~ PRs für Wiederholungen, Kalendertermine, Prioritäten & Tags.',
+      projRagTitle: 'Fertigungsqualität RAG',
+      projRagDesc: '~ Semantische Dokumentensuche in unter einer Sekunde mit ChromaDB.',
+      projSalesTitle: 'ML Fahrzeugverkäufe',
+      projSalesDesc: '~ Gradient-Boosted-Regression mit 92 % R²-Genauigkeit.',
+      projDnnTitle: 'Objekterkennung DNN',
+      projDnnDesc: '~ Echtzeit-CPU-Objekterkennung mit 30+ FPS über ONNX.',
+      projSentimentTitle: 'Reddit Aktien-Sentiment',
+      projSentimentDesc: '~ Echtzeit-NLP-Streaming-Pipeline für Ticker-Stimmungen.',
       followMe: 'Folgen',
-      favIntro: 'Ich liebe es, großartige Dinge zu entdecken — ob ein durchdachtes Produkt, eine inspirierende Person oder eine Website, zu der ich immer wieder zurückkehre. Hier sammle ich diese Fundstücke aus dem Netz und der echten Welt.'
+      footerRights: 'Alle Rechte vorbehalten',
+      modalTranslate: 'Übersetzen',
+      modalSearchPlaceholder: 'Sprachen suchen',
+      modalNoLanguages: 'Keine Sprachen gefunden',
+      favIntro: 'Ich liebe es, großartige Dinge zu entdecken — ob ein durchdachtes Produkt, eine inspirierende Person oder eine Website, zu der ich immer wieder zurückkehre. Hier sammle ich diese Fundstücke aus dem Netz und der echten Welt.',
+      favSearchPlaceholder: 'Links durchsuchen',
+      favEmpty: 'Keine passenden Favoriten gefunden.',
+      sortLatest: 'Neueste',
+      sortOldest: 'Älteste',
+      sortAZ: 'A–Z',
+      catAll: 'Alle',
+      catDesign: 'Design',
+      catApps: 'Apps',
+      catMovies: 'Filme',
+      catTypography: 'Typografie',
+      catPeople: 'Menschen',
+      catBlogs: 'Blogs',
+      catHardware: 'Hardware',
+      photoIntro1: 'Auf Film zu fotografieren zwingt einen dazu, langsamer zu werden. Mit den verschiedenen Handykameras meines Lebens schaut man nicht ständig auf den Bildschirm, um zu prüfen, ob das Bild sitzt. Genau diese Einschränkung macht mich zu einem besseren Fotografen.',
+      photoIntro2: 'Das meiste hier ist Straßenfotografie — spontane Momente und stille Szenen, über die ich beim ziellosen Spazierengehen gestolpert bin. Sie hat eine eigene Textur und Ehrlichkeit. Diese Fotos sind nicht perfekt, aber sie sind echt.'
     },
     hi: {
       navHome: 'होम',
       navFavorites: 'पसंदीदा',
       navPhotography: 'फ़ोटोग्राफ़ी',
+      headerAka: 'उर्फ़',
+      pullLampMorning: 'सुबह के लिए खींचें',
+      pullLampNight: 'रात के लिए खींचें',
       introTitle: 'मैं अभिषेक हूँ',
       introGreeting: 'Hi, Guten Tag, नमस्ते',
       introLead: 'मैं एक',
@@ -1314,16 +1506,70 @@ function initLanguageSwitcher() {
       introOpen: 'डेटा, AI या इंजीनियरिंग भूमिकाओं के लिए खुला हूँ — जुड़ें',
       introOrMail: 'या ईमेल करें',
       signoff: '~ बना रहे हैं...',
+      signoffQuerying: '~ डेटा खोज रहे हैं...',
+      signoffBuilding: '~ निर्माण जारी है...',
+      signoffCaffeinated: '~ कॉफ़ी के साथ...',
+      githubActivity30d: '30 दिन की गतिविधि',
+      githubContributionsYear: 'पिछले वर्ष में {count} योगदान',
+      githubNoContributions: 'कोई योगदान नहीं',
+      githubContributionOne: '1 योगदान',
+      githubContributionMany: '{count} योगदान',
       sectionWork: 'कार्य अनुभव',
+      workRaycastDesc: '~ ओपन सोर्स योगदानकर्ता',
+      workRaycastType: 'ओपन सोर्स -',
+      workRaycastDate: 'मार्च 2026–वर्तमान',
+      workInfineonDesc: '~ डेटा एनालिस्ट',
+      workInfineonType: 'वर्किंग स्टूडेंट -',
+      workInfineonDate: '24 महीने',
+      workTeisnachDesc: '~ ग्रेजुएट रिसर्च असिस्टेंट',
+      workTeisnachType: 'शोध -',
+      workTeisnachDate: '7 महीने',
+      workRosenbergerDesc: '~ पायथन डेवलपर इंटर्न और एनालिस्ट',
+      workRosenbergerType: 'इंटर्नशिप -',
+      workRosenbergerDate: '7 महीने',
       sectionProducts: 'प्रोडक्ट्स',
+      prodWosDesc: '~ मिनिमलिस्ट भगवद गीता iOS ऐप',
+      prodRenameMailDesc: '~ अपने Gmail को विज़ुअल ट्रैकर और पाइपलाइन में बदलें।',
       sectionProjects: 'प्रोजेक्ट्स',
+      projRemindersTitle: 'Apple रिमाइंडर्स (Raycast)',
+      projRemindersDesc: '~ पुनरावृत्ति, कैलेंडर ईवेंट, प्राथमिकताएं और टैग PRs।',
+      projRagTitle: 'मैन्युफैक्चरिंग क्वालिटी RAG',
+      projRagDesc: '~ ChromaDB के साथ सब-सेकंड सिमेंटिक डॉक सर्च।',
+      projSalesTitle: 'ML वाहन बिक्री पूर्वानुमान',
+      projSalesDesc: '~ 92% R² सटीकता के साथ ग्रेडिएंट-बूस्टेड रिग्रेशन।',
+      projDnnTitle: 'ऑब्जेक्ट डिटेक्शन DNN',
+      projDnnDesc: '~ ONNX के माध्यम से रियल-टाइम 30+ FPS CPU ऑब्जेक्ट डिटेक्शन।',
+      projSentimentTitle: 'Reddit स्टॉक सेंटीमेंट',
+      projSentimentDesc: '~ रियल-टाइम NLP टिकर सेंटीमेंट स्ट्रीमिंग पाइपलाइन।',
       followMe: 'फ़ॉलो करें',
-      favIntro: 'मुझे बेहतरीन चीज़ें खोजना पसंद है — चाहे वह कोई सुंदर डिज़ाइन वाला प्रोडक्ट हो, कोई प्रेरणादायक व्यक्ति हो, या कोई वेबसाइट जिस पर मैं बार-बार लौटता हूँ। यह इंटरनेट और वास्तविक दुनिया से चुने गए उन्हीं रत्नों का मेरा संग्रह है।'
+      footerRights: 'सर्वाधिकार सुरक्षित',
+      modalTranslate: 'अनुवाद करें',
+      modalSearchPlaceholder: 'भाषाएँ खोजें',
+      modalNoLanguages: 'कोई भाषा नहीं मिली',
+      favIntro: 'मुझे बेहतरीन चीज़ें खोजना पसंद है — चाहे वह कोई सुंदर डिज़ाइन वाला प्रोडक्ट हो, कोई प्रेरणादायक व्यक्ति हो, या कोई वेबसाइट जिस पर मैं बार-बार लौटता हूँ। यह इंटरनेट और वास्तविक दुनिया से चुने गए उन्हीं रत्नों का मेरा संग्रह है।',
+      favSearchPlaceholder: 'लिंक खोजें',
+      favEmpty: 'कोई पसंदीदा लिंक नहीं मिला।',
+      sortLatest: 'नवीनतम',
+      sortOldest: 'पुराने',
+      sortAZ: 'A–Z',
+      catAll: 'सभी',
+      catDesign: 'डिज़ाइन',
+      catApps: 'ऐप्स',
+      catMovies: 'फ़िल्में',
+      catTypography: 'टाइपोग्राफ़ी',
+      catPeople: 'लोग',
+      catBlogs: 'ब्लॉग्स',
+      catHardware: 'हार्डवेयर',
+      photoIntro1: 'फ़िल्म पर फ़ोटो खींचने में कुछ ऐसा है जो आपको धीमा होने पर मजबूर करता है। अपने जीवन भर अलग-अलग फ़ोन कैमरों के साथ, हर शॉट के बाद स्क्रीन देखने की आदत नहीं रही। यही सीमा मुझे एक बेहतर फ़ोटोग्राफ़र बनाती है।',
+      photoIntro2: 'यहाँ आप जो कुछ भी देखेंगे वह स्ट्रीट फ़ोटोग्राफ़ी है — सहज पल और शांत दृश्य जो मुझे बिना किसी योजना के टहलते हुए मिले। इसमें एक बनावट और ईमानदारी है। ये तस्वीरें परफ़ेक्ट नहीं हैं, लेकिन असली हैं।'
     },
     fr: {
       navHome: 'Accueil',
       navFavorites: 'Favoris',
       navPhotography: 'Photographie',
+      headerAka: 'alias',
+      pullLampMorning: 'Tirer pour le matin',
+      pullLampNight: 'Tirer pour la nuit',
       introTitle: 'Je suis Abhishek',
       introGreeting: 'Hi, Guten Tag, नमस्ते',
       introLead: 'Je suis',
@@ -1352,16 +1598,70 @@ function initLanguageSwitcher() {
       introOpen: 'Ouvert aux opportunités en data, IA ou ingénierie — échangeons sur',
       introOrMail: 'ou par e-mail',
       signoff: '~ en production...',
+      signoffQuerying: '~ en requête...',
+      signoffBuilding: '~ en construction...',
+      signoffCaffeinated: '~ caféiné...',
+      githubActivity30d: 'Activité 30j',
+      githubContributionsYear: '{count} contributions cette dernière année',
+      githubNoContributions: 'Aucune contribution',
+      githubContributionOne: '1 contribution',
+      githubContributionMany: '{count} contributions',
       sectionWork: 'Expérience',
+      workRaycastDesc: '~ Contributeur Open Source',
+      workRaycastType: 'open source -',
+      workRaycastDate: 'Mars 2026–Présent',
+      workInfineonDesc: '~ Data Analyst',
+      workInfineonType: 'étudiant salarié -',
+      workInfineonDate: '24 mois',
+      workTeisnachDesc: '~ Assistant de recherche diplômé',
+      workTeisnachType: 'recherche -',
+      workTeisnachDate: '7 mois',
+      workRosenbergerDesc: '~ Stagiaire Développeur Python & Analyste',
+      workRosenbergerType: 'stage -',
+      workRosenbergerDate: '7 mois',
       sectionProducts: 'Produits',
+      prodWosDesc: '~ Application iOS minimaliste de la Bhagavad Gītā',
+      prodRenameMailDesc: '~ Transformez Gmail en un outil de suivi visuel & pipeline.',
       sectionProjects: 'Projets',
+      projRemindersTitle: 'Rappels Apple (Raycast)',
+      projRemindersDesc: '~ PRs pour récurrence, événements calendrier, priorités & tags.',
+      projRagTitle: 'RAG Qualité Industrielle',
+      projRagDesc: '~ Recherche documentaire sémantique sub-seconde avec ChromaDB.',
+      projSalesTitle: 'Prédiction ML des Ventes Automobiles',
+      projSalesDesc: '~ Régression par gradient boosting avec 92 % de précision R².',
+      projDnnTitle: "Détection d'Objets DNN",
+      projDnnDesc: "~ Détection d'objets CPU temps réel à 30+ FPS via ONNX.",
+      projSentimentTitle: 'Sentiment Boursier Reddit',
+      projSentimentDesc: '~ Pipeline NLP en temps réel des sentiments boursiers.',
       followMe: 'Suivre',
-      favIntro: "J'aime découvrir de belles choses — un produit bien conçu, une personne inspirante ou un site auquel je reviens toujours. Voici ma collection de ces pépites trouvées en ligne et dans la vraie vie."
+      footerRights: 'Tous droits réservés',
+      modalTranslate: 'Traduire',
+      modalSearchPlaceholder: 'Rechercher une langue',
+      modalNoLanguages: 'Aucune langue trouvée',
+      favIntro: "J'aime découvrir de belles choses — un produit bien conçu, une personne inspirante ou un site auquel je reviens toujours. Voici ma collection de ces pépites trouvées en ligne et dans la vraie vie.",
+      favSearchPlaceholder: 'Rechercher des liens',
+      favEmpty: 'Aucun favori correspondant trouvé.',
+      sortLatest: 'Récents',
+      sortOldest: 'Anciens',
+      sortAZ: 'A–Z',
+      catAll: 'Tout',
+      catDesign: 'Design',
+      catApps: 'Applications',
+      catMovies: 'Films',
+      catTypography: 'Typographie',
+      catPeople: 'Personnes',
+      catBlogs: 'Blogs',
+      catHardware: 'Matériel',
+      photoIntro1: "Photographier sur pellicule oblige à ralentir. Avec les différents appareils photo de téléphone de ma vie, inutile de vérifier l'écran après chaque prise. Cette contrainte fait de moi un meilleur photographe.",
+      photoIntro2: "La plupart de ces clichés sont de la photographie de rue, des instants pris sur le vif et des scènes calmes croisées en marchant sans but précis. Il y a une texture et une sincérité. Ces photos ne sont pas parfaites, mais elles sont vraies."
     },
     es: {
       navHome: 'Inicio',
       navFavorites: 'Favoritos',
       navPhotography: 'Fotografía',
+      headerAka: 'alias',
+      pullLampMorning: 'Tira para la mañana',
+      pullLampNight: 'Tira para la noche',
       introTitle: 'Soy Abhishek',
       introGreeting: 'Hi, Guten Tag, नमस्ते',
       introLead: 'Soy',
@@ -1390,16 +1690,70 @@ function initLanguageSwitcher() {
       introOpen: 'Disponible para roles de datos, IA o ingeniería — conecta en',
       introOrMail: 'o envía un correo',
       signoff: '~ construyendo...',
+      signoffQuerying: '~ consultando...',
+      signoffBuilding: '~ programando...',
+      signoffCaffeinated: '~ con cafeína...',
+      githubActivity30d: 'Actividad 30d',
+      githubContributionsYear: '{count} contribuciones en el último año',
+      githubNoContributions: 'Sin contribuciones',
+      githubContributionOne: '1 contribución',
+      githubContributionMany: '{count} contribuciones',
       sectionWork: 'Experiencia',
+      workRaycastDesc: '~ Colaborador de Código Abierto',
+      workRaycastType: 'código abierto -',
+      workRaycastDate: 'Mar 2026–Presente',
+      workInfineonDesc: '~ Analista de Datos',
+      workInfineonType: 'estudiante en prácticas -',
+      workInfineonDate: '24 meses',
+      workTeisnachDesc: '~ Asistente de Investigación de Posgrado',
+      workTeisnachType: 'investigación -',
+      workTeisnachDate: '7 meses',
+      workRosenbergerDesc: '~ Pasante Desarrollador Python y Analista',
+      workRosenbergerType: 'pasantía -',
+      workRosenbergerDate: '7 meses',
       sectionProducts: 'Productos',
+      prodWosDesc: '~ App minimalista del Bhagavad Gītā para iOS',
+      prodRenameMailDesc: '~ Convierte tu Gmail en un rastreador visual y pipeline.',
       sectionProjects: 'Proyectos',
+      projRemindersTitle: 'Recordatorios de Apple (Raycast)',
+      projRemindersDesc: '~ PRs de recurrencia, eventos de calendario, prioridades y etiquetas.',
+      projRagTitle: 'RAG de Calidad de Manufactura',
+      projRagDesc: '~ Búsqueda semántica de documentos en menos de un segundo con ChromaDB.',
+      projSalesTitle: 'Predicción ML de Ventas de Vehículos',
+      projSalesDesc: '~ Regresión con gradient boosting al 92 % de precisión R².',
+      projDnnTitle: 'Detección de Objetos DNN',
+      projDnnDesc: '~ Detección de objetos en CPU en tiempo real a 30+ FPS vía ONNX.',
+      projSentimentTitle: 'Sentimiento Bursátil en Reddit',
+      projSentimentDesc: '~ Pipeline NLP en tiempo real para sentimiento de acciones.',
       followMe: 'Seguir',
-      favIntro: 'Me encanta descubrir grandes cosas, ya sea un producto bien diseñado, una persona inspiradora o una web a la que siempre vuelvo. Esta es mi colección de esas joyas que encuentro en internet y en el mundo real.'
+      footerRights: 'Todos los derechos reservados',
+      modalTranslate: 'Traducir',
+      modalSearchPlaceholder: 'Buscar idiomas',
+      modalNoLanguages: 'No se encontraron idiomas',
+      favIntro: 'Me encanta descubrir grandes cosas, ya sea un producto bien diseñado, una persona inspiradora o una web a la que siempre vuelvo. Esta es mi colección de esas joyas que encuentro en internet y en el mundo real.',
+      favSearchPlaceholder: 'Buscar enlaces',
+      favEmpty: 'No se encontraron favoritos.',
+      sortLatest: 'Recientes',
+      sortOldest: 'Antiguos',
+      sortAZ: 'A–Z',
+      catAll: 'Todo',
+      catDesign: 'Diseño',
+      catApps: 'Apps',
+      catMovies: 'Películas',
+      catTypography: 'Tipografía',
+      catPeople: 'Personas',
+      catBlogs: 'Blogs',
+      catHardware: 'Hardware',
+      photoIntro1: 'Disparar en película te obliga a ir más despacio. Con las distintas cámaras de teléfono a lo largo de mi vida, no hay que mirar la pantalla tras cada foto. Esa limitación me hace un mejor fotógrafo.',
+      photoIntro2: 'La mayoría de lo que verás aquí es fotografía callejera, momentos espontáneos y escenas tranquilas que encontré caminando sin rumbo fijo. Tiene una textura y honestidad propias. Estas fotos no son perfectas, pero son reales.'
     },
     zh: {
       navHome: '首页',
       navFavorites: '收藏',
       navPhotography: '摄影',
+      headerAka: '又名',
+      pullLampMorning: '拉动切换至清晨',
+      pullLampNight: '拉动切换至夜晚',
       introTitle: '我是 Abhishek',
       introGreeting: 'Hi, Guten Tag, नमस्ते',
       introLead: '我是一名',
@@ -1428,16 +1782,70 @@ function initLanguageSwitcher() {
       introOpen: '开放寻找数据、AI 或工程相关机会 — 欢迎联系',
       introOrMail: '或发送邮件',
       signoff: '~ 持续构建中...',
+      signoffQuerying: '~ 数据查询中...',
+      signoffBuilding: '~ 开发中...',
+      signoffCaffeinated: '~ 咖啡加持中...',
+      githubActivity30d: '30天动态',
+      githubContributionsYear: '过去一年共 {count} 次贡献',
+      githubNoContributions: '无贡献',
+      githubContributionOne: '1 次贡献',
+      githubContributionMany: '{count} 次贡献',
       sectionWork: '工作经历',
+      workRaycastDesc: '~ 开源贡献者',
+      workRaycastType: '开源 -',
+      workRaycastDate: '2026年3月–至今',
+      workInfineonDesc: '~ 数据分析师',
+      workInfineonType: '工作学生 -',
+      workInfineonDate: '24 个月',
+      workTeisnachDesc: '~ 研究生科研助理',
+      workTeisnachType: '科研 -',
+      workTeisnachDate: '7 个月',
+      workRosenbergerDesc: '~ Python 开发实习生兼分析师',
+      workRosenbergerType: '实习 -',
+      workRosenbergerDate: '7 个月',
       sectionProducts: '产品',
+      prodWosDesc: '~ 极简《薄伽梵歌》iOS 应用',
+      prodRenameMailDesc: '~ 将 Gmail 转化为可视化追踪器与工作流管道。',
       sectionProjects: '项目',
+      projRemindersTitle: 'Apple 提醒事项 (Raycast)',
+      projRemindersDesc: '~ 重复提醒、日历事件、优先级与标签 PR 贡献。',
+      projRagTitle: '制造质量 RAG 系统',
+      projRagDesc: '~ 基于 ChromaDB 的亚秒级语义文档检索。',
+      projSalesTitle: 'ML 汽车销量预测',
+      projSalesDesc: '~ R² 准确率达 92% 的梯度提升回归模型。',
+      projDnnTitle: 'DNN 目标检测',
+      projDnnDesc: '~ 基于 ONNX 的实时 30+ FPS CPU 目标检测。',
+      projSentimentTitle: 'Reddit 股票情绪分析',
+      projSentimentDesc: '~ 实时 NLP 股票代码情绪流处理管道。',
       followMe: '关注我',
-      favIntro: '我喜欢发掘美好的事物——无论是设计精良的产品、富有启发的人，还是令人流连忘返的网站。这里收藏了我在网络与现实生活中发现的宝藏。'
+      footerRights: '保留所有权利',
+      modalTranslate: '翻译',
+      modalSearchPlaceholder: '搜索语言',
+      modalNoLanguages: '未找到匹配的语言',
+      favIntro: '我喜欢发掘美好的事物——无论是设计精良的产品、富有启发的人，还是令人流连忘返的网站。这里收藏了我在网络与现实生活中发现的宝藏。',
+      favSearchPlaceholder: '搜索链接',
+      favEmpty: '未找到匹配的收藏。',
+      sortLatest: '最新',
+      sortOldest: '最早',
+      sortAZ: 'A–Z',
+      catAll: '全部',
+      catDesign: '设计',
+      catApps: '应用',
+      catMovies: '影视',
+      catTypography: '字体排版',
+      catPeople: '人物',
+      catBlogs: '博客',
+      catHardware: '硬件',
+      photoIntro1: '胶片摄影总能让人慢下来。在我用过的各代手机相机里，不必每次按下快门后都盯着屏幕确认。这种克制与限制反而让我成为更好的摄影师。',
+      photoIntro2: '这里的大部分作品都是街头摄影——那些我在漫无目的散步时偶遇的真实瞬间与静谧场景。它们有独特的质感与真诚。这些照片并不完美，但足够真实。'
     },
     ja: {
       navHome: 'ホーム',
       navFavorites: 'お気に入り',
       navPhotography: '写真',
+      headerAka: '別名',
+      pullLampMorning: '引いて朝にする',
+      pullLampNight: '引いて夜にする',
       introTitle: 'Abhishek です',
       introGreeting: 'Hi, Guten Tag, नमस्ते',
       introLead: '私は',
@@ -1466,16 +1874,70 @@ function initLanguageSwitcher() {
       introOpen: 'データ・AI・エンジニアリングの機会を探しています —',
       introOrMail: 'またはメールで',
       signoff: '~ 開発中...',
+      signoffQuerying: '~ クエリ実行中...',
+      signoffBuilding: '~ 構築中...',
+      signoffCaffeinated: '~ カフェイン補給済み...',
+      githubActivity30d: '30日間のアクティビティ',
+      githubContributionsYear: '過去1年間で {count} 件のコントリビューション',
+      githubNoContributions: 'コントリビューションなし',
+      githubContributionOne: '1 件のコントリビューション',
+      githubContributionMany: '{count} 件のコントリビューション',
       sectionWork: '職歴',
+      workRaycastDesc: '~ オープンソースコントリビューター',
+      workRaycastType: 'オープンソース -',
+      workRaycastDate: '2026年3月–現在',
+      workInfineonDesc: '~ データアナリスト',
+      workInfineonType: 'ワーキングスチューデント -',
+      workInfineonDate: '24ヶ月',
+      workTeisnachDesc: '~ 大学院研究助手',
+      workTeisnachType: '研究 -',
+      workTeisnachDate: '7ヶ月',
+      workRosenbergerDesc: '~ Python開発インターン & アナリスト',
+      workRosenbergerType: 'インターンシップ -',
+      workRosenbergerDate: '7ヶ月',
       sectionProducts: 'プロダクト',
+      prodWosDesc: '~ ミニマルなバガヴァッド・ギーター iOSアプリ',
+      prodRenameMailDesc: '~ Gmailをビジュアルトラッカー＆パイプラインに変換。',
       sectionProjects: 'プロジェクト',
+      projRemindersTitle: 'Apple リマインダー (Raycast)',
+      projRemindersDesc: '~ 繰り返し、カレンダー連携、優先度、タグ機能のPR。',
+      projRagTitle: '製造品質 RAG',
+      projRagDesc: '~ ChromaDBによるサブ秒セマンティック文書検索。',
+      projSalesTitle: 'ML 自動車販売予測',
+      projSalesDesc: '~ R²精度92%の勾配ブースティング回帰モデル。',
+      projDnnTitle: '物体検出 DNN',
+      projDnnDesc: '~ ONNXによるリアルタイム30+ FPS CPU物体検出。',
+      projSentimentTitle: 'Reddit 株価センチメント分析',
+      projSentimentDesc: '~ リアルタイムNLP銘柄センチメント配信パイプライン。',
       followMe: 'フォロー',
-      favIntro: '美しくデザインされたプロダクト、刺激をくれる人、つい何度も訪れてしまうウェブサイトなど、素晴らしいものを見つけるのが好きです。'
+      footerRights: '無断複写・転載を禁じます',
+      modalTranslate: '翻訳',
+      modalSearchPlaceholder: '言語を検索',
+      modalNoLanguages: '言語が見つかりません',
+      favIntro: '美しくデザインされたプロダクト、刺激をくれる人、つい何度も訪れてしまうウェブサイトなど、素晴らしいものを見つけるのが好きです。ここはインターネットや現実世界で見つけた宝物のコレクションです。',
+      favSearchPlaceholder: 'リンクを検索',
+      favEmpty: '一致するお気に入りが見つかりません。',
+      sortLatest: '最新順',
+      sortOldest: '古い順',
+      sortAZ: 'A–Z',
+      catAll: 'すべて',
+      catDesign: 'デザイン',
+      catApps: 'アプリ',
+      catMovies: '映画・番組',
+      catTypography: 'タイポグラフィ',
+      catPeople: '人物',
+      catBlogs: 'ブログ',
+      catHardware: 'ハードウェア',
+      photoIntro1: 'フィルムでの撮影には、歩みをゆっくりにさせる何かがあります。これまでの様々なスマートフォンのカメラでも、撮った直後に画面を確認しない制約そのものが、私をより良い写真家にしてくれました。',
+      photoIntro2: 'ここに並んでいるのは主にストリートスナップで、あてもなく歩いているときに出会った何気ない瞬間や静かな風景です。独特の質感と誠実さがあります。完璧ではありませんが、本物の記録です。'
     },
     ko: {
       navHome: '홈',
       navFavorites: '즐겨찾기',
       navPhotography: '사진',
+      headerAka: '일명',
+      pullLampMorning: '당겨서 아침으로',
+      pullLampNight: '당겨서 밤으로',
       introTitle: 'Abhishek입니다',
       introGreeting: 'Hi, Guten Tag, नमस्ते',
       introLead: '저는',
@@ -1504,16 +1966,70 @@ function initLanguageSwitcher() {
       introOpen: '데이터, AI, 엔지니어링 역할을 찾고 있습니다 —',
       introOrMail: '또는 이메일로 연락주세요',
       signoff: '~ 개발 중...',
+      signoffQuerying: '~ 쿼리 중...',
+      signoffBuilding: '~ 구축 중...',
+      signoffCaffeinated: '~ 카페인 충전 완료...',
+      githubActivity30d: '30일 활동',
+      githubContributionsYear: '지난 1년간 {count}개의 기여',
+      githubNoContributions: '기여 없음',
+      githubContributionOne: '1개의 기여',
+      githubContributionMany: '{count}개의 기여',
       sectionWork: '경력',
+      workRaycastDesc: '~ 오픈소스 기여자',
+      workRaycastType: '오픈소스 -',
+      workRaycastDate: '2026년 3월–현재',
+      workInfineonDesc: '~ 데이터 애널리스트',
+      workInfineonType: '워킹 스튜던트 -',
+      workInfineonDate: '24개월',
+      workTeisnachDesc: '~ 대학원 연구 조교',
+      workTeisnachType: '연구 -',
+      workTeisnachDate: '7개월',
+      workRosenbergerDesc: '~ Python 개발 인턴 & 애널리스트',
+      workRosenbergerType: '인턴십 -',
+      workRosenbergerDate: '7개월',
       sectionProducts: '제품',
+      prodWosDesc: '~ 미니멀 바가바드 기타 iOS 앱',
+      prodRenameMailDesc: '~ Gmail을 비주얼 트래커 및 파이프라인으로 전환하세요.',
       sectionProjects: '프로젝트',
+      projRemindersTitle: 'Apple 미리 알림 (Raycast)',
+      projRemindersDesc: '~ 반복 일정, 캘린더 이벤트, 우선순위 및 태그 PR 기여.',
+      projRagTitle: '제조 품질 RAG',
+      projRagDesc: '~ ChromaDB 기반 초고속 시맨틱 문서 검색.',
+      projSalesTitle: 'ML 차량 판매 예측',
+      projSalesDesc: '~ 92% R² 정확도의 그래디언트 부스팅 회귀 모델.',
+      projDnnTitle: '객체 탐지 DNN',
+      projDnnDesc: '~ ONNX를 통한 실시간 30+ FPS CPU 객체 탐지.',
+      projSentimentTitle: 'Reddit 주식 감성 분석',
+      projSentimentDesc: '~ 실시간 NLP 티커 감성 스트리밍 파이프라인.',
       followMe: '팔로우',
-      favIntro: '잘 설계된 제품, 영감을 주는 사람, 계속 찾게 되는 웹사이트처럼 멋진 것들을 발견하는 것을 좋아합니다.'
+      footerRights: '모든 권리 보유',
+      modalTranslate: '번역',
+      modalSearchPlaceholder: '언어 검색',
+      modalNoLanguages: '언어를 찾을 수 없습니다',
+      favIntro: '잘 설계된 제품, 영감을 주는 사람, 계속 찾게 되는 웹사이트처럼 멋진 것들을 발견하는 것을 좋아합니다. 인터넷과 일상에서 찾은 보석 같은 목록입니다.',
+      favSearchPlaceholder: '링크 검색',
+      favEmpty: '일치하는 즐겨찾기가 없습니다.',
+      sortLatest: '최신순',
+      sortOldest: '오래된순',
+      sortAZ: 'A–Z',
+      catAll: '전체',
+      catDesign: '디자인',
+      catApps: '앱',
+      catMovies: '영화/시리즈',
+      catTypography: '타이포그래피',
+      catPeople: '인물',
+      catBlogs: '블로그',
+      catHardware: '하드웨어',
+      photoIntro1: '필름 촬영에는 속도를 늦추게 만드는 매력이 있습니다. 그동안 사용한 여러 휴대폰 카메라로도 촬영 직후 화면을 확인하지 않는 제약 덕분에 더 나은 사진가가 될 수 있었습니다.',
+      photoIntro2: '이곳의 사진들은 대부분 거리 사진으로, 특별한 목적 없이 걷다가 마주친 솔직한 순간과 고요한 풍경들입니다. 질감과 진솔함이 담겨 있습니다. 완벽하진 않지만 진짜입니다.'
     },
     it: {
       navHome: 'Home',
       navFavorites: 'Preferiti',
       navPhotography: 'Fotografia',
+      headerAka: 'alias',
+      pullLampMorning: 'Tira per il mattino',
+      pullLampNight: 'Tira per la notte',
       introTitle: 'Sono Abhishek',
       introGreeting: 'Hi, Guten Tag, नमस्ते',
       introLead: 'Sono un',
@@ -1542,16 +2058,70 @@ function initLanguageSwitcher() {
       introOpen: 'Aperto a ruoli in dati, AI o ingegneria — scrivimi su',
       introOrMail: 'o invia una mail',
       signoff: '~ in sviluppo...',
+      signoffQuerying: '~ interrogando i dati...',
+      signoffBuilding: '~ costruendo...',
+      signoffCaffeinated: '~ caffeinato...',
+      githubActivity30d: 'Attività 30g',
+      githubContributionsYear: "{count} contributi nell'ultimo anno",
+      githubNoContributions: 'Nessun contributo',
+      githubContributionOne: '1 contributo',
+      githubContributionMany: '{count} contributi',
       sectionWork: 'Esperienza',
+      workRaycastDesc: '~ Contributore Open Source',
+      workRaycastType: 'open source -',
+      workRaycastDate: 'Mar 2026–Presente',
+      workInfineonDesc: '~ Data Analyst',
+      workInfineonType: 'studente lavoratore -',
+      workInfineonDate: '24 mesi',
+      workTeisnachDesc: '~ Assistente di Ricerca Laureato',
+      workTeisnachType: 'ricerca -',
+      workTeisnachDate: '7 mesi',
+      workRosenbergerDesc: '~ Stagista Sviluppatore Python & Analista',
+      workRosenbergerType: 'stage -',
+      workRosenbergerDate: '7 mesi',
       sectionProducts: 'Prodotti',
+      prodWosDesc: '~ App iOS minimalista della Bhagavad Gītā',
+      prodRenameMailDesc: '~ Trasforma Gmail in un tracker visivo e una pipeline.',
       sectionProjects: 'Progetti',
+      projRemindersTitle: 'Promemoria Apple (Raycast)',
+      projRemindersDesc: '~ PR per ricorrenze, eventi calendario, priorità e tag.',
+      projRagTitle: 'RAG Qualità Manifatturiera',
+      projRagDesc: '~ Ricerca semantica di documenti sub-secondo con ChromaDB.',
+      projSalesTitle: 'Predizione ML Vendite Veicoli',
+      projSalesDesc: '~ Regressione gradient-boosted con precisione R² del 92%.',
+      projDnnTitle: 'Rilevamento Oggetti DNN',
+      projDnnDesc: '~ Rilevamento oggetti CPU in tempo reale a 30+ FPS tramite ONNX.',
+      projSentimentTitle: 'Sentiment Azionario Reddit',
+      projSentimentDesc: '~ Pipeline NLP in tempo reale per il sentiment dei titoli.',
       followMe: 'Seguimi',
-      favIntro: 'Amo scoprire cose belle: un prodotto ben progettato, una persona stimolante o un sito su cui torno sempre.'
+      footerRights: 'Tutti i diritti riservati',
+      modalTranslate: 'Traduci',
+      modalSearchPlaceholder: 'Cerca lingue',
+      modalNoLanguages: 'Nessuna lingua trovata',
+      favIntro: 'Amo scoprire cose belle: un prodotto ben progettato, una persona stimolante o un sito su cui torno sempre. Questa è la mia raccolta di queste perle trovate online e nel mondo reale.',
+      favSearchPlaceholder: 'Cerca link',
+      favEmpty: 'Nessun preferito corrispondente trovato.',
+      sortLatest: 'Più recenti',
+      sortOldest: 'Più vecchi',
+      sortAZ: 'A–Z',
+      catAll: 'Tutti',
+      catDesign: 'Design',
+      catApps: 'App',
+      catMovies: 'Film',
+      catTypography: 'Tipografia',
+      catPeople: 'Persone',
+      catBlogs: 'Blog',
+      catHardware: 'Hardware',
+      photoIntro1: 'Scattare su pellicola ti costringe a rallentare. Con le diverse fotocamere dei telefoni della mia vita, non serve controllare lo schermo dopo ogni scatto. Questo limite mi rende un fotografo migliore.',
+      photoIntro2: 'Quasi tutto ciò che vedrai qui è street photography: momenti spontanei e scene silenziose incontrati camminando senza meta. Ha una consistenza e una sincerità proprie. Queste foto non sono perfette, ma sono vere.'
     },
     pt: {
       navHome: 'Início',
       navFavorites: 'Favoritos',
       navPhotography: 'Fotografia',
+      headerAka: 'vulgo',
+      pullLampMorning: 'Puxe para a manhã',
+      pullLampNight: 'Puxe para a noite',
       introTitle: 'Sou o Abhishek',
       introGreeting: 'Hi, Guten Tag, नमस्ते',
       introLead: 'Sou',
@@ -1580,16 +2150,70 @@ function initLanguageSwitcher() {
       introOpen: 'Aberto a vagas em dados, IA ou engenharia — conecte-se no',
       introOrMail: 'ou envie um e-mail',
       signoff: '~ construindo...',
+      signoffQuerying: '~ consultando...',
+      signoffBuilding: '~ desenvolvendo...',
+      signoffCaffeinated: '~ cafeinado...',
+      githubActivity30d: 'Atividade 30d',
+      githubContributionsYear: '{count} contribuições no último ano',
+      githubNoContributions: 'Sem contribuições',
+      githubContributionOne: '1 contribuição',
+      githubContributionMany: '{count} contribuições',
       sectionWork: 'Experiência',
+      workRaycastDesc: '~ Contribuidor de Código Aberto',
+      workRaycastType: 'código aberto -',
+      workRaycastDate: 'Mar 2026–Presente',
+      workInfineonDesc: '~ Analista de Dados',
+      workInfineonType: 'estudante trabalhador -',
+      workInfineonDate: '24 meses',
+      workTeisnachDesc: '~ Assistente de Pesquisa de Pós-Graduação',
+      workTeisnachType: 'pesquisa -',
+      workTeisnachDate: '7 meses',
+      workRosenbergerDesc: '~ Estagiário Desenvolvedor Python e Analista',
+      workRosenbergerType: 'estágio -',
+      workRosenbergerDate: '7 meses',
       sectionProducts: 'Produtos',
+      prodWosDesc: '~ App iOS minimalista do Bhagavad Gītā',
+      prodRenameMailDesc: '~ Transforme seu Gmail em um rastreador visual e pipeline.',
       sectionProjects: 'Projetos',
+      projRemindersTitle: 'Lembretes da Apple (Raycast)',
+      projRemindersDesc: '~ PRs de recorrência, eventos de calendário, prioridades e tags.',
+      projRagTitle: 'RAG de Qualidade Industrial',
+      projRagDesc: '~ Busca semântica de documentos em menos de um segundo com ChromaDB.',
+      projSalesTitle: 'Previsão ML de Vendas de Veículos',
+      projSalesDesc: '~ Regressão gradient-boosted com 92% de precisão R².',
+      projDnnTitle: 'Detecção de Objetos DNN',
+      projDnnDesc: '~ Detecção de objetos em CPU em tempo real a 30+ FPS via ONNX.',
+      projSentimentTitle: 'Sentimento de Ações no Reddit',
+      projSentimentDesc: '~ Pipeline NLP em tempo real para sentimento de ações.',
       followMe: 'Seguir',
-      favIntro: 'Adoro descobrir coisas incríveis — seja um produto bem projetado, uma pessoa inspiradora ou um site ao qual sempre volto.'
+      footerRights: 'Todos os direitos reservados',
+      modalTranslate: 'Traduzir',
+      modalSearchPlaceholder: 'Pesquisar idiomas',
+      modalNoLanguages: 'Nenhum idioma encontrado',
+      favIntro: 'Adoro descobrir coisas incríveis — seja um produto bem projetado, uma pessoa inspiradora ou um site ao qual sempre volto. Esta é a minha coleção dessas joias da internet e do mundo real.',
+      favSearchPlaceholder: 'Pesquisar links',
+      favEmpty: 'Nenhum favorito correspondente encontrado.',
+      sortLatest: 'Mais recentes',
+      sortOldest: 'Mais antigos',
+      sortAZ: 'A–Z',
+      catAll: 'Todos',
+      catDesign: 'Design',
+      catApps: 'Apps',
+      catMovies: 'Filmes',
+      catTypography: 'Tipografia',
+      catPeople: 'Pessoas',
+      catBlogs: 'Blogs',
+      catHardware: 'Hardware',
+      photoIntro1: 'Fotografar em filme força você a desacelerar. Com as diferentes câmeras de celular ao longo da minha vida, não fico olhando para a tela para checar cada foto. Essa limitação me torna um fotógrafo melhor.',
+      photoIntro2: 'A maior parte do que você verá aqui é fotografia de rua, momentos espontâneos e cenas silenciosas que encontrei caminhando sem rumo. Tem textura e honestidade. Essas fotos não são perfeitas, mas são reais.'
     },
     nl: {
       navHome: 'Home',
       navFavorites: 'Favorieten',
       navPhotography: 'Fotografie',
+      headerAka: 'alias',
+      pullLampMorning: 'Trek voor de ochtend',
+      pullLampNight: 'Trek voor de nacht',
       introTitle: 'Ik ben Abhishek',
       introGreeting: 'Hi, Guten Tag, नमस्ते',
       introLead: 'Ik ben een',
@@ -1618,16 +2242,70 @@ function initLanguageSwitcher() {
       introOpen: 'Beschikbaar voor data-, AI- of engineeringrollen — verbind via',
       introOrMail: 'of stuur een mail',
       signoff: '~ aan het bouwen...',
+      signoffQuerying: '~ aan het queryen...',
+      signoffBuilding: '~ aan het ontwikkelen...',
+      signoffCaffeinated: '~ vol cafeïne...',
+      githubActivity30d: '30d activiteit',
+      githubContributionsYear: '{count} bijdragen in het afgelopen jaar',
+      githubNoContributions: 'Geen bijdragen',
+      githubContributionOne: '1 bijdrage',
+      githubContributionMany: '{count} bijdragen',
       sectionWork: 'Werk',
+      workRaycastDesc: '~ Open-source bijdrager',
+      workRaycastType: 'open source -',
+      workRaycastDate: 'Mrt 2026–Heden',
+      workInfineonDesc: '~ Data Analist',
+      workInfineonType: 'werkstudent -',
+      workInfineonDate: '24 mnd',
+      workTeisnachDesc: '~ Onderzoeksassistent',
+      workTeisnachType: 'onderzoek -',
+      workTeisnachDate: '7 mnd',
+      workRosenbergerDesc: '~ Python Developer Stagiair & Analist',
+      workRosenbergerType: 'stage -',
+      workRosenbergerDate: '7 mnd',
       sectionProducts: 'Producten',
+      prodWosDesc: '~ Minimalistische Bhagavad Gītā iOS-app',
+      prodRenameMailDesc: '~ Verander je Gmail in een visuele tracker & pijplijn.',
       sectionProjects: 'Projecten',
+      projRemindersTitle: 'Apple Herinneringen (Raycast)',
+      projRemindersDesc: '~ PRs voor herhalingen, agenda-items, prioriteiten & tags.',
+      projRagTitle: 'Productiekwaliteit RAG',
+      projRagDesc: '~ Semantisch zoeken in documenten binnen een seconde met ChromaDB.',
+      projSalesTitle: 'ML Voertuigverkoop',
+      projSalesDesc: '~ Gradient-boosted regressie met 92% R²-nauwkeurigheid.',
+      projDnnTitle: 'Objectdetectie DNN',
+      projDnnDesc: '~ Realtime 30+ FPS CPU-objectdetectie via ONNX.',
+      projSentimentTitle: 'Reddit Aandelensentiment',
+      projSentimentDesc: '~ Realtime NLP-streamingpijplijn voor aandelensentiment.',
       followMe: 'Volg mij',
-      favIntro: 'Ik ontdek graag mooie dingen, of het nu een goed ontworpen product is, een inspirerend persoon of een website waar ik steeds naar terugkeer.'
+      footerRights: 'Alle rechten voorbehouden',
+      modalTranslate: 'Vertalen',
+      modalSearchPlaceholder: 'Zoek talen',
+      modalNoLanguages: 'Geen talen gevonden',
+      favIntro: 'Ik ontdek graag mooie dingen, of het nu een goed ontworpen product is, een inspirerend persoon of een website waar ik steeds naar terugkeer. Dit is mijn verzameling van die pareltjes.',
+      favSearchPlaceholder: 'Zoek links',
+      favEmpty: 'Geen overeenkomende favorieten gevonden.',
+      sortLatest: 'Nieuwste',
+      sortOldest: 'Oudste',
+      sortAZ: 'A–Z',
+      catAll: 'Alles',
+      catDesign: 'Design',
+      catApps: 'Apps',
+      catMovies: 'Films',
+      catTypography: 'Typografie',
+      catPeople: 'Mensen',
+      catBlogs: 'Blogs',
+      catHardware: 'Hardware',
+      photoIntro1: 'Fotograferen op film dwingt je om te vertragen. Met de verschillende telefooncamera’s in mijn leven kijk ik niet na elke foto op het scherm. Juist die beperking maakt mij een betere fotograaf.',
+      photoIntro2: 'Het meeste dat je hier ziet is straatfotografie: spontane momenten en stille scènes waar ik zonder plan tegenaan liep. Het heeft textuur en eerlijkheid. Deze foto’s zijn niet perfect, maar wel echt.'
     },
     ar: {
       navHome: 'الرئيسية',
       navFavorites: 'المفضلة',
       navPhotography: 'التصوير',
+      headerAka: 'المعروف بـ',
+      pullLampMorning: 'اسحب للصباح',
+      pullLampNight: 'اسحب للمساء',
       introTitle: 'أنا أبهيشيك',
       introGreeting: 'Hi, Guten Tag, नमस्ते',
       introLead: 'أنا',
@@ -1656,11 +2334,935 @@ function initLanguageSwitcher() {
       introOpen: 'متاح للعمل في مجالات البيانات والذكاء الاصطناعي والهندسة — تواصل عبر',
       introOrMail: 'أو أرسل بريداً',
       signoff: '~ قيد البناء...',
+      signoffQuerying: '~ استعلام البيانات...',
+      signoffBuilding: '~ قيد التطوير...',
+      signoffCaffeinated: '~ مع القهوة...',
+      githubActivity30d: 'نشاط 30 يوماً',
+      githubContributionsYear: '{count} مساهمة في العام الماضي',
+      githubNoContributions: 'لا توجد مساهمات',
+      githubContributionOne: 'مساهمة واحدة',
+      githubContributionMany: '{count} مساهمات',
       sectionWork: 'الخبرة',
+      workRaycastDesc: '~ مساهم في المصادر المفتوحة',
+      workRaycastType: 'مصادر مفتوحة -',
+      workRaycastDate: 'مارس 2026–الحاضر',
+      workInfineonDesc: '~ محلل بيانات',
+      workInfineonType: 'طالب عامل -',
+      workInfineonDate: '24 شهراً',
+      workTeisnachDesc: '~ مساعد باحث دراسات عليا',
+      workTeisnachType: 'بحث علمي -',
+      workTeisnachDate: '7 أشهر',
+      workRosenbergerDesc: '~ متدرب مطور بايثون ومحلل',
+      workRosenbergerType: 'تدريب -',
+      workRosenbergerDate: '7 أشهر',
       sectionProducts: 'المنتجات',
+      prodWosDesc: '~ تطبيق iOS بسيط لكتاب بهاغافاد غيتا',
+      prodRenameMailDesc: '~ حوّل Gmail إلى أداة تتبع مرئية ومسار عمل.',
       sectionProjects: 'المشاريع',
+      projRemindersTitle: 'تذكيرات Apple (Raycast)',
+      projRemindersDesc: '~ مساهمات التكرار وأحداث التقويم والأولويات والوسوم.',
+      projRagTitle: 'نظام RAG لجودة التصنيع',
+      projRagDesc: '~ بحث دلالي في المستندات بأقل من ثانية باستخدام ChromaDB.',
+      projSalesTitle: 'توقع مبيعات المركبات بالتعلم الآلي',
+      projSalesDesc: '~ انحدار معزز بالتدرج بدقة 92% R².',
+      projDnnTitle: 'كشف الأجسام عبر DNN',
+      projDnnDesc: '~ كشف فوري للأجسام على المعالج بسرعة 30+ إطاراً عبر ONNX.',
+      projSentimentTitle: 'تحليل مشاعر الأسهم في Reddit',
+      projSentimentDesc: '~ مسار معالجة لغة طبيعية فوري لمشاعر الأسهم.',
       followMe: 'تابعني',
-      favIntro: 'أحب اكتشاف الأشياء الرائعة، سواء كان منتجاً مصمماً بعناية، أو شخصاً ملهماً، أو موقعاً أعود إليه باستمرار.'
+      footerRights: 'جميع الحقوق محفوظة',
+      modalTranslate: 'ترجمة',
+      modalSearchPlaceholder: 'ابحث عن اللغات',
+      modalNoLanguages: 'لم يتم العثور على لغات',
+      favIntro: 'أحب اكتشاف الأشياء الرائعة، سواء كان منتجاً مصمماً بعناية، أو شخصاً ملهماً، أو موقعاً أعود إليه باستمرار. هذه مجموعتي من تلك الجواهر التي وجدتها على الإنترنت وفي العالم الحقيقي.',
+      favSearchPlaceholder: 'البحث في الروابط',
+      favEmpty: 'لم يتم العثور على مفضلات مطابقة.',
+      sortLatest: 'الأحدث',
+      sortOldest: 'الأقدم',
+      sortAZ: 'أ–ي',
+      catAll: 'الكل',
+      catDesign: 'تصميم',
+      catApps: 'تطبيقات',
+      catMovies: 'أفلام',
+      catTypography: 'خطوط',
+      catPeople: 'أشخاص',
+      catBlogs: 'مدونات',
+      catHardware: 'أجهزة',
+      photoIntro1: 'التصوير بالفيلم يجبرك على التمهل. مع كاميرات الهواتف المختلفة طوال حياتي، لا داعي للنظر إلى الشاشة بعد كل لقطة. هذا القيد هو ما يجعلني مصوراً أفضل.',
+      photoIntro2: 'معظم ما ستراه هنا هو تصوير شوارع، لحظات عفوية ومشاهد هادئة صادفتها أثناء المشي دون خطة مسبقة. فيها ملمس وصدق؛ هذه الصور ليست مثالية لكنها حقيقية.'
+    }
+  };
+
+  const FAVORITE_DESC_TRANSLATIONS = {
+    'AI company I trust': {
+      de: 'KI-Unternehmen, dem ich vertraue',
+      hi: 'AI कंपनी जिस पर मुझे भरोसा है',
+      fr: "L'entreprise d'IA en qui j'ai confiance",
+      es: 'La empresa de IA en la que confío',
+      zh: '我信赖的 AI 公司',
+      ja: '信頼しているAI企業',
+      ko: '내가 신뢰하는 AI 기업',
+      it: "L'azienda AI di cui mi fido",
+      pt: 'A empresa de IA em que confio',
+      nl: 'AI-bedrijf dat ik vertrouw',
+      ar: 'شركة الذكاء الاصطناعي التي أثق بها'
+    },
+    'My Shortcut to Everything': {
+      de: 'Mein Shortcut für alles',
+      hi: 'हर चीज़ के लिए मेरा शॉर्टकट',
+      fr: 'Mon raccourci vers tout',
+      es: 'Mi atajo para todo',
+      zh: '我通往一切的快捷方式',
+      ja: 'あらゆる操作へのショートカット',
+      ko: '모든 것으로 향하는 나만의 단축키',
+      it: 'La mia scorciatoia per tutto',
+      pt: 'Meu atalho para tudo',
+      nl: 'Mijn snelkoppeling naar alles',
+      ar: 'اختصاري لكل شيء'
+    },
+    'favourite coding language': {
+      de: 'Lieblings-Programmiersprache',
+      hi: 'पसंदीदा प्रोग्रामिंग भाषा',
+      fr: 'Langage de programmation préféré',
+      es: 'Lenguaje de programación favorito',
+      zh: '最喜欢的编程语言',
+      ja: 'お気に入りのプログラミング言語',
+      ko: '가장 좋아하는 프로그래밍 언어',
+      it: 'Linguaggio di programmazione preferito',
+      pt: 'Linguagem de programação favorita',
+      nl: 'Favoriete programmeertaal',
+      ar: 'لغة البرمجة المفضلة'
+    },
+    'Based on Incredible true event': {
+      de: 'Basierend auf einer unglaublichen wahren Begebenheit',
+      hi: 'एक अविश्वसनीय सच्ची घटना पर आधारित',
+      fr: 'Inspiré d’une incroyable histoire vraie',
+      es: 'Basada en un increíble hecho real',
+      zh: '改编自令人难以置信的真实事件',
+      ja: '信じられないほどの実話に基づく作品',
+      ko: '믿기 힘든 실화를 바탕으로 한 작품',
+      it: 'Basato su un incredibile evento realmente accaduto',
+      pt: 'Baseado em um incrível evento real',
+      nl: 'Gebaseerd op een ongelooflijke waargebeurde geschiedenis',
+      ar: 'مبني على قصة حقيقية مذهلة'
+    },
+    'illustrated tech manual': {
+      de: 'Illustriertes Technik-Handbuch',
+      hi: 'सचित्र टेक मैनुअल',
+      fr: 'Manuel technique illustré',
+      es: 'Manual técnico ilustrado',
+      zh: '插画式技术手册',
+      ja: '図解テックマニュアル',
+      ko: '일러스트로 풀어낸 기술 매뉴얼',
+      it: 'Manuale tecnico illustrato',
+      pt: 'Manual técnico ilustrado',
+      nl: 'Geïllustreerd technisch handboek',
+      ar: 'دليل تقني مصوّر'
+    },
+    'Loved the landing page. Clear, concise, and direct!': {
+      de: 'Tolle Landingpage. Klar, präzise und direkt!',
+      hi: 'शानदार लैंडिंग पेज। स्पष्ट, संक्षिप्त और सीधा!',
+      fr: "J'adore la landing page. Claire, concise et directe !",
+      es: 'Me encantó la página de inicio. ¡Clara, concisa y directa!',
+      zh: '非常喜欢这个落地页。清晰、简洁、直接！',
+      ja: 'ランディングページが最高。明快で簡潔、ストレート！',
+      ko: '랜딩 페이지가 정말 마음에 듭니다. 명확하고 간결하며 직관적!',
+      it: 'Ho adorato la landing page. Chiara, concisa e diretta!',
+      pt: 'Adorei a landing page. Clara, concisa e direta!',
+      nl: 'Geweldige landingspagina. Helder, beknopt en direct!',
+      ar: 'أحببت صفحة الهبوط. واضحة وموجزة ومباشرة!'
+    },
+    'Favourite place to find movies, TV-shows, series': {
+      de: 'Lieblingsort, um Filme, TV-Shows und Serien zu entdecken',
+      hi: 'फ़िल्में, टीवी शो और सीरीज़ खोजने की पसंदीदा जगह',
+      fr: 'Endroit préféré pour trouver films, émissions et séries',
+      es: 'Lugar favorito para encontrar películas, programas y series',
+      zh: '发现电影、电视节目与剧集的最爱去处',
+      ja: '映画やテレビ番組、シリーズを探すお気に入りの場所',
+      ko: '영화, TV 쇼, 시리즈를 찾을 때 가장 좋아하는 곳',
+      it: 'Posto preferito per trovare film, programmi TV e serie',
+      pt: 'Lugar favorito para encontrar filmes, programas de TV e séries',
+      nl: 'Favoriete plek om films, tv-shows en series te vinden',
+      ar: 'المكان المفضل للعثور على الأفلام والبرامج والمسلسلات'
+    },
+    'The keyboard that makes me feel like a kid again.': {
+      de: 'Die Tastatur, mit der ich mich wieder wie ein Kind fühle.',
+      hi: 'वह कीबोर्ड जो मुझे फिर से बचपन की याद दिलाता है।',
+      fr: 'Le clavier qui me fait retomber en enfance.',
+      es: 'El teclado que me hace sentir como un niño otra vez.',
+      zh: '让我重拾童年快乐的机械键盘。',
+      ja: '子どもの頃のワクワクを思い出させてくれるキーボード。',
+      ko: '다시 어린아이가 된 듯한 기분을 주는 키보드.',
+      it: 'La tastiera che mi fa sentire di nuovo un bambino.',
+      pt: 'O teclado que me faz sentir criança novamente.',
+      nl: 'Het toetsenbord waardoor ik me weer kind voel.',
+      ar: 'لوحة المفاتيح التي تجعلني أشعر وكأنني طفل من جديد.'
+    },
+    'Favourite Anime': {
+      de: 'Lieblings-Anime',
+      hi: 'पसंदीदा एनीमे',
+      fr: 'Anime préféré',
+      es: 'Anime favorito',
+      zh: '最喜欢的动漫',
+      ja: 'お気に入りのアニメ',
+      ko: '가장 좋아하는 애니메이션',
+      it: 'Anime preferito',
+      pt: 'Anime favorito',
+      nl: 'Favoriete anime',
+      ar: 'الأنمي المفضل'
+    },
+    'Product font I blindly use': {
+      de: 'Produktschrift, die ich blind verwende',
+      hi: 'प्रोडक्ट फ़ॉन्ट जिसे मैं आँख बंद करके इस्तेमाल करता हूँ',
+      fr: "Police produit que j'utilise les yeux fermés",
+      es: 'Tipografía de producto que uso a ciegas',
+      zh: '我毫不犹豫使用的产品字体',
+      ja: '迷わず愛用しているプロダクトフォント',
+      ko: '믿고 쓰는 프로덕트 폰트',
+      it: 'Font di prodotto che uso a occhi chiusi',
+      pt: 'Fonte de produto que uso de olhos fechados',
+      nl: 'Productlettertype dat ik blindelings gebruik',
+      ar: 'خط المنتجات الذي أستخدمه دون تردد'
+    },
+    'Beautiful pixel mono font': {
+      de: 'Wunderschöne Pixel-Monospace-Schrift',
+      hi: 'खूबसूरत पिक्सेल मोनो फ़ॉन्ट',
+      fr: 'Magnifique police pixel monospace',
+      es: 'Hermosa fuente monoespaciada de píxeles',
+      zh: '精美的像素等宽字体',
+      ja: '美しいピクセル等幅フォント',
+      ko: '아름다운 픽셀 모노스페이스 폰트',
+      it: 'Bellissimo font pixel monospazio',
+      pt: 'Linda fonte pixel monoespaçada',
+      nl: 'Prachtig pixel-monospace lettertype',
+      ar: 'خط بكسل أحادي المسافة جميل'
+    },
+    "Click only if you've 2 hours to spare.": {
+      de: 'Nur klicken, wenn du 2 Stunden Zeit übrig hast.',
+      hi: 'तभी क्लिक करें जब आपके पास 2 घंटे खाली हों।',
+      fr: 'Ne cliquez que si vous avez 2 heures devant vous.',
+      es: 'Haz clic solo si tienes 2 horas libres.',
+      zh: '只有当你有两小时空闲时才建议点开。',
+      ja: '2時間余裕があるときだけクリックしてください。',
+      ko: '2시간의 여유가 있을 때만 클릭하세요.',
+      it: 'Clicca solo se hai 2 ore libere.',
+      pt: 'Clique apenas se tiver 2 horas livres.',
+      nl: 'Klik alleen als je 2 uur over hebt.',
+      ar: 'اضغط فقط إذا كان لديك ساعتان من وقت الفراغ.'
+    },
+    'my iOS design inspiration': {
+      de: 'Meine iOS-Design-Inspiration',
+      hi: 'मेरी iOS डिज़ाइन प्रेरणा',
+      fr: 'Mon inspiration design iOS',
+      es: 'Mi inspiración de diseño iOS',
+      zh: '我的 iOS 设计灵感来源',
+      ja: 'iOSデザインのインスピレーション源',
+      ko: '나의 iOS 디자인 영감 원천',
+      it: 'La mia ispirazione per il design iOS',
+      pt: 'Minha inspiração de design iOS',
+      nl: 'Mijn iOS-designinspiratie',
+      ar: 'مصدر إلهامي لتصميم iOS'
+    },
+    'All the things I wish to own someday': {
+      de: 'All die Dinge, die ich eines Tages besitzen möchte',
+      hi: 'वे सभी चीज़ें जिन्हें मैं एक दिन अपना बनाना चाहता हूँ',
+      fr: "Toutes les choses que j'aimerais posséder un jour",
+      es: 'Todas las cosas que deseo tener algún día',
+      zh: '那些我希望有一天能拥有的好物',
+      ja: 'いつか手に入れたいものすべて',
+      ko: '언젠가 꼭 소장하고 싶은 모든 것들',
+      it: 'Tutte le cose che vorrei possedere un giorno',
+      pt: 'Todas as coisas que desejo ter um dia',
+      nl: 'Alle dingen die ik ooit hoop te bezitten',
+      ar: 'كل الأشياء التي أتمنى امتلاكها يوماً ما'
+    },
+    'Portfolio of a award winning songwriter': {
+      de: 'Portfolio eines preisgekrönten Songwriters',
+      hi: 'एक पुरस्कार विजेता गीतकार का पोर्टफ़ोलियो',
+      fr: "Portfolio d'un auteur-compositeur primé",
+      es: 'Portafolio de un compositor galardonado',
+      zh: '获奖词曲作家的作品集网站',
+      ja: '受賞歴のあるソングライターのポートフォリオ',
+      ko: '수상 경력에 빛나는 작곡가의 포트폴리오',
+      it: 'Portfolio di un cantautore pluripremiato',
+      pt: 'Portfólio de um compositor premiado',
+      nl: 'Portfolio van een bekroonde songwriter',
+      ar: 'ملف أعمال كاتب أغانٍ حائز على جوائز'
+    },
+    'My comfort zone': {
+      de: 'Meine Komfortzone',
+      hi: 'मेरा कम्फ़र्ट ज़ोन',
+      fr: 'Ma zone de réconfort',
+      es: 'Mi lugar seguro',
+      zh: '我的治愈舒适区',
+      ja: '心が安らぐお気に入りの一本',
+      ko: '나만의 편안한 안식처 같은 영화',
+      it: 'La mia zona di comfort',
+      pt: 'Minha zona de conforto',
+      nl: 'Mijn comfortzone',
+      ar: 'منطقة راحتي النفسية'
+    },
+    'Top notch product & website design': {
+      de: 'Erstklassiges Produkt- & Webdesign',
+      hi: 'बेहतरीन प्रोडक्ट और वेबसाइट डिज़ाइन',
+      fr: 'Design de produit et de site web exceptionnel',
+      es: 'Diseño de producto y sitio web de primer nivel',
+      zh: '一流的产品与网站设计',
+      ja: '最高峰のプロダクト＆Webサイトデザイン',
+      ko: '최고 수준의 프로덕트 및 웹사이트 디자인',
+      it: 'Design di prodotto e sito web di altissimo livello',
+      pt: 'Design de produto e site de primeira linha',
+      nl: 'Product- en websitedesign van topniveau',
+      ar: 'تصميم منتجات ومواقع من الطراز الأول'
+    },
+    'So simple landing page': {
+      de: 'So eine schlichte Landingpage',
+      hi: 'बेहद सरल लैंडिंग पेज',
+      fr: 'Une landing page tellement simple',
+      es: 'Una página de inicio tan sencilla',
+      zh: '极其简洁纯粹的落地页',
+      ja: 'とてもシンプルで美しいランディングページ',
+      ko: '감탄이 나올 만큼 심플한 랜딩 페이지',
+      it: 'Una landing page così semplice',
+      pt: 'Uma landing page tão simples',
+      nl: 'Zo’n eenvoudige landingspagina',
+      ar: 'صفحة هبوط في غاية البساطة'
+    },
+    'My favourite TV-show': {
+      de: 'Meine Lieblingsserie',
+      hi: 'मेरा पसंदीदा टीवी शो',
+      fr: 'Ma série TV préférée',
+      es: 'Mi serie de TV favorita',
+      zh: '我最喜欢的电视剧',
+      ja: 'お気に入りのTVドラマ',
+      ko: '가장 좋아하는 TV 드라마',
+      it: 'La mia serie TV preferita',
+      pt: 'Minha série de TV favorita',
+      nl: 'Mijn favoriete tv-serie',
+      ar: 'مسلسلي التلفزيوني المفضل'
+    },
+    'Blog websites can be thoughtful': {
+      de: 'Blog-Websites können so durchdacht sein',
+      hi: 'ब्लॉग वेबसाइटें भी इतनी सोच-समझकर बनाई जा सकती हैं',
+      fr: 'Les sites de blog peuvent être si bien pensés',
+      es: 'Los sitios de blogs pueden ser muy cuidados',
+      zh: '博客网站也可以设计得如此有巧思',
+      ja: 'ブログサイトはここまで丁寧に作れる',
+      ko: '블로그 웹사이트도 이렇게 사려 깊을 수 있다',
+      it: 'I siti blog possono essere così curati',
+      pt: 'Sites de blog podem ser muito bem pensados',
+      nl: 'Blogwebsites kunnen zo doordacht zijn',
+      ar: 'مواقع المدونات يمكن أن تكون مصممة بعناية فائقة'
+    },
+    'Books I wish to own': {
+      de: 'Bücher, die ich besitzen möchte',
+      hi: 'किताबें जिन्हें मैं अपना बनाना चाहता हूँ',
+      fr: 'Les livres que je rêve de posséder',
+      es: 'Libros que deseo tener',
+      zh: '我渴望收藏的书籍',
+      ja: '手元に置いておきたい本たち',
+      ko: '소장하고 싶은 책들',
+      it: 'Libri che vorrei possedere',
+      pt: 'Livros que desejo ter',
+      nl: 'Boeken die ik graag wil bezitten',
+      ar: 'كتب أتمنى اقتناءها'
+    },
+    'Design inspiration for og-images': {
+      de: 'Design-Inspiration für OG-Images',
+      hi: 'OG-इमेज के लिए डिज़ाइन प्रेरणा',
+      fr: 'Inspiration design pour les images Open Graph',
+      es: 'Inspiración de diseño para imágenes OG',
+      zh: 'OG 社交预览图的设计灵感库',
+      ja: 'OG画像のデザインインスピレーション',
+      ko: 'OG 이미지 디자인 영감 갤러리',
+      it: 'Ispirazione di design per immagini OG',
+      pt: 'Inspiração de design para imagens OG',
+      nl: 'Designinspiratie voor OG-afbeeldingen',
+      ar: 'إلهام تصميمي لصور المعاينة OG'
+    },
+    'Brilliant design leader': {
+      de: 'Brillanter Design-Leader',
+      hi: 'शानदार डिज़ाइन लीडर',
+      fr: 'Brillant leader du design',
+      es: 'Brillante líder de diseño',
+      zh: '卓越的设计领袖',
+      ja: '素晴らしいデザインリーダー',
+      ko: '탁월한 디자인 리더',
+      it: 'Brillante design leader',
+      pt: 'Brilhante líder de design',
+      nl: 'Briljante designleider',
+      ar: 'قائد تصميم بارع'
+    },
+    "Big fan of Darius' illustrations": {
+      de: 'Großer Fan von Darius’ Illustrationen',
+      hi: 'डैरियस के चित्रों का बड़ा प्रशंसक',
+      fr: 'Grand fan des illustrations de Darius',
+      es: 'Gran fan de las ilustraciones de Darius',
+      zh: 'Darius 插画作品的忠实粉丝',
+      ja: 'Dariusのイラストの大ファン',
+      ko: '다리우스 일러스트레이션의 열렬한 팬',
+      it: 'Grande fan delle illustrazioni di Darius',
+      pt: 'Grande fã das ilustrações do Darius',
+      nl: 'Grote fan van de illustraties van Darius',
+      ar: 'معجب كبير برسومات داريوس التوضيحية'
+    },
+    'Favourite Rāmāyaṇa': {
+      de: 'Lieblings-Rāmāyaṇa',
+      hi: 'पसंदीदा रामायण',
+      fr: 'Rāmāyaṇa préféré',
+      es: 'Rāmāyaṇa favorito',
+      zh: '最喜欢的《罗摩衍那》动画',
+      ja: 'お気に入りのラーマーヤナ',
+      ko: '가장 좋아하는 라마야나',
+      it: 'Rāmāyaṇa preferito',
+      pt: 'Rāmāyaṇa favorito',
+      nl: 'Favoriete Rāmāyaṇa',
+      ar: 'الرامايانا المفضلة'
+    },
+    'Favourite Rāmāyaṇa': {
+      de: 'Lieblings-Rāmāyaṇa',
+      hi: 'पसंदीदा रामायण',
+      fr: 'Rāmāyaṇa préféré',
+      es: 'Rāmāyaṇa favorito',
+      zh: '最喜欢的《罗摩衍那》动画',
+      ja: 'お気に入りのラーマーヤナ',
+      ko: '가장 좋아하는 라마야나',
+      it: 'Rāmāyaṇa preferito',
+      pt: 'Rāmāyaṇa favorito',
+      nl: 'Favoriete Rāmāyaṇa',
+      ar: 'الرامايانا المفضلة'
+    },
+    'Designer at Linear': {
+      de: 'Designer bei Linear',
+      hi: 'Linear में डिज़ाइनर',
+      fr: 'Designer chez Linear',
+      es: 'Diseñador en Linear',
+      zh: 'Linear 设计师',
+      ja: 'Linear のデザイナー',
+      ko: 'Linear 디자이너',
+      it: 'Designer presso Linear',
+      pt: 'Designer na Linear',
+      nl: 'Designer bij Linear',
+      ar: 'مصمم في Linear'
+    },
+    'My source of inspiration': {
+      de: 'Meine Inspirationsquelle',
+      hi: 'मेरी प्रेरणा का स्रोत',
+      fr: "Ma source d'inspiration",
+      es: 'Mi fuente de inspiración',
+      zh: '我的设计灵感源泉',
+      ja: '私のインスピレーションの源',
+      ko: '나의 영감의 원천',
+      it: 'La mia fonte di ispirazione',
+      pt: 'Minha fonte de inspiração',
+      nl: 'Mijn bron van inspiratie',
+      ar: 'مصدر إلهامي'
+    },
+    'A minimal and beautiful clock screensaver for your mac.': {
+      de: 'Ein minimalistischer und schöner Uhr-Bildschirmschoner für den Mac.',
+      hi: 'आपके मैक के लिए एक मिनिमल और खूबसूरत घड़ी स्क्रीनसेवर।',
+      fr: "Un économiseur d'écran horloge minimaliste et élégant pour Mac.",
+      es: 'Un salvapantallas de reloj minimalista y hermoso para tu Mac.',
+      zh: '为 Mac 打造的极简唯美时钟屏保。',
+      ja: 'Mac向けのミニマルで美しい時計スクリーンセーバー。',
+      ko: 'Mac을 위한 미니멀하고 아름다운 시계 화면 보호기.',
+      it: 'Uno screensaver orologio minimale e bellissimo per il tuo Mac.',
+      pt: 'Um protetor de tela de relógio minimalista e lindo para o seu Mac.',
+      nl: 'Een minimalistische en prachtige klok-screensaver voor je Mac.',
+      ar: 'شاشة توقف ساعة بسيطة وجميلة لجهاز ماك.'
+    },
+    'Lightweight Intercom alternative': {
+      de: 'Leichtgewichtige Intercom-Alternative',
+      hi: 'हल्का-फुल्का Intercom विकल्प',
+      fr: 'Alternative légère à Intercom',
+      es: 'Alternativa ligera a Intercom',
+      zh: '轻量级 Intercom 替代方案',
+      ja: '軽量な Intercom 代替ツール',
+      ko: '가벼운 Intercom 대안',
+      it: 'Alternativa leggera a Intercom',
+      pt: 'Alternativa leve ao Intercom',
+      nl: 'Lichtgewicht alternatief voor Intercom',
+      ar: 'بديل خفيف لـ Intercom'
+    },
+    'My companion in all sales calls': {
+      de: 'Mein Begleiter in allen Gesprächen & Calls',
+      hi: 'सभी सेल्स कॉल्स में मेरा साथी',
+      fr: 'Mon compagnon dans tous les appels',
+      es: 'Mi compañero en todas las llamadas',
+      zh: '我所有通话与会议的得力助手',
+      ja: 'あらゆる通話・ミーティングの相棒',
+      ko: '모든 미팅과 통화에서 함께하는 동반자',
+      it: 'Il mio compagno in tutte le chiamate',
+      pt: 'Meu companheiro em todas as chamadas',
+      nl: 'Mijn metgezel bij alle gesprekken',
+      ar: 'رفيقي في جميع المكالمات والاجتماعات'
+    },
+    'A humble little film, maybe, but an enriching one.': {
+      de: 'Vielleicht ein bescheidener kleiner Film, aber ein sehr bereichernder.',
+      hi: 'शायद एक साधारण-सी छोटी फ़िल्म, लेकिन दिल को समृद्ध करने वाली।',
+      fr: 'Un petit film humble, peut-être, mais profondément enrichissant.',
+      es: 'Una pequeña película humilde, tal vez, pero muy enriquecedora.',
+      zh: '也许是一部朴素的小电影，却能丰盈内心。',
+      ja: 'ささやかな映画かもしれないけれど、心を豊かにしてくれる一本。',
+      ko: '소박한 작은 영화일지 몰라도 마음을 풍요롭게 해주는 작품.',
+      it: 'Un piccolo film umile, forse, ma profondamente arricchente.',
+      pt: 'Um pequeno filme humilde, talvez, mas muito enriquecedor.',
+      nl: 'Misschien een bescheiden kleine film, maar wel een verrijkende.',
+      ar: 'فيلم صغير متواضع ربما، لكنه يُثري الروح.'
+    },
+    'Using these icons in all of my projects': {
+      de: 'Ich nutze diese Icons in all meinen Projekten',
+      hi: 'मैं अपने सभी प्रोजेक्ट्स में इन आइकन्स का उपयोग करता हूँ',
+      fr: "J'utilise ces icônes dans tous mes projets",
+      es: 'Uso estos iconos en todos mis proyectos',
+      zh: '我在所有项目中都在使用的图标库',
+      ja: 'すべてのプロジェクトで使っているアイコンセット',
+      ko: '내 모든 프로젝트에서 사용하는 아이콘',
+      it: 'Uso queste icone in tutti i miei progetti',
+      pt: 'Uso esses ícones em todos os meus projetos',
+      nl: 'Ik gebruik deze iconen in al mijn projecten',
+      ar: 'أستخدم هذه الأيقونات في جميع مشاريعي'
+    },
+    'Love their everyday 3d icons': {
+      de: 'Ich liebe ihre alltäglichen 3D-Icons',
+      hi: 'इनके रोज़मर्रा के 3D आइकन्स बहुत पसंद हैं',
+      fr: "J'adore leurs icônes 3D du quotidien",
+      es: 'Me encantan sus iconos 3D cotidianos',
+      zh: '非常喜欢他们的日常 3D 图标',
+      ja: '日常モチーフの3Dアイコンがお気に入り',
+      ko: '일상적인 3D 아이콘들이 정말 매력적인 곳',
+      it: 'Adoro le loro icone 3D di tutti i giorni',
+      pt: 'Adoro os ícones 3D do dia a dia deles',
+      nl: 'Dol op hun alledaagse 3D-iconen',
+      ar: 'أحب أيقوناتهم ثلاثية الأبعاد اليومية'
+    },
+    'Analytics with beauty and brain': {
+      de: 'Analytics mit Schönheit und Verstand',
+      hi: 'खूबसूरती और समझदारी के साथ एनालिटिक्स',
+      fr: "L'analytique alliant beauté et intelligence",
+      es: 'Analítica con belleza e inteligencia',
+      zh: '兼具颜值与智慧的数据分析工具',
+      ja: '美しさと知性を兼ね備えたアナリティクス',
+      ko: '아름다움과 똑똑함을 겸비한 애널리틱스',
+      it: 'Analytics con bellezza e intelligenza',
+      pt: 'Analytics com beleza e inteligência',
+      nl: 'Analytics met schoonheid en verstand',
+      ar: 'تحليلات تجمع بين الجمال والذكاء'
+    },
+    'Only generational wealth I will pass on': {
+      de: 'Das einzige Familienerbe, das ich weitergeben werde',
+      hi: 'एकमात्र पीढ़ीगत धरोहर जो मैं आगे सौंपूंगा',
+      fr: 'Le seul patrimoine que je transmettrai',
+      es: 'La única herencia generacional que dejaré',
+      zh: '我唯一会代代相传的传家宝',
+      ja: '次の世代に受け継ぎたい唯一の財産',
+      ko: '다음 세대에 물려줄 유일한 유산',
+      it: "L'unica eredità generazionale che tramanderò",
+      pt: 'A única herança geracional que vou deixar',
+      nl: 'Het enige familiestuk dat ik zal doorgeven',
+      ar: 'الإرث الوحيد الذي سأورثه للأجيال القادمة'
+    },
+    'For a bookworm in you': {
+      de: 'Für den Bücherwurm in dir',
+      hi: 'आपके भीतर के किताबी कीड़े के लिए',
+      fr: 'Pour le rat de bibliothèque en vous',
+      es: 'Para el lector voraz que llevas dentro',
+      zh: '献给热爱阅读的你',
+      ja: '本好きのための場所',
+      ko: '당신 안의 독서광을 위한 서비스',
+      it: 'Per il topo di biblioteca che è in te',
+      pt: 'Para o amante de livros em você',
+      nl: 'Voor de boekenwurm in jou',
+      ar: 'لعشاق القراءة والكتب'
+    },
+    'This app make avgeek within me happy': {
+      de: 'Diese App macht den Luftfahrt-Nerd in mir glücklich',
+      hi: 'यह ऐप मेरे भीतर के एविएशन प्रेमी को खुश कर देता है',
+      fr: "Cette application ravit le passionné d'aviation en moi",
+      es: 'Esta app hace feliz al entusiasta de la aviación en mí',
+      zh: '让身为航空迷的我幸福感满满的应用',
+      ja: '飛行機好きの心を満たしてくれるアプリ',
+      ko: '내 안의 항공 덕후를 행복하게 해주는 앱',
+      it: "Questa app rende felice l'appassionato di aviazione che è in me",
+      pt: 'Este app deixa o entusiasta de aviação em mim feliz',
+      nl: 'Deze app maakt de luchtvaartliefhebber in mij blij',
+      ar: 'هذا التطبيق يسعد شغفي بالطيران'
+    }
+  };
+
+  const FAVORITE_TITLE_TRANSLATIONS = {
+    'What Human Memory Teaches Us About Building AI Memory': {
+      de: 'Was das menschliche Gedächtnis uns über KI-Gedächtnis lehrt',
+      hi: 'मानव स्मृति हमें AI मेमोरी बनाने के बारे में क्या सिखाती है',
+      fr: 'Ce que la mémoire humaine nous apprend sur la mémoire IA',
+      es: 'Lo que la memoria humana nos enseña sobre construir memoria en IA',
+      zh: '人类记忆对构建 AI 记忆系统的启示',
+      ja: '人間の記憶から学ぶAIメモリの構築',
+      ko: '인간의 기억이 AI 메모리 구축에 주는 교훈',
+      it: "Cosa ci insegna la memoria umana sulla memoria dell'IA",
+      pt: 'O que a memória humana nos ensina sobre construir memória de IA',
+      nl: 'Wat het menselijk geheugen ons leert over AI-geheugen',
+      ar: 'ما تعلمنا إياه الذاكرة البشرية حول بناء ذاكرة الذكاء الاصطناعي'
+    },
+    'Developing Taste': {
+      de: 'Geschmack entwickeln',
+      hi: 'अपनी कला और परख विकसित करना',
+      fr: 'Développer son goût',
+      es: 'Desarrollar el buen gusto',
+      zh: '培养设计品味',
+      ja: 'センスを磨くということ',
+      ko: '안목을 기른다는 것',
+      it: 'Sviluppare il gusto',
+      pt: 'Desenvolvendo o bom gosto',
+      nl: 'Smaak ontwikkelen',
+      ar: 'تطوير الذائقة الفنية'
+    },
+    'The physics of doing hard things': {
+      de: 'Die Physik schwieriger Dinge',
+      hi: 'कठिन काम करने का भौतिक विज्ञान',
+      fr: 'La physique des choses difficiles',
+      es: 'La física de hacer cosas difíciles',
+      zh: '做难事的物理学',
+      ja: '困難なことに挑む物理学',
+      ko: '어려운 일을 해내는 물리학',
+      it: 'La fisica del fare cose difficili',
+      pt: 'A física de fazer coisas difíceis',
+      nl: 'De fysica van moeilijke dingen doen',
+      ar: 'فيزياء إنجاز المهام الصعبة'
+    },
+    'Gmail: Designed to be joyfully simple': {
+      de: 'Gmail: Entworfen für freudige Einfachheit',
+      hi: 'Gmail: आनंददायक सरलता के लिए डिज़ाइन किया गया',
+      fr: "Gmail : Conçu pour être joyeusement simple",
+      es: 'Gmail: Diseñado para ser alegremente simple',
+      zh: 'Gmail：为愉悦的简洁而设计',
+      ja: 'Gmail：心地よいシンプルさのためのデザイン',
+      ko: 'Gmail: 즐거운 단순함을 위해 디자인되다',
+      it: 'Gmail: Progettato per essere gioiosamente semplice',
+      pt: 'Gmail: Projetado para ser alegremente simples',
+      nl: 'Gmail: Ontworpen om vreugdevol eenvoudig te zijn',
+      ar: 'Gmail: صُمم ليكون بسيطاً ومبهجاً'
+    },
+    'People are portals': {
+      de: 'Menschen sind Portale',
+      hi: 'लोग नए संसार के द्वार हैं',
+      fr: 'Les gens sont des portails',
+      es: 'Las personas son portales',
+      zh: '每个人都是通往新世界的传送门',
+      ja: '人は新しい世界へのポータルである',
+      ko: '사람은 새로운 세계로 향하는 포털이다',
+      it: 'Le persone sono portali',
+      pt: 'Pessoas são portais',
+      nl: 'Mensen zijn portalen',
+      ar: 'الناس بوابات لعوالم جديدة'
+    },
+    'what should a machine see in human behaviour': {
+      de: 'Was sollte eine Maschine im menschlichen Verhalten sehen?',
+      hi: 'मशीन को मानवीय व्यवहार में क्या देखना चाहिए',
+      fr: 'Que devrait voir une machine dans le comportement humain ?',
+      es: 'Qué debería ver una máquina en el comportamiento humano',
+      zh: '机器在人类行为中应当看到什么',
+      ja: '機械は人間の行動の中に何を見るべきか',
+      ko: '기계는 인간의 행동에서 무엇을 보아야 하는가',
+      it: 'Cosa dovrebbe vedere una macchina nel comportamento umano',
+      pt: 'O que uma máquina deve ver no comportamento humano',
+      nl: 'Wat zou een machine moeten zien in menselijk gedrag',
+      ar: 'ماذا يجب أن ترى الآلة في السلوك البشري'
+    },
+    'Principles': {
+      de: 'Prinzipien',
+      hi: 'सिद्धांत',
+      fr: 'Principes',
+      es: 'Principios',
+      zh: '原则',
+      ja: 'プリンシプル（原則）',
+      ko: '원칙들',
+      it: 'Principi',
+      pt: 'Princípios',
+      nl: 'Principes',
+      ar: 'المبادئ'
+    },
+    'Thoughts on ownership': {
+      de: 'Gedanken über Eigenverantwortung',
+      hi: 'ओनरशिप (स्वामित्व) पर विचार',
+      fr: 'Réflexions sur la responsabilité',
+      es: 'Reflexiones sobre la responsabilidad',
+      zh: '关于主人翁精神的思考',
+      ja: 'オーナーシップについての考察',
+      ko: '오너십에 대한 생각',
+      it: 'Riflessioni sulla responsabilità',
+      pt: 'Reflexões sobre senso de dono',
+      nl: 'Gedachten over eigenaarschap',
+      ar: 'تأملات حول روح المسؤولية والملكية'
+    },
+    'Breadcrumbs': {
+      de: 'Brotkrumen',
+      hi: 'ब्रेडक्रम्ब्स (रास्ते के निशान)',
+      fr: 'Traces et repères',
+      es: 'Migas de pan',
+      zh: '思想的足迹',
+      ja: '思考の道しるべ',
+      ko: '생각의 흔적들',
+      it: 'Briciole di pane',
+      pt: 'Migalhas de pão',
+      nl: 'Broodkruimels',
+      ar: 'آثار على الطريق'
+    },
+    'the power of knowing what you like': {
+      de: 'Die Kraft zu wissen, was man mag',
+      hi: 'यह जानने की शक्ति कि आपको क्या पसंद है',
+      fr: "Le pouvoir de savoir ce que l'on aime",
+      es: 'El poder de saber lo que te gusta',
+      zh: '明确自己所爱之事的力量',
+      ja: '自分が好きなものを知ることの力',
+      ko: '자신이 좋아하는 것을 아는 힘',
+      it: 'Il potere di sapere ciò che ti piace',
+      pt: 'O poder de saber o que você gosta',
+      nl: 'De kracht van weten wat je leuk vindt',
+      ar: 'قوة أن تعرف ما تحب'
+    },
+    'Becoming yourself is a social project': {
+      de: 'Man selbst zu werden ist ein soziales Projekt',
+      hi: 'स्वयं बनना एक सामाजिक प्रक्रिया है',
+      fr: 'Devenir soi-même est un projet social',
+      es: 'Convertirse en uno mismo es un proyecto social',
+      zh: '成为自己是一项社会性工程',
+      ja: '自分自身になることは社会的なプロジェクトである',
+      ko: '나다워지는 것은 사회적 프로젝트다',
+      it: 'Diventare se stessi è un progetto sociale',
+      pt: 'Tornar-se você mesmo é um projeto social',
+      nl: 'Jezelf worden is een sociaal project',
+      ar: 'أن تصبح نفسك هو مشروع اجتماعي'
+    },
+    'The power of side projects': {
+      de: 'Die Kraft von Nebenprojekten',
+      hi: 'साइड प्रोजेक्ट्स की ताकत',
+      fr: 'Le pouvoir des projets personnels',
+      es: 'El poder de los proyectos paralelos',
+      zh: '副业与个人项目的力量',
+      ja: 'サイドプロジェクトの力',
+      ko: '사이드 프로젝트의 힘',
+      it: 'Il potere dei progetti personali',
+      pt: 'O poder dos projetos paralelos',
+      nl: 'De kracht van zijprojecten',
+      ar: 'قوة المشاريع الجانبية'
+    },
+    'how to enter side doors': {
+      de: 'Wie man durch Seitentüren geht',
+      hi: 'साइड डोर्स से प्रवेश कैसे करें',
+      fr: 'Comment emprunter les portes dérobées',
+      es: 'Cómo entrar por puertas laterales',
+      zh: '如何推开人生的侧门',
+      ja: '裏口から入る方法',
+      ko: '옆문으로 들어가는 법',
+      it: 'Come entrare dalle porte laterali',
+      pt: 'Como entrar pelas portas laterais',
+      nl: 'Hoe je via zijdeuren binnenkomt',
+      ar: 'كيف تدخل من الأبواب الجانبية'
+    },
+    "Brian's wiritng section": {
+      de: 'Brians Texte & Essays',
+      hi: 'ब्रायन का लेखन अनुभाग',
+      fr: 'Les écrits de Brian',
+      es: 'La sección de escritos de Brian',
+      zh: 'Brian 的写作专栏',
+      ja: 'Brian のエッセイ欄',
+      ko: '브라이언의 글 모음',
+      it: 'La sezione di scrittura di Brian',
+      pt: 'A seção de textos do Brian',
+      nl: 'Brians schrijfsectie',
+      ar: 'قسم كتابات براين'
+    }
+  };
+
+  const PHOTO_CAPTION_TRANSLATIONS = {
+    'Beyond Time': {
+      de: 'Jenseits der Zeit', hi: 'समय से परे', fr: 'Au-delà du temps', es: 'Más allá del tiempo',
+      zh: '超越时间', ja: '時を超えて', ko: '시간을 넘어', it: 'Oltre il tempo', pt: 'Além do tempo', nl: 'Voorbij de tijd', ar: 'ما وراء الزمن'
+    },
+    'Aged Well': {
+      de: 'Gut gereift', hi: 'वक्त के साथ निखरा हुआ', fr: 'Bien vieilli', es: 'Bien envejecido',
+      zh: '岁月沉淀', ja: ' 멋지게歳を重ねて', ko: '세월의 멋', it: 'Invecchiato bene', pt: 'Envelheceu bem', nl: 'Mooi verouderd', ar: 'تعتّق بجمال'
+    },
+    'Jai Hanuman': {
+      de: 'Jai Hanuman', hi: 'जय हनुमान', fr: 'Jai Hanuman', es: 'Jai Hanuman',
+      zh: '哈努曼神像', ja: 'ジャイ・ハヌマーン', ko: '자이 하누만', it: 'Jai Hanuman', pt: 'Jai Hanuman', nl: 'Jai Hanuman', ar: 'جاي هانومان'
+    },
+    'Aged Innocence': {
+      de: 'Gealterte Unschuld', hi: 'उम्रदराज़ मासूमियत', fr: 'Innocence âgée', es: 'Inocencia envejecida',
+      zh: '苍老的纯真', ja: '歳月を経た無垢', ko: '세월 속의 순수함', it: 'Innocenza antica', pt: 'Inocência envelhecida', nl: 'Verouderde onschuld', ar: 'براءة المسنين'
+    },
+    'Bargain': {
+      de: 'Feilschen', hi: 'मोल-भाव', fr: 'Marchandage', es: 'Regateo',
+      zh: '讨价还价', ja: '値切り交渉', ko: '흥정', it: 'Contrattazione', pt: 'Pechincha', nl: 'Afdingen', ar: 'مساومة'
+    },
+    'The hard Work': {
+      de: 'Harte Arbeit', hi: 'कड़ी मेहनत', fr: 'Le dur labeur', es: 'El trabajo duro',
+      zh: '辛勤劳作', ja: '懸命な労働', ko: '고된 노동', it: 'Il duro lavoro', pt: 'O trabalho duro', nl: 'Het harde werk', ar: 'العمل الشاق'
+    },
+    'The Hard Work': {
+      de: 'Harte Arbeit', hi: 'कड़ी मेहनत', fr: 'Le dur labeur', es: 'El trabajo duro',
+      zh: '辛勤劳作', ja: '懸命な労働', ko: '고된 노동', it: 'Il duro lavoro', pt: 'O trabalho duro', nl: 'Het harde werk', ar: 'العمل الشاق'
+    },
+    'Flower Market, Pune': {
+      de: 'Blumenmarkt, Pune', hi: 'फूल बाज़ार, पुणे', fr: 'Marché aux fleurs, Pune', es: 'Mercado de flores, Pune',
+      zh: '浦那鲜花市场', ja: 'プネーの花市場', ko: '푸네 꽃 시장', it: 'Mercato dei fiori, Pune', pt: 'Mercado de Flores, Pune', nl: 'Bloemenmarkt, Pune', ar: 'سوق الزهور، بونه'
+    },
+    'The Flower Market, Pune': {
+      de: 'Der Blumenmarkt, Pune', hi: 'फूल बाज़ार, पुणे', fr: 'Le marché aux fleurs, Pune', es: 'El mercado de flores, Pune',
+      zh: '浦那鲜花市场', ja: 'プネーの花市場', ko: '푸네 꽃 시장', it: 'Il mercato dei fiori, Pune', pt: 'O Mercado de Flores, Pune', nl: 'De bloemenmarkt, Pune', ar: 'سوق الزهور، بونه'
+    },
+    'Copper Smiths': {
+      de: 'Kupferschmiede', hi: 'तांबे के कारीगर', fr: 'Chaudronniers sur cuivre', es: 'Artesanos del cobre',
+      zh: '铜匠艺人', ja: '銅細工職人', ko: '구리 세공 장인', it: 'Artigiani del rame', pt: 'Artesãos de cobre', nl: 'Kopersmeden', ar: 'حرفيو النحاس'
+    },
+    'Dilip Kaka - Copper Smith': {
+      de: 'Dilip Kaka – Kupferschmied', hi: 'दिलीप काका - तांबे के कारीगर', fr: 'Dilip Kaka — Chaudronnier', es: 'Dilip Kaka - Artesano del cobre',
+      zh: 'Dilip 叔叔 — 老铜匠', ja: 'ディリップ・カカ ― 銅細工職人', ko: '딜립 카카 - 구리 세공 장인', it: 'Dilip Kaka - Artigiano del rame', pt: 'Dilip Kaka - Artesão de cobre', nl: 'Dilip Kaka - Kopersmid', ar: 'ديليب كاكا - حرفي نحاس'
+    },
+    'Symmetry': {
+      de: 'Symmetrie', hi: 'सममिति (सिमेट्री)', fr: 'Symétrie', es: 'Simetría',
+      zh: '对称之美', ja: 'シンメトリー（対称）', ko: '대칭', it: 'Simmetria', pt: 'Simetria', nl: 'Symmetrie', ar: 'تناظر'
+    },
+    'The Hawa Mahal': {
+      de: 'Der Hawa Mahal', hi: 'हवा महल', fr: 'Le Hawa Mahal', es: 'El Hawa Mahal',
+      zh: '风之宫殿', ja: 'ハワー・マハル（風の宮殿）', ko: '하와 마할', it: 'L’Hawa Mahal', pt: 'O Hawa Mahal', nl: 'De Hawa Mahal', ar: 'هاوا محل'
+    },
+    'Hawa Mahal, Jaipur': {
+      de: 'Hawa Mahal, Jaipur', hi: 'हवा महल, जयपुर', fr: 'Hawa Mahal, Jaipur', es: 'Hawa Mahal, Jaipur',
+      zh: '斋浦尔风之宫殿', ja: 'ジャイプールのハワー・マハル', ko: '자이푸르 하와 마할', it: 'Hawa Mahal, Jaipur', pt: 'Hawa Mahal, Jaipur', nl: 'Hawa Mahal, Jaipur', ar: 'هاوا محل، جايبور'
+    },
+    'Streets of Jaipur, India': {
+      de: 'Straßen von Jaipur, Indien', hi: 'जयपुर की गलियाँ, भारत', fr: 'Rues de Jaipur, Inde', es: 'Calles de Jaipur, India',
+      zh: '印度斋浦尔街头', ja: 'インド・ジャイプールの街角', ko: '인도 자이푸르의 거리', it: 'Strade di Jaipur, India', pt: 'Ruas de Jaipur, Índia', nl: 'Straten van Jaipur, India', ar: 'شوارع جايبور، الهند'
+    },
+    'Streets of Jaipur, Rajasthan': {
+      de: 'Straßen von Jaipur, Rajasthan', hi: 'जयपुर की गलियाँ, राजस्थान', fr: 'Rues de Jaipur, Rajasthan', es: 'Calles de Jaipur, Rajastán',
+      zh: '拉贾斯坦邦斋浦尔街头', ja: 'ラージャスターン州ジャイプールの街角', ko: '라자스탄 자이푸르의 거리', it: 'Strade di Jaipur, Rajasthan', pt: 'Ruas de Jaipur, Rajastão', nl: 'Straten van Jaipur, Rajasthan', ar: 'شوارع جايبور، راجستان'
+    },
+    'Jaipur, Rajasthan, India': {
+      de: 'Jaipur, Rajasthan, Indien', hi: 'जयपुर, राजस्थान, भारत', fr: 'Jaipur, Rajasthan, Inde', es: 'Jaipur, Rajastán, India',
+      zh: '印度拉贾斯坦邦斋浦尔', ja: 'インド・ラージャスターン州ジャイプール', ko: '인도 라자스탄 자이푸르', it: 'Jaipur, Rajasthan, India', pt: 'Jaipur, Rajastão, Índia', nl: 'Jaipur, Rajasthan, India', ar: 'جايبور، راجستان، الهند'
+    },
+    'The Royal Entrance': {
+      de: 'Der königliche Eingang', hi: 'शाही प्रवेश द्वार', fr: "L'entrée royale", es: 'La entrada real',
+      zh: '皇家门廊', ja: '王宮の入り口', ko: '왕실의 입구', it: "L'ingresso reale", pt: 'A entrada real', nl: 'De koninklijke ingang', ar: 'المدخل الملكي'
+    },
+    'Roadside Shop': {
+      de: 'Straßenladen', hi: 'सड़क किनारे की दुकान', fr: 'Boutique au bord de la route', es: 'Tienda junto al camino',
+      zh: '路边小店', ja: '道端の店', ko: '길가 상점', it: 'Negozio sul ciglio della strada', pt: 'Loja de beira de estrada', nl: 'Winkeltje langs de weg', ar: 'متجر على جانب الطريق'
+    },
+    'The Shopkeeper': {
+      de: 'Der Ladenbesitzer', hi: 'दुकानदार', fr: 'Le commerçant', es: 'El tendero',
+      zh: '店主', ja: '店主', ko: '상점 주인', it: 'Il negoziante', pt: 'O lojista', nl: 'De winkelier', ar: 'صاحب المتجر'
+    },
+    'Miniature Painting': {
+      de: 'Miniaturmalerei', hi: 'लघु चित्रकला (मिनिएचर पेंटिंग)', fr: 'Peinture miniature', es: 'Pintura en miniatura',
+      zh: '细密画艺术', ja: '細密画', ko: '세밀화', it: 'Pittura in miniatura', pt: 'Pintura em miniatura', nl: 'Miniatuurschildering', ar: 'رسم المنمنمات'
+    },
+    'The Jaigarh Fort, Jaipur': {
+      de: 'Das Jaigarh-Fort, Jaipur', hi: 'जयगढ़ किला, जयपुर', fr: 'Le fort de Jaigarh, Jaipur', es: 'El fuerte Jaigarh, Jaipur',
+      zh: '斋浦尔杰伊加尔堡', ja: 'ジャイプールのジャイガル城', ko: '자이푸르 자이가르 요새', it: 'Il forte di Jaigarh, Jaipur', pt: 'O Forte Jaigarh, Jaipur', nl: 'Het Jaigarh-fort, Jaipur', ar: 'حصن جايغار، جايبور'
+    },
+    'Abandoned': {
+      de: 'Verlassen', hi: 'वीरान', fr: 'Abandonné', es: 'Abandonado',
+      zh: '遗落之地', ja: '廃墟の静寂', ko: '버려진 공간', it: 'Abbandonato', pt: 'Abandonado', nl: 'Verlaten', ar: 'مهجور'
+    },
+    'Mandai': {
+      de: 'Mandai-Markt', hi: 'मंडई बाज़ार', fr: 'Marché de Mandai', es: 'Mercado Mandai',
+      zh: '曼代集市', ja: 'マンダイ市場', ko: '만다이 시장', it: 'Mercato di Mandai', pt: 'Mercado Mandai', nl: 'Mandai-markt', ar: 'سوق منداي'
+    },
+    'Sunflowers Missing The Sun': {
+      de: 'Sonnenblumen, die die Sonne vermissen', hi: 'सूरज को तरसते सूरजमुखी', fr: 'Tournesols en manque de soleil', es: 'Girasoles extrañando el sol',
+      zh: '思念阳光的向日葵', ja: '太陽を恋しがるひまわり', ko: '태양을 그리워하는 해바라기', it: 'Girasoli in cerca del sole', pt: 'Girassóis com saudade do sol', nl: 'Zonnebloemen die de zon missen', ar: 'عباد الشمس يشتاق للشمس'
+    },
+    'Busy': {
+      de: 'Geschäftig', hi: 'व्यस्त', fr: 'Affairé', es: 'Ocupado',
+      zh: '忙碌', ja: '賑わい', ko: '분주한 일상', it: 'Indaffarato', pt: 'Ocupado', nl: 'Druk bezig', ar: 'منهمك'
+    },
+    'Most Trusted Shoulders': {
+      de: 'Die verlässlichsten Schultern', hi: 'सबसे भरोसेमंद कंधे', fr: 'Les épaules les plus sûres', es: 'Los hombros más confiables',
+      zh: '最值得信赖的肩膀', ja: '一番頼れる肩', ko: '가장 든든한 어깨', it: 'Le spalle più fidate', pt: 'Os ombros mais confiáveis', nl: 'De meest vertrouwde schouders', ar: 'الأكتاف الأكثر أماناً'
+    },
+    'Soaking Sun': {
+      de: 'Sonne tanken', hi: 'धूप सेकते हुए', fr: 'Bain de soleil', es: 'Tomando el sol',
+      zh: '沐浴阳光', ja: '日向ぼっこ', ko: '햇살을 머금고', it: 'Bagnati dal sole', pt: 'Tomando sol', nl: 'Zonnestralen vangen', ar: 'تحت أشعة الشمس'
+    },
+    'Shadows on The Streets of Jaipur': {
+      de: 'Schatten auf den Straßen von Jaipur', hi: 'जयपुर की गलियों में परछाइयाँ', fr: 'Ombres dans les rues de Jaipur', es: 'Sombras en las calles de Jaipur',
+      zh: '斋浦尔街头的树影', ja: 'ジャイプールの街路の影', ko: '자이푸르 거리의 그림자', it: 'Ombre sulle strade di Jaipur', pt: 'Sombras nas ruas de Jaipur', nl: 'Schaduwen in de straten van Jaipur', ar: 'ظلال في شوارع جايبور'
+    },
+    'The Puppet Show': {
+      de: 'Das Puppenspiel', hi: 'कठपुतली का खेल', fr: 'Le spectacle de marionnettes', es: 'El espectáculo de marionetas',
+      zh: '木偶戏', ja: '人形劇', ko: '인형극', it: 'Lo spettacolo dei burattini', pt: 'O show de marionetes', nl: 'Het poppenspel', ar: 'عرض الدمى'
+    },
+    'The Lehenga Shop': {
+      de: 'Das Lehenga-Geschäft', hi: 'लहंगे की दुकान', fr: 'La boutique de lehengas', es: 'La tienda de lehengas',
+      zh: '传统礼服店', ja: 'レヘンガの衣装店', ko: '레헹가 의상실', it: 'Il negozio di lehenga', pt: 'A loja de lehengas', nl: 'De lehenga-winkel', ar: 'متجر الأزياء التقليدية'
+    },
+    'Old and Rusty Scooter': {
+      de: 'Alter, rostiger Roller', hi: 'पुराना और जंग लगा स्कूटर', fr: 'Vieux scooter rouillé', es: 'Vieja moto oxidada',
+      zh: '锈迹斑斑的老踏板车', ja: '古びて錆びたスクーター', ko: '오래되고 녹슨 스쿠터', it: 'Vecchio scooter arrugginito', pt: 'Lambreta velha e enferrujada', nl: 'Oude en roestige scooter', ar: 'دراجة قديمة صدئة'
+    },
+    'The Selfie': {
+      de: 'Das Selfie', hi: 'सेल्फ़ी', fr: 'Le selfie', es: 'El selfie',
+      zh: '自拍时刻', ja: 'セルフィー', ko: '셀피', it: 'Il selfie', pt: 'A selfie', nl: 'De selfie', ar: 'السيلفي'
+    },
+    'Can you smell this picture?': {
+      de: 'Kannst du dieses Bild riechen?', hi: 'क्या आप इस तस्वीर की खुशबू महसूस कर सकते हैं?', fr: 'Pouvez-vous sentir cette photo ?', es: '¿Puedes oler esta foto?',
+      zh: '你能闻到这张照片里的花香吗？', ja: 'この写真の香りが届きますか？', ko: '이 사진의 향기가 느껴지나요?', it: 'Riesci a sentire il profumo di questa foto?', pt: 'Você consegue sentir o aroma desta foto?', nl: 'Kun je deze foto ruiken?', ar: 'هل يمكنك شم عبير هذه الصورة؟'
+    },
+    'Still Together. Forever?!': {
+      de: 'Immer noch zusammen. Für immer?!', hi: 'आज भी साथ। हमेशा के लिए?!', fr: 'Toujours ensemble. Pour toujours ?!', es: 'Aún juntos. ¡¿Para siempre?!',
+      zh: '依然相伴，直到永远？！', ja: 'ずっと一緒。永遠に？！', ko: '여전히 함께. 영원히?!', it: 'Ancora insieme. Per sempre?!', pt: 'Ainda juntos. Para sempre?!', nl: 'Nog steeds samen. Voor altijd?!', ar: 'معاً حتى الآن. إلى الأبد؟!'
+    },
+    'The Glow of Childhood': {
+      de: 'Das Leuchten der Kindheit', hi: 'बचपन की चमक', fr: "L'éclat de l'enfance", es: 'El brillo de la infancia',
+      zh: '童年的光芒', ja: '幼き日の輝き', ko: '어린 시절의 반짝임', it: "Lo splendore dell'infanzia", pt: 'O brilho da infância', nl: 'De gloed van de kindertijd', ar: 'وهج الطفولة'
+    },
+    'Royalty': {
+      de: 'Königlich', hi: 'राजसी ठाठ', fr: 'Royauté', es: 'Realeza',
+      zh: '皇室气度', ja: '王者の風格', ko: '왕실의 품격', it: 'Regalità', pt: 'Realeza', nl: 'Koninklijk', ar: 'هيبة ملكية'
+    },
+    'The Vintage Camera': {
+      de: 'Die Vintage-Kamera', hi: 'विंटेज कैमरा', fr: "L'appareil photo vintage", es: 'La cámara vintage',
+      zh: '复古相机', ja: 'ヴィンテージカメラ', ko: '빈티지 카메라', it: 'La fotocamera vintage', pt: 'A câmera vintage', nl: 'De vintage camera', ar: 'الكاميرا الكلاسيكية'
+    },
+    'Looking Far Beyond': {
+      de: 'Blick in die Ferne', hi: 'दूर क्षितिज की ओर देखते हुए', fr: 'Le regard tourné au loin', es: 'Mirando mucho más allá',
+      zh: '远眺远方', ja: '遥か彼方を見つめて', ko: '먼 곳을 바라보며', it: 'Guardando lontano', pt: 'Olhando muito além', nl: 'Ver vooruit kijkend', ar: 'نظرة إلى البعيد'
+    },
+    'The Artist': {
+      de: 'Der Künstler', hi: 'कलाकार', fr: "L'artiste", es: 'El artista',
+      zh: '手艺人', ja: '職人・アーティスト', ko: '예술가', it: "L'artista", pt: 'O artista', nl: 'De kunstenaar', ar: 'الفنان'
+    },
+    'Childhood': {
+      de: 'Kindheit', hi: 'बचपन', fr: 'Enfance', es: 'Infancia',
+      zh: '童年', ja: '子ども時代', ko: '유년 시절', it: 'Infanzia', pt: 'Infância', nl: 'Kindertijd', ar: 'الطفولة'
+    },
+    'Retirement': {
+      de: 'Ruhestand', hi: 'विश्राम के पल', fr: 'La retraite', es: 'Jubilación',
+      zh: '悠闲晚年', ja: '穏やかな余生', ko: '은퇴 후의 여유', it: 'Pensionamento', pt: 'Aposentadoria', nl: 'Pensioen', ar: 'التقاعد'
+    },
+    'Marigold': {
+      de: 'Ringelblumen', hi: 'गेंदे के फूल', fr: "Œillets d'Inde", es: 'Caléndulas',
+      zh: '万寿菊', ja: 'マリーゴールド', ko: '메리골드', it: 'Calendule', pt: 'Cravos-de-defunto', nl: 'Afrikaantjes', ar: 'زهور القطيفة'
+    },
+    'Through The Broken Window': {
+      de: 'Durch das zerbrochene Fenster', hi: 'टूटी खिड़की के पार', fr: 'À travers la fenêtre brisée', es: 'A través de la ventana rota',
+      zh: '透过破损的窗', ja: '壊れた窓の向こうに', ko: '깨진 창문 너머로', it: 'Attraverso la finestra rotta', pt: 'Através da janela quebrada', nl: 'Door het gebroken raam', ar: 'عبر النافذة المكسورة'
+    },
+    'The Blue Sky': {
+      de: 'Der blaue Himmel', hi: 'नीला आसमान', fr: 'Le ciel bleu', es: 'El cielo azul',
+      zh: '蔚蓝天空', ja: '青い空', ko: '푸른 하늘', it: 'Il cielo azzurro', pt: 'O céu azul', nl: 'De blauwe lucht', ar: 'السماء الزرقاء'
+    },
+    'Darbaan': {
+      de: 'Der Torwächter (Darbaan)', hi: 'दरबान', fr: 'Le gardien (Darbaan)', es: 'El guardián (Darbaan)',
+      zh: '守门人', ja: '門番（ダルバーン）', ko: '문지기 (다르반)', it: 'Il guardiano (Darbaan)', pt: 'O guardião (Darbaan)', nl: 'De poortwachter (Darbaan)', ar: 'حارس البوابة'
+    },
+    'Muffin': {
+      de: 'Muffin', hi: 'मफ़िन', fr: 'Muffin', es: 'Muffin',
+      zh: '小狗 Muffin', ja: 'マフィン', ko: '머핀', it: 'Muffin', pt: 'Muffin', nl: 'Muffin', ar: 'مافن'
     }
   };
 
@@ -1668,6 +3270,24 @@ function initLanguageSwitcher() {
   if (!TRANSLATIONS[currentLanguage]) currentLanguage = 'en';
   let blurTimer = null;
   let applyTimer = null;
+
+  window.__getCurrentLang = () => currentLanguage;
+  window.__getTranslatedText = (key) => {
+    const dict = TRANSLATIONS[currentLanguage] || TRANSLATIONS.en;
+    return dict[key] || TRANSLATIONS.en[key] || '';
+  };
+  window.__translateFavoriteTitle = (title) => {
+    if (currentLanguage === 'en') return title;
+    return FAVORITE_TITLE_TRANSLATIONS[title]?.[currentLanguage] || title;
+  };
+  window.__translateFavoriteDesc = (desc) => {
+    if (!desc || currentLanguage === 'en') return desc;
+    return FAVORITE_DESC_TRANSLATIONS[desc]?.[currentLanguage] || desc;
+  };
+  window.__translatePhotoCaption = (caption) => {
+    if (!caption || currentLanguage === 'en') return caption;
+    return PHOTO_CAPTION_TRANSLATIONS[caption]?.[currentLanguage] || caption;
+  };
 
   function glyphIndexesForText(text) {
     const characters = [...text];
@@ -1726,6 +3346,12 @@ function initLanguageSwitcher() {
       updateTranslatedText(el, copy[key], animateGlyphs);
     });
 
+    document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+      const key = el.dataset.i18nPlaceholder;
+      if (!copy[key]) return;
+      el.setAttribute('placeholder', copy[key]);
+    });
+
     const isBuiltIn = BUILT_IN_CODES.has(nextCode);
     languageButtons.forEach((btn) => {
       const active = btn.dataset.lang === nextCode;
@@ -1733,6 +3359,11 @@ function initLanguageSwitcher() {
       btn.setAttribute('aria-pressed', active ? 'true' : 'false');
     });
     languageMoreButton?.classList.toggle('is-active', !isBuiltIn);
+
+    if (typeof window.__syncLampAria === 'function') window.__syncLampAria();
+    if (typeof window.__renderFavorites === 'function') window.__renderFavorites();
+    if (typeof window.__renderPhotography === 'function') window.__renderPhotography();
+    if (typeof window.__refreshGitHubLabels === 'function') window.__refreshGitHubLabels();
   }
 
   function translatePage(code, force = false) {
@@ -1775,7 +3406,9 @@ function initLanguageSwitcher() {
     if (!matches.length) {
       const empty = document.createElement('p');
       empty.className = 'language-choice-empty';
-      empty.textContent = 'No languages found';
+      empty.textContent =
+        (TRANSLATIONS[currentLanguage] && TRANSLATIONS[currentLanguage].modalNoLanguages) ||
+        'No languages found';
       languageList.appendChild(empty);
       return;
     }
@@ -1840,9 +3473,7 @@ function initLanguageSwitcher() {
     }
   });
 
-  if (currentLanguage !== 'en') {
-    applyLanguage(currentLanguage, false);
-  }
+  applyLanguage(currentLanguage, false);
 }
 
 /* ══════════════════════════════════════════════
@@ -2255,19 +3886,38 @@ function initPhotography() {
 
   let activeIdx = 0;
 
-  grid.innerHTML = PHOTOS.map((p, idx) => `
-    <button type="button" class="photo-card" data-photo-idx="${idx}" aria-label="${p.alt.replace(/"/g, "&quot;")}">
-      <img src="${p.src}" alt="${p.alt.replace(/"/g, "&quot;")}" loading="lazy" decoding="async">
-      <div class="photo-caption"><span>${p.alt}</span></div>
+  function getCaption(rawAlt) {
+    return typeof window.__translatePhotoCaption === "function"
+      ? window.__translatePhotoCaption(rawAlt)
+      : rawAlt;
+  }
+
+  function renderGrid() {
+    grid.innerHTML = PHOTOS.map((p, idx) => {
+      const cap = getCaption(p.alt);
+      const safeCap = cap.replace(/"/g, "&quot;");
+      return `
+    <button type="button" class="photo-card" data-photo-idx="${idx}" aria-label="${safeCap}">
+      <img src="${p.src}" alt="${safeCap}" loading="lazy" decoding="async">
+      <div class="photo-caption"><span>${cap}</span></div>
     </button>
-  `).join("");
+  `;
+    }).join("");
+    if (lightbox?.classList.contains("is-open")) {
+      showPhoto(activeIdx);
+    }
+  }
+
+  window.__renderPhotography = renderGrid;
+  renderGrid();
 
   function showPhoto(idx) {
     activeIdx = (idx + PHOTOS.length) % PHOTOS.length;
     const item = PHOTOS[activeIdx];
+    const cap = getCaption(item.alt);
     lbImg.src = item.src;
-    lbImg.alt = item.alt;
-    lbCaption.textContent = item.alt;
+    lbImg.alt = cap;
+    lbCaption.textContent = cap;
   }
 
   function openLightbox(idx) {
@@ -2398,24 +4048,51 @@ async function initGitHubBar() {
 
   const DAYS = 30;
   const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  let cachedDays = null;
+  let cachedYearTotal = null;
 
   function formatDate(iso) {
     const [, m, d] = iso.split('-').map(Number);
-    return `${MONTHS[(m || 1) - 1]} ${d}`;
+    try {
+      const lang = typeof window.__getCurrentLang === 'function' ? window.__getCurrentLang() : 'en';
+      const dt = new Date(Date.UTC(2026, (m || 1) - 1, d || 1));
+      return new Intl.DateTimeFormat(lang, { month: 'short', day: 'numeric', timeZone: 'UTC' }).format(dt);
+    } catch {
+      return `${MONTHS[(m || 1) - 1]} ${d}`;
+    }
+  }
+
+  function formatContributionCount(count) {
+    if (typeof window.__getTranslatedText === 'function') {
+      if (count === 0) return window.__getTranslatedText('githubNoContributions');
+      if (count === 1) return window.__getTranslatedText('githubContributionOne');
+      return window.__getTranslatedText('githubContributionMany').replace('{count}', String(count));
+    }
+    return count === 0 ? 'No contributions' : `${count} contribution${count === 1 ? '' : 's'}`;
   }
 
   function renderBars(days, yearTotal) {
+    cachedDays = days;
+    cachedYearTotal = yearTotal;
     const recent = days.slice(-DAYS);
-    if (totalEl && typeof yearTotal === 'number') {
-      totalEl.textContent = `${yearTotal} contributions in the last year`;
+    if (totalEl) {
+      if (typeof yearTotal === 'number') {
+        const tpl =
+          typeof window.__getTranslatedText === 'function'
+            ? window.__getTranslatedText('githubContributionsYear')
+            : '{count} contributions in the last year';
+        totalEl.textContent = tpl.replace('{count}', String(yearTotal));
+      } else {
+        totalEl.textContent =
+          typeof window.__getTranslatedText === 'function'
+            ? window.__getTranslatedText('githubActivity30d')
+            : '30d activity';
+      }
     }
     container.innerHTML = recent
       .map((day, idx) => {
         const label = formatDate(day.date);
-        const countText =
-          day.count === 0
-            ? 'No contributions'
-            : `${day.count} contribution${day.count === 1 ? '' : 's'}`;
+        const countText = formatContributionCount(day.count);
         return `
           <div class="github-bar-slot" data-bar-idx="${idx}">
             <div class="github-bar-fill" data-level="${day.level}"></div>
@@ -2440,6 +4117,12 @@ async function initGitHubBar() {
     });
     container.addEventListener('mouseleave', () => setHover(null));
   }
+
+  window.__refreshGitHubLabels = () => {
+    if (cachedDays) {
+      renderBars(cachedDays, cachedYearTotal);
+    }
+  };
 
   try {
     const res = await fetch('https://github-contributions-api.jogruber.de/v4/isabhiii?y=last');

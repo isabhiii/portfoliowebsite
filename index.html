@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=69">
+  <link rel="stylesheet" href="style.css?v=81">
   <script>
     try {
       if (localStorage.getItem('theme') === 'dark') {
@@ -190,11 +190,11 @@
   <main class="page-main">
 
     <!-- ══════════════ HEADER & SECTION NAV (DesignerDada style) ══════════════ -->
-    <header class="site-header gutter-x">
+    <header class="site-header gutter-x animate-in">
       <a href="#home" class="avatar-pop" aria-label="Abhishek Kanani">
         <img src="profile.jpg" alt="Abhishek Kanani" class="header-avatar">
       </a>
-      <div class="header-name">Abhishek Kanani <span class="aka">aka</span> @isabhiii</div>
+      <div class="header-name">Abhishek Kanani <span class="aka" data-i18n="headerAka">aka</span> @isabhiii</div>
       <nav class="top-nav" aria-label="Main navigation">
         <a href="#home" class="nav-tab active" data-tab="home" aria-current="page" data-i18n="navHome">Home</a>
         <a href="#favorites" class="nav-tab" data-tab="favorites" data-i18n="navFavorites">Favorites</a>
@@ -213,12 +213,12 @@
     <section id="panel-home" class="tab-panel active">
 
       <article>
-        <h1 class="intro-title gutter-x" style="margin-bottom: 14px;" data-i18n="introTitle">I'm Abhishek</h1>
+        <h1 class="intro-title gutter-x animate-in animate-delay-1" style="margin-bottom: 14px;" data-i18n="introTitle">I'm Abhishek</h1>
 
         <div class="intro-body gutter-x">
-          <span class="intro-p hi" data-i18n="introGreeting">Hi, Guten Tag, नमस्ते</span>
+          <span class="intro-p hi animate-in animate-delay-2" data-i18n="introGreeting">Hi, Guten Tag, नमस्ते</span>
 
-          <span class="intro-p">
+          <span class="intro-p animate-in animate-delay-3">
             <span data-i18n="introLead">I'm a</span> <span class="hi" data-i18n="introRole">Data Analyst &amp; ML Engineer</span>. <span data-i18n="introLove">I love</span>
             <span class="inline-tech"><span class="inline-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z"/></svg></span>AI</span>,
             <span class="hi" data-i18n="introDataAuto">Data, Automation</span> <span data-i18n="introAndWord">and</span>
@@ -237,7 +237,7 @@
             </span>.
           </span>
 
-          <span class="intro-p">
+          <span class="intro-p animate-in animate-delay-4">
             <span data-i18n="introSystems">I build data systems that don't break</span> <span class="strike" data-i18n="introMostDays">(most days)</span>, <span data-i18n="introBackend">mostly in data &amp; backend with</span>
             <span class="inline-tech"><span class="inline-icon"><svg viewBox="0 0 24 24" fill="#3776AB"><path d="M12 2c-2.6 0-4.5.9-4.5 2.7v2.3h4.5v.8H6c-1.8 0-3.5 1.3-3.5 4.2s1.5 4.2 3.5 4.2h2v-2.1c0-1.9 1.6-3.4 3.5-3.4h4.5c1.5 0 2.5-1.1 2.5-2.6V4.7C18.5 2.9 15.6 2 12 2zm-2 2.2c.5 0 .9.4.9.9s-.4.9-.9.9-.9-.4-.9-.9.4-.9.9-.9z"/><path fill="#FFD43B" d="M12 22c2.6 0 4.5-.9 4.5-2.7V17H12v-.8h6c1.8 0 3.5-1.3 3.5-4.2S20 7.8 18 7.8h-2v2.1c0 1.9-1.6 3.4-3.5 3.4H8c-1.5 0-2.5 1.1-2.5 2.6v3.4C5.5 21.1 8.4 22 12 22zm2-2.2c-.5 0-.9-.4-.9-.9s.4-.9.9-.9.9.4.9.9-.4.9-.9.9z"/></svg></span>Python</span>,
             <span class="inline-tech"><span class="inline-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#e11d48" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/></svg></span>SQL</span>,
@@ -250,18 +250,18 @@
             <span class="inline-tech"><span class="inline-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg></span>RAG</span>.
           </span>
 
-          <span class="intro-p">
+          <span class="intro-p animate-in animate-delay-5">
             <span data-i18n="introTooling">Lately, I've been heavily focused on macOS developer tooling and open source with</span>
             <span class="inline-tech"><span class="inline-icon"><svg viewBox="0 0 28 28" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M7 18.079V21L0 14L1.46 12.54L7 18.081V18.079ZM9.921 21H7L14 28L15.46 26.54L9.921 21ZM26.535 15.462L27.996 14L13.996 0L12.538 1.466L18.077 7.004H14.73L10.864 3.146L9.404 4.606L11.809 7.01H10.129V17.876H20.994V16.196L23.399 18.6L24.859 17.14L20.994 13.274V9.927L26.535 15.462ZM7.73 6.276L6.265 7.738L7.833 9.304L9.294 7.844L7.73 6.276ZM20.162 18.708L18.702 20.17L20.268 21.738L21.73 20.276L20.162 18.708ZM4.596 9.41L3.134 10.872L7 14.738V11.815L4.596 9.41ZM16.192 21.006H13.268L17.134 24.872L18.596 23.41L16.192 21.006Z" fill="#FF6363"/></svg></span>Raycast</span>,
             <span class="inline-tech"><span class="inline-icon"><svg viewBox="0 0 24 24" fill="#3178C6"><rect x="2" y="2" width="20" height="20" rx="3"/><path d="M10.5 11v7M7.5 11h6M16.5 11c-1.5 0-2.5.8-2.5 2s1 1.7 2.5 2 2.5.8 2.5 2-1 2-2.5 2" stroke="#fff" stroke-width="1.6" fill="none"/></svg></span>TypeScript</span>, <span data-i18n="introAndWord5">and</span>
             <span class="inline-tech"><span class="inline-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="1.7"><circle cx="12" cy="12" r="2" fill="#06b6d4"/><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/></svg></span>React</span>.
           </span>
 
-          <span class="intro-p">
+          <span class="intro-p animate-in animate-delay-6">
             <span data-i18n="introBesides">Besides, I love</span> <span class="hi" data-i18n="introInterests">Photography, Minimal Design</span> <span data-i18n="introAndWord6">and</span> <span class="hi" data-i18n="introEngineering">Engineering</span>, <span data-i18n="introAlways">I'm always looking for new things to learn and new people to meet.</span>
           </span>
 
-          <span class="intro-p">
+          <span class="intro-p animate-in animate-delay-7">
             <span data-i18n="introOpen">Open to work on data, AI, or engineering roles — connect on</span>
             <a href="https://www.linkedin.com/in/abhishek-kanani/" target="_blank" rel="noreferrer" class="inline-tech dashed-link">
               <span class="inline-icon"><svg viewBox="0 0 256 256"><path d="M218.123 218.127h-37.931v-59.403c0-14.165-.253-32.4-19.728-32.4-19.756 0-22.779 15.434-22.779 31.369v60.43h-37.93V95.967h36.413v16.694h.51a39.907 39.907 0 0 1 35.928-19.733c38.445 0 45.533 25.288 45.533 58.186l-.016 67.013ZM56.955 79.27c-12.157.002-22.014-9.852-22.016-22.009-.002-12.157 9.851-22.014 22.008-22.016 12.157-.003 22.014 9.851 22.016 22.008A22.013 22.013 0 0 1 56.955 79.27m18.966 138.858H37.95V95.967h37.97v122.16ZM237.033.018H18.89C8.58-.098.125 8.161-.001 18.471v219.053c.122 10.315 8.576 18.582 18.89 18.474h218.144c10.336.128 18.823-8.139 18.966-18.474V18.454c-.147-10.33-8.635-18.588-18.966-18.453" fill="#0A66C2"/></svg></span>LinkedIn
@@ -272,7 +272,7 @@
             </a>
           </span>
 
-          <div class="signoff-row">
+          <div class="signoff-row animate-in animate-delay-7">
             <span id="signoffText" data-i18n="signoff">~ shipping...</span>
             <button id="dotBtn" class="dot-btn" aria-label="Status toggle"></button>
           </div>
@@ -280,7 +280,7 @@
       </article>
 
       <!-- ── GITHUB ACTIVITY BAR (ch.sh style) ── -->
-      <section class="github-bar-section gutter-x" aria-label="GitHub contributions">
+      <section class="github-bar-section gutter-x animate-in animate-delay-8" aria-label="GitHub contributions">
         <div class="github-bar-header">
           <a href="https://github.com/isabhiii" target="_blank" rel="noreferrer noopener" class="github-bar-link">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
@@ -291,10 +291,10 @@
         <div id="githubBars" class="github-bars"></div>
       </section>
 
-      <div class="divider"></div>
+      <div class="divider animate-in animate-delay-8"></div>
 
       <!-- ── WORK ── -->
-      <div class="ruru-section">
+      <div class="ruru-section animate-in animate-delay-9">
         <span class="ruru-section-label gutter-x" data-i18n="sectionWork">Work</span>
         <div class="ruru-list">
 
@@ -304,10 +304,10 @@
                 <svg viewBox="0 0 28 28" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M7 18.079V21L0 14L1.46 12.54L7 18.081V18.079ZM9.921 21H7L14 28L15.46 26.54L9.921 21ZM26.535 15.462L27.996 14L13.996 0L12.538 1.466L18.077 7.004H14.73L10.864 3.146L9.404 4.606L11.809 7.01H10.129V17.876H20.994V16.196L23.399 18.6L24.859 17.14L20.994 13.274V9.927L26.535 15.462ZM7.73 6.276L6.265 7.738L7.833 9.304L9.294 7.844L7.73 6.276ZM20.162 18.708L18.702 20.17L20.268 21.738L21.73 20.276L20.162 18.708ZM4.596 9.41L3.134 10.872L7 14.738V11.815L4.596 9.41ZM16.192 21.006H13.268L17.134 24.872L18.596 23.41L16.192 21.006Z" fill="currentColor"/></svg>
               </span>
               <span class="row-title">Raycast</span>
-              <span class="row-desc">~ Open Source Contributor</span>
+              <span class="row-desc" data-i18n="workRaycastDesc">~ Open Source Contributor</span>
             </div>
             <div class="ruru-row-right">
-              <div class="row-meta"><span>open source -</span><span>Mar 2026–Present</span></div>
+              <div class="row-meta"><span data-i18n="workRaycastType">open source -</span><span data-i18n="workRaycastDate">Mar 2026–Present</span></div>
               <div class="row-hover-domain">raycast.com <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></div>
             </div>
           </a>
@@ -318,10 +318,10 @@
                 <img src="infineon-logo.png" alt="Infineon Technologies">
               </span>
               <span class="row-title">Infineon Technologies</span>
-              <span class="row-desc">~ Data Analyst</span>
+              <span class="row-desc" data-i18n="workInfineonDesc">~ Data Analyst</span>
             </div>
             <div class="ruru-row-right">
-              <div class="row-meta"><span>working student -</span><span>24 mo</span></div>
+              <div class="row-meta"><span data-i18n="workInfineonType">working student -</span><span data-i18n="workInfineonDate">24 mo</span></div>
               <div class="row-hover-domain">infineon.com <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></div>
             </div>
           </a>
@@ -332,10 +332,10 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>
               </span>
               <span class="row-title">TC Teisnach Optik</span>
-              <span class="row-desc">~ Graduate Research Assistant</span>
+              <span class="row-desc" data-i18n="workTeisnachDesc">~ Graduate Research Assistant</span>
             </div>
             <div class="ruru-row-right">
-              <div class="row-meta"><span>research -</span><span>7 mo</span></div>
+              <div class="row-meta"><span data-i18n="workTeisnachType">research -</span><span data-i18n="workTeisnachDate">7 mo</span></div>
               <div class="row-hover-domain">th-deg.de <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></div>
             </div>
           </a>
@@ -346,10 +346,10 @@
                 <img src="rosenberger-logo.png" alt="Rosenberger">
               </span>
               <span class="row-title">Rosenberger</span>
-              <span class="row-desc">~ Python Developer Intern &amp; Analyst</span>
+              <span class="row-desc" data-i18n="workRosenbergerDesc">~ Python Developer Intern &amp; Analyst</span>
             </div>
             <div class="ruru-row-right">
-              <div class="row-meta"><span>internship -</span><span>7 mo</span></div>
+              <div class="row-meta"><span data-i18n="workRosenbergerType">internship -</span><span data-i18n="workRosenbergerDate">7 mo</span></div>
               <div class="row-hover-domain">rosenberger.com <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></div>
             </div>
           </a>
@@ -357,10 +357,10 @@
         </div>
       </div>
 
-      <div class="divider"></div>
+      <div class="divider animate-in animate-delay-7"></div>
 
       <!-- ── PRODUCTS ── -->
-      <div class="ruru-section">
+      <div class="ruru-section animate-in animate-delay-8">
         <span class="ruru-section-label gutter-x" data-i18n="sectionProducts">Products</span>
         <div class="ruru-list">
 
@@ -370,7 +370,7 @@
                 <img src="wos-icon.png" alt="Word of Supreme" style="width:14px;height:14px;border-radius:3px;background:none;padding:0;">
               </span>
               <span class="row-title">Word of Supreme</span>
-              <span class="row-desc">~ Minimalist Bhagavad Gītā iOS app</span>
+              <span class="row-desc" data-i18n="prodWosDesc">~ Minimalist Bhagavad Gītā iOS app</span>
             </div>
             <div class="ruru-row-right">
               <div class="stack-icons">
@@ -387,7 +387,7 @@
                 <img src="renamemail-icon.png" alt="RenameMail" style="width:14px;height:14px;border-radius:3px;background:none;padding:0;">
               </span>
               <span class="row-title">RenameMail</span>
-              <span class="row-desc">~ Turn your Gmail into a visual tracker &amp; pipeline.</span>
+              <span class="row-desc" data-i18n="prodRenameMailDesc">~ Turn your Gmail into a visual tracker &amp; pipeline.</span>
             </div>
             <div class="ruru-row-right">
               <div class="stack-icons">
@@ -402,10 +402,10 @@
         </div>
       </div>
 
-      <div class="divider"></div>
+      <div class="divider animate-in animate-delay-8"></div>
 
       <!-- ── PROJECTS ── -->
-      <div class="ruru-section">
+      <div class="ruru-section animate-in animate-delay-9">
         <span class="ruru-section-label gutter-x" data-i18n="sectionProjects">Projects</span>
         <div class="ruru-list">
 
@@ -414,8 +414,8 @@
               <span class="row-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
               </span>
-              <span class="row-title">Apple Reminders (Raycast)</span>
-              <span class="row-desc">~ Recurrence, calendar events, priorities &amp; tags PRs.</span>
+              <span class="row-title" data-i18n="projRemindersTitle">Apple Reminders (Raycast)</span>
+              <span class="row-desc" data-i18n="projRemindersDesc">~ Recurrence, calendar events, priorities &amp; tags PRs.</span>
             </div>
             <div class="ruru-row-right">
               <div class="stack-icons">
@@ -431,8 +431,8 @@
               <span class="row-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
               </span>
-              <span class="row-title">Manufacturing Quality RAG</span>
-              <span class="row-desc">~ Sub-second semantic doc search with ChromaDB.</span>
+              <span class="row-title" data-i18n="projRagTitle">Manufacturing Quality RAG</span>
+              <span class="row-desc" data-i18n="projRagDesc">~ Sub-second semantic doc search with ChromaDB.</span>
             </div>
             <div class="ruru-row-right">
               <div class="stack-icons">
@@ -448,8 +448,8 @@
               <span class="row-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
               </span>
-              <span class="row-title">ML Vehicle Sales</span>
-              <span class="row-desc">~ Gradient-boosted regression at 92% R² accuracy.</span>
+              <span class="row-title" data-i18n="projSalesTitle">ML Vehicle Sales</span>
+              <span class="row-desc" data-i18n="projSalesDesc">~ Gradient-boosted regression at 92% R² accuracy.</span>
             </div>
             <div class="ruru-row-right">
               <div class="stack-icons">
@@ -465,8 +465,8 @@
               <span class="row-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
               </span>
-              <span class="row-title">Object Detection DNN</span>
-              <span class="row-desc">~ Real-time 30+ FPS CPU object detection via ONNX.</span>
+              <span class="row-title" data-i18n="projDnnTitle">Object Detection DNN</span>
+              <span class="row-desc" data-i18n="projDnnDesc">~ Real-time 30+ FPS CPU object detection via ONNX.</span>
             </div>
             <div class="ruru-row-right">
               <div class="stack-icons">
@@ -482,8 +482,8 @@
               <span class="row-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
               </span>
-              <span class="row-title">Reddit Stock Sentiment</span>
-              <span class="row-desc">~ Real-time NLP ticker sentiment streaming pipeline.</span>
+              <span class="row-title" data-i18n="projSentimentTitle">Reddit Stock Sentiment</span>
+              <span class="row-desc" data-i18n="projSentimentDesc">~ Real-time NLP ticker sentiment streaming pipeline.</span>
             </div>
             <div class="ruru-row-right">
               <div class="stack-icons">
@@ -496,10 +496,10 @@
         </div>
       </div>
 
-      <div class="divider"></div>
+      <div class="divider animate-in animate-delay-9"></div>
 
       <!-- ── FOOTER SOCIALS (Ruru style) ── -->
-      <footer class="ruru-footer gutter-x">
+      <footer class="ruru-footer gutter-x animate-in animate-delay-10">
         <div class="social-icons-group">
           <a href="https://www.linkedin.com/in/abhishek-kanani/" target="_blank" rel="noreferrer noopener" class="social-icon-link" aria-label="LinkedIn">
             <svg viewBox="0 0 256 256" fill="currentColor"><path d="M218.123 218.127h-37.931v-59.403c0-14.165-.253-32.4-19.728-32.4-19.756 0-22.779 15.434-22.779 31.369v60.43h-37.93V95.967h36.413v16.694h.51a39.907 39.907 0 0 1 35.928-19.733c38.445 0 45.533 25.288 45.533 58.186l-.016 67.013ZM56.955 79.27c-12.157.002-22.014-9.852-22.016-22.009-.002-12.157 9.851-22.014 22.008-22.016 12.157-.003 22.014 9.851 22.016 22.008A22.013 22.013 0 0 1 56.955 79.27m18.966 138.858H37.95V95.967h37.97v122.16ZM237.033.018H18.89C8.58-.098.125 8.161-.001 18.471v219.053c.122 10.315 8.576 18.582 18.89 18.474h218.144c10.336.128 18.823-8.139 18.966-18.474V18.454c-.147-10.33-8.635-18.588-18.966-18.453"/></svg>
@@ -523,51 +523,51 @@
 
     <!-- ══════════════ FAVORITES TAB (DesignerDada pixel-by-pixel) ══════════════ -->
     <section id="panel-favorites" class="tab-panel gutter-x">
-      <p class="fav-intro" data-i18n="favIntro">
+      <p class="fav-intro animate-in animate-delay-1" data-i18n="favIntro">
         I love discovering great things, whether it's a beautifully designed product, an inspiring person, or a website I keep coming back to. This is my collection of those gems I find on the internet and in the real world. Everything here has caught my attention and stuck with me for one reason or another.
       </p>
 
-      <div class="fav-controls" role="search">
+      <div class="fav-controls animate-in animate-delay-2" role="search">
         <div class="fav-search-wrap">
           <svg class="fav-search-icon" viewBox="0 0 16 16" fill="none">
             <path d="M11.3333 11.3333L14 14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
             <path d="M12.6667 7.33333C12.6667 4.38781 10.2789 2 7.33333 2C4.38781 2 2 4.38781 2 7.33333C2 10.2789 4.38781 12.6667 7.33333 12.6667C10.2789 12.6667 12.6667 10.2789 12.6667 7.33333Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
           </svg>
-          <input id="favSearch" type="search" placeholder="Search links" class="fav-search-input" aria-label="Search favorites">
+          <input id="favSearch" type="search" placeholder="Search links" data-i18n-placeholder="favSearchPlaceholder" class="fav-search-input" aria-label="Search favorites">
         </div>
 
         <div class="fav-dropdown-wrap">
           <button id="sortBtn" class="fav-filter-btn" aria-label="Sort favorites">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg>
-            <span id="sortLabel">Latest</span>
+            <span id="sortLabel" data-i18n="sortLatest">Latest</span>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
           </button>
           <div id="sortMenu" class="fav-dropdown-menu">
-            <button class="fav-dropdown-item selected" data-val="Latest">Latest</button>
-            <button class="fav-dropdown-item" data-val="Oldest">Oldest</button>
-            <button class="fav-dropdown-item" data-val="A–Z">A–Z</button>
+            <button class="fav-dropdown-item selected" data-val="Latest" data-i18n="sortLatest">Latest</button>
+            <button class="fav-dropdown-item" data-val="Oldest" data-i18n="sortOldest">Oldest</button>
+            <button class="fav-dropdown-item" data-val="A–Z" data-i18n="sortAZ">A–Z</button>
           </div>
         </div>
 
         <div class="fav-dropdown-wrap">
           <button id="catBtn" class="fav-filter-btn" aria-label="Filter by category">
-            <span id="catLabel">All</span>
+            <span id="catLabel" data-i18n="catAll">All</span>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
           </button>
           <div id="catMenu" class="fav-dropdown-menu">
-            <button class="fav-dropdown-item selected" data-val="All">All</button>
-            <button class="fav-dropdown-item" data-val="Design">Design</button>
-            <button class="fav-dropdown-item" data-val="Apps">Apps</button>
-            <button class="fav-dropdown-item" data-val="Movies">Movies</button>
-            <button class="fav-dropdown-item" data-val="Typography">Typography</button>
-            <button class="fav-dropdown-item" data-val="People">People</button>
-            <button class="fav-dropdown-item" data-val="Blogs">Blogs</button>
-            <button class="fav-dropdown-item" data-val="Hardware">Hardware</button>
+            <button class="fav-dropdown-item selected" data-val="All" data-i18n="catAll">All</button>
+            <button class="fav-dropdown-item" data-val="Design" data-i18n="catDesign">Design</button>
+            <button class="fav-dropdown-item" data-val="Apps" data-i18n="catApps">Apps</button>
+            <button class="fav-dropdown-item" data-val="Movies" data-i18n="catMovies">Movies</button>
+            <button class="fav-dropdown-item" data-val="Typography" data-i18n="catTypography">Typography</button>
+            <button class="fav-dropdown-item" data-val="People" data-i18n="catPeople">People</button>
+            <button class="fav-dropdown-item" data-val="Blogs" data-i18n="catBlogs">Blogs</button>
+            <button class="fav-dropdown-item" data-val="Hardware" data-i18n="catHardware">Hardware</button>
           </div>
         </div>
       </div>
 
-      <div class="fav-list-wrap">
+      <div class="fav-list-wrap animate-in animate-delay-3">
         <div id="favPreview" class="fav-preview" aria-hidden="true">
           <div id="favPreviewCard" class="fav-preview-card">
             <div id="favPreviewInner" class="fav-preview-inner"></div>
@@ -580,11 +580,11 @@
     <!-- ══════════════ PHOTOGRAPHY TAB (DesignerDada style) ══════════════ -->
     <section id="panel-photography" class="tab-panel gutter-x">
       <div class="photo-intro">
-        <p>There's something about shooting film that forces you to slow down. With my different Phone's camera throughout my life, there's no chimping at the back of the screen to check if I nailed it. That constraint is the whole point. I've found that limitations make me a better photographer.</p>
-        <p>Most of what you'll see here is street photography, candid moments and quiet scenes I stumbled into while walking around with no particular agenda. It has a texture and honesty to it. These photos aren't perfect, but they're real.</p>
+        <p class="animate-in animate-delay-1" data-i18n="photoIntro1">There's something about shooting film that forces you to slow down. With my different Phone's camera throughout my life, there's no chimping at the back of the screen to check if I nailed it. That constraint is the whole point. I've found that limitations make me a better photographer.</p>
+        <p class="animate-in animate-delay-2" data-i18n="photoIntro2">Most of what you'll see here is street photography, candid moments and quiet scenes I stumbled into while walking around with no particular agenda. It has a texture and honesty to it. These photos aren't perfect, but they're real.</p>
       </div>
       <div class="photo-grid-breakout">
-        <div id="photoGrid" class="photo-grid"></div>
+        <div id="photoGrid" class="photo-grid animate-in animate-delay-3"></div>
       </div>
     </section>
 
@@ -592,7 +592,7 @@
     <footer class="wixon-footer" aria-label="Site footer">
       <div class="wixon-footer-meta">
         <span class="wixon-footer-copy">©2026 Abhishek Kanani</span>
-        <span class="wixon-footer-rights">All rights reserved</span>
+        <span class="wixon-footer-rights" data-i18n="footerRights">All rights reserved</span>
       </div>
       <a href="#top" class="wixon-footer-wordmark-link" aria-label="Back to top">
         <div class="wixon-footer-wordmark-letters" aria-hidden="true" data-wordmark="ABHISHEK KANANI"></div>
@@ -604,11 +604,11 @@
   <div class="language-modal" data-language-modal aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="language-modal-title">
     <div class="language-modal-panel" data-language-panel>
       <div class="language-modal-header">
-        <h2 class="language-modal-title" id="language-modal-title">Translate</h2>
+        <h2 class="language-modal-title" id="language-modal-title" data-i18n="modalTranslate">Translate</h2>
         <button class="language-modal-close" type="button" data-language-close data-sound="press" aria-label="Close language picker">×</button>
       </div>
       <div class="language-search-wrap">
-        <input class="language-search" type="search" data-language-search placeholder="Search languages" autocomplete="off" autocapitalize="none" spellcheck="false" />
+        <input class="language-search" type="search" data-language-search data-i18n-placeholder="modalSearchPlaceholder" placeholder="Search languages" autocomplete="off" autocapitalize="none" spellcheck="false" />
       </div>
       <div class="language-list" data-language-list role="listbox" aria-label="Available languages"></div>
     </div>
@@ -625,6 +625,6 @@
   </div>
 
   <div id="copyToast" class="copy-toast"></div>
-  <script src="app.js?v=69"></script>
+  <script src="app.js?v=76"></script>
 </body>
 </html>
