@@ -1174,12 +1174,15 @@ function initClickSound() {
   // play immediately after a refresh without requiring a random click first.
   function unlockAudio() {
     try {
+      if (navigator.userActivation && !navigator.userActivation.hasBeenActive) {
+        return;
+      }
       const context = getContext();
       if (context.state === 'suspended') {
         context.resume().catch(() => {});
       }
       if (context.state === 'running') {
-        ['pointerdown', 'pointermove', 'wheel', 'keydown', 'touchstart', 'scroll'].forEach((evt) =>
+        ['pointerdown', 'keydown', 'touchstart'].forEach((evt) =>
           window.removeEventListener(evt, unlockAudio, true)
         );
       }
@@ -1187,7 +1190,7 @@ function initClickSound() {
   }
 
   unlockAudio();
-  ['pointerdown', 'pointermove', 'wheel', 'keydown', 'touchstart', 'scroll'].forEach((evt) =>
+  ['pointerdown', 'keydown', 'touchstart'].forEach((evt) =>
     window.addEventListener(evt, unlockAudio, { capture: true, passive: true })
   );
 
@@ -1250,7 +1253,11 @@ function initClickSound() {
       const context = getContext();
       if (context.state === 'running') {
         scheduleCue(context, type);
-      } else {
+        return;
+      }
+      // Only call resume() when the browser has recorded user activation,
+      // or let the unlockAudio gesture listener resume it cleanly.
+      if (!navigator.userActivation || navigator.userActivation.hasBeenActive) {
         context
           .resume()
           .then(() => {
