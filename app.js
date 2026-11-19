@@ -842,9 +842,9 @@ function initTabs() {
   const headerEl = document.querySelector('.site-header');
   let currentActiveTab = null;
 
-  function replayStaggerReveal(panel) {
+  function replayStaggerReveal(panel, includeHeader = false) {
     const items = [
-      ...(headerEl ? [headerEl] : []),
+      ...(includeHeader && headerEl ? [headerEl] : []),
       ...panel.querySelectorAll('.animate-in'),
     ];
     items.forEach((el) => {
@@ -856,7 +856,7 @@ function initTabs() {
     });
   }
 
-  function activateTab(name, replay = false) {
+  function activateTab(name, replay = false, includeHeader = false) {
     if (name === currentActiveTab) return;
     currentActiveTab = name;
 
@@ -869,19 +869,19 @@ function initTabs() {
       const isTarget = p.id === `panel-${name}`;
       p.classList.toggle('active', isTarget);
       if (isTarget && replay) {
-        replayStaggerReveal(p);
+        replayStaggerReveal(p, includeHeader);
       }
     });
   }
 
   const hash = window.location.hash.replace('#', '');
   const initialTab = ['home', 'favorites', 'photography'].includes(hash) ? hash : 'home';
-  activateTab(initialTab, true);
+  activateTab(initialTab, true, true);
 
   window.addEventListener('pageshow', (e) => {
     if (!e.persisted) return;
     const activePanel = document.querySelector('.tab-panel.active');
-    if (activePanel) replayStaggerReveal(activePanel);
+    if (activePanel) replayStaggerReveal(activePanel, true);
   });
 
   navTabs.forEach((tab) => {
@@ -889,7 +889,7 @@ function initTabs() {
       e.preventDefault();
       const target = tab.dataset.tab;
       if (target === currentActiveTab) return;
-      activateTab(target, true);
+      activateTab(target, true, false);
       history.replaceState(null, '', target === 'home' ? '#' : `#${target}`);
     });
   });
@@ -897,7 +897,7 @@ function initTabs() {
   window.addEventListener('hashchange', () => {
     const h = window.location.hash.replace('#', '') || 'home';
     if (['home', 'favorites', 'photography'].includes(h) && h !== currentActiveTab) {
-      activateTab(h, true);
+      activateTab(h, true, false);
     }
   });
 }
