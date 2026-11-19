@@ -1210,7 +1210,7 @@ html.dark .theme-label-dark {
 }
 
 .intro-p + .intro-p {
-  margin-top: 12px;
+  margin-top: 18px;
 }
 
 .hi {
@@ -1285,7 +1285,7 @@ html.dark .theme-label-dark {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-top: 12px;
+  margin-top: 18px;
   font-size: 0.875rem;
   color: var(--secondary-text);
 }
