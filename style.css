@@ -664,6 +664,18 @@ button {
     box-shadow 0.28s ease;
 }
 
+.header-avatar-dark {
+  display: none;
+}
+
+html.dark .header-avatar-light {
+  display: none;
+}
+
+html.dark .header-avatar-dark {
+  display: block;
+}
+
 .avatar-pop:hover .header-avatar,
 .avatar-pop:focus-visible .header-avatar {
   transform: scale(4.5);
@@ -671,7 +683,19 @@ button {
   box-shadow: 0 18px 46px -18px rgba(0, 0, 0, 0.45);
 }
 
-html.dark .avatar-pop:hover .header-avatar,
+html.dark .header-avatar-dark {
+  display: none;
+}
+
+html.dark .header-avatar-light {
+  display: none;
+}
+
+html.dark .header-avatar-dark {
+  display: block;
+}
+
+.avatar-pop:hover .header-avatar,
 html.dark .avatar-pop:focus-visible .header-avatar {
   box-shadow: 0 22px 54px -16px rgba(0, 0, 0, 0.85);
 }
@@ -2220,7 +2244,19 @@ html.dark .github-bar-tooltip {
 
 /* ── COMPREHENSIVE MOBILE & TABLET RESPONSIVENESS ── */
 @media (max-width: 767px) {
-  .avatar-pop:hover .header-avatar,
+  .header-avatar-dark {
+  display: none;
+}
+
+html.dark .header-avatar-light {
+  display: none;
+}
+
+html.dark .header-avatar-dark {
+  display: block;
+}
+
+.avatar-pop:hover .header-avatar,
   .avatar-pop:focus-visible .header-avatar {
     transform: scale(3.1);
   }
