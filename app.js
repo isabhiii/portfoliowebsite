@@ -841,7 +841,86 @@ function initTabs() {
   const navTabs = document.querySelectorAll('.nav-tab');
   const panels = document.querySelectorAll('.tab-panel');
   const headerEl = document.querySelector('.site-header');
+  const siteNav = document.querySelector('.site-nav');
   let currentActiveTab = null;
+
+  // Two-spring stretchy underline (Tab Pill physics: leading edge stiff, trailing edge soft)
+  const navArr = [...navTabs];
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const springA = { x: 0, v: 0, t: 0, k: 400, c: 30 };
+  const springB = { x: 0, v: 0, t: 0, k: 400, c: 30 };
+  const tuneSpring = (s, k, c) => { s.k = k; s.c = reduceMotion ? 2 * Math.sqrt(k) : c; };
+  const stepSpring = (s, dt) => {
+    const a = -s.k * (s.x - s.t) - s.c * s.v;
+    s.v += a * dt;
+    s.x += s.v * dt;
+  };
+
+  let indicator = null;
+  let curIdx = -1;
+  let rafId = null;
+  let lastT = 0;
+
+  if (siteNav) {
+    siteNav.style.position = 'relative';
+    indicator = document.createElement('span');
+    indicator.className = 'nav-indicator';
+    siteNav.appendChild(indicator);
+  }
+
+  function renderIndicator() {
+    if (!indicator) return;
+    indicator.style.transform = `translateX(${springA.x.toFixed(2)}px)`;
+    indicator.style.width = `${Math.max(0, springB.x - springA.x).toFixed(2)}px`;
+  }
+
+  function tickIndicator(now) {
+    const dt = Math.min((now - lastT) / 1000, 1 / 30);
+    lastT = now;
+    const sub = 4;
+    for (let k = 0; k < sub; k++) {
+      stepSpring(springA, dt / sub);
+      stepSpring(springB, dt / sub);
+    }
+    renderIndicator();
+    const settled =
+      Math.abs(springA.x - springA.t) < 0.05 && Math.abs(springA.v) < 0.05 &&
+      Math.abs(springB.x - springB.t) < 0.05 && Math.abs(springB.v) < 0.05;
+    if (settled) {
+      springA.x = springA.t; springA.v = 0;
+      springB.x = springB.t; springB.v = 0;
+      renderIndicator();
+      rafId = null;
+    } else {
+      rafId = requestAnimationFrame(tickIndicator);
+    }
+  }
+
+  function moveIndicator(tab, snap = false) {
+    if (!indicator || !tab) return;
+    const idx = navArr.indexOf(tab);
+    const dir = idx > curIdx ? 1 : -1;
+    curIdx = idx;
+    springA.t = tab.offsetLeft;
+    springB.t = tab.offsetLeft + tab.offsetWidth;
+    if (dir > 0) { tuneSpring(springB, 620, 40); tuneSpring(springA, 170, 19); }
+    else { tuneSpring(springA, 620, 40); tuneSpring(springB, 170, 19); }
+    if (snap || reduceMotion) {
+      springA.x = springA.t; springA.v = 0;
+      springB.x = springB.t; springB.v = 0;
+      renderIndicator();
+      return;
+    }
+    if (!rafId) {
+      lastT = performance.now();
+      rafId = requestAnimationFrame(tickIndicator);
+    }
+  }
+
+  window.addEventListener('resize', () => {
+    const active = document.querySelector('.nav-tab.active');
+    if (active) moveIndicator(active, true);
+  });
 
   function replayStaggerReveal(panel, includeHeader = false) {
     const items = [
@@ -858,6 +937,7 @@ function initTabs() {
   }
 
   function activateTab(name, replay = false, includeHeader = false) {
+    const isInitial = currentActiveTab === null;
     if (name === currentActiveTab) return;
     currentActiveTab = name;
 
@@ -865,6 +945,7 @@ function initTabs() {
       const active = t.dataset.tab === name;
       t.classList.toggle('active', active);
       t.setAttribute('aria-current', active ? 'page' : 'false');
+      if (active) moveIndicator(t, isInitial);
     });
     panels.forEach((p) => {
       const isTarget = p.id === `panel-${name}`;

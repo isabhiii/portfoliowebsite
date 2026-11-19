@@ -1028,9 +1028,6 @@ body.language-settled .tab-panel {
 .nav-tab.active {
   color: #2563eb;
   font-weight: 600;
-  text-decoration: underline;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 5px;
 }
 
 html.dark .nav-tab:hover {
@@ -1039,6 +1036,22 @@ html.dark .nav-tab:hover {
 
 html.dark .nav-tab.active {
   color: #ef4444;
+}
+
+.nav-indicator {
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  height: 2px;
+  background: #2563eb;
+  border-radius: 2px;
+  pointer-events: none;
+  will-change: transform, width;
+  transition: background-color 0.2s ease;
+}
+
+html.dark .nav-indicator {
+  background: #ef4444;
 }
 
 html[data-theme-reveal]::view-transition-old(root),
