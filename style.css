@@ -626,6 +626,8 @@ button {
 
 /* ── HEADER & NAV (DesignerDada style) ── */
 .site-header {
+  position: relative;
+  z-index: 60;
   display: flex;
   flex-direction: column;
   gap: 10px;
