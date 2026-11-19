@@ -840,6 +840,7 @@ function initTabs() {
   const navTabs = document.querySelectorAll('.nav-tab');
   const panels = document.querySelectorAll('.tab-panel');
   const headerEl = document.querySelector('.site-header');
+  let currentActiveTab = null;
 
   function replayStaggerReveal(panel) {
     const items = [
@@ -856,6 +857,9 @@ function initTabs() {
   }
 
   function activateTab(name, replay = false) {
+    if (name === currentActiveTab) return;
+    currentActiveTab = name;
+
     navTabs.forEach((t) => {
       const active = t.dataset.tab === name;
       t.classList.toggle('active', active);
@@ -874,7 +878,8 @@ function initTabs() {
   const initialTab = ['home', 'favorites', 'photography'].includes(hash) ? hash : 'home';
   activateTab(initialTab, true);
 
-  window.addEventListener('pageshow', () => {
+  window.addEventListener('pageshow', (e) => {
+    if (!e.persisted) return;
     const activePanel = document.querySelector('.tab-panel.active');
     if (activePanel) replayStaggerReveal(activePanel);
   });
@@ -883,6 +888,7 @@ function initTabs() {
     tab.addEventListener('click', (e) => {
       e.preventDefault();
       const target = tab.dataset.tab;
+      if (target === currentActiveTab) return;
       activateTab(target, true);
       history.replaceState(null, '', target === 'home' ? '#' : `#${target}`);
     });
@@ -890,7 +896,7 @@ function initTabs() {
 
   window.addEventListener('hashchange', () => {
     const h = window.location.hash.replace('#', '') || 'home';
-    if (['home', 'favorites', 'photography'].includes(h)) {
+    if (['home', 'favorites', 'photography'].includes(h) && h !== currentActiveTab) {
       activateTab(h, true);
     }
   });
