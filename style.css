@@ -1016,18 +1016,27 @@ body.language-settled .tab-panel {
 .nav-tab {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--secondary-text);
+  color: #2563eb;
   transition: color 0.15s ease;
   padding: 2px 0;
 }
 
 .nav-tab:hover {
-  color: var(--primary-text);
+  color: #1d4ed8;
 }
 
 .nav-tab.active {
-  color: var(--primary-text);
+  color: #1d4ed8;
   font-weight: 600;
+}
+
+html.dark .nav-tab {
+  color: #38bdf8;
+}
+
+html.dark .nav-tab:hover,
+html.dark .nav-tab.active {
+  color: #7dd3fc;
 }
 
 html[data-theme-reveal]::view-transition-old(root),
