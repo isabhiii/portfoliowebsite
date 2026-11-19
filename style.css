@@ -51,6 +51,10 @@ html {
   }
 }
 
+html.dark img.dark-invert {
+  filter: invert(1);
+}
+
 body {
   font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
   background-color: var(--bg);
