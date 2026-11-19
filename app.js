@@ -1169,6 +1169,28 @@ function initClickSound() {
     return ctx;
   }
 
+  // Pre-warm and unlock AudioContext on page load and on the earliest user activity
+  // (wheel, scroll, pointermove, keydown, touchstart, pointerdown) so hover sounds
+  // play immediately after a refresh without requiring a random click first.
+  function unlockAudio() {
+    try {
+      const context = getContext();
+      if (context.state === 'suspended') {
+        context.resume().catch(() => {});
+      }
+      if (context.state === 'running') {
+        ['pointerdown', 'pointermove', 'wheel', 'keydown', 'touchstart', 'scroll'].forEach((evt) =>
+          window.removeEventListener(evt, unlockAudio, true)
+        );
+      }
+    } catch {}
+  }
+
+  unlockAudio();
+  ['pointerdown', 'pointermove', 'wheel', 'keydown', 'touchstart', 'scroll'].forEach((evt) =>
+    window.addEventListener(evt, unlockAudio, { capture: true, passive: true })
+  );
+
   function playNoise(context, dest, freq, q, attack, decay, peak, startTime) {
     const duration = attack + decay + 0.05;
     const length = Math.max(1, Math.floor(duration * context.sampleRate));
@@ -1209,19 +1231,34 @@ function initClickSound() {
     osc.stop(startTime + attack + decay + 0.05);
   }
 
+  function scheduleCue(context, type) {
+    const now = context.currentTime;
+    const master = context.createGain();
+    master.gain.value = 0.4;
+    master.connect(context.destination);
+
+    if (type === 'press') {
+      playNoise(context, master, 1700, 1.4, 0.001, 0.02, 0.13, now);
+    } else {
+      playNoise(context, master, 5400, 1.8, 0.001, 0.018, 0.14, now);
+      playTone(context, master, 2600, 0.001, 0.012, 0.018, now);
+    }
+  }
+
   function playCue(type) {
     try {
       const context = getContext();
-      const now = context.currentTime;
-      const master = context.createGain();
-      master.gain.value = 0.4;
-      master.connect(context.destination);
-
-      if (type === 'press') {
-        playNoise(context, master, 1700, 1.4, 0.001, 0.02, 0.13, now);
+      if (context.state === 'running') {
+        scheduleCue(context, type);
       } else {
-        playNoise(context, master, 5400, 1.8, 0.001, 0.018, 0.14, now);
-        playTone(context, master, 2600, 0.001, 0.012, 0.018, now);
+        context
+          .resume()
+          .then(() => {
+            if (context.state === 'running') {
+              scheduleCue(context, type);
+            }
+          })
+          .catch(() => {});
       }
     } catch {
       // Ignore Web Audio autoplay blocks if any
