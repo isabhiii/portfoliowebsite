@@ -1016,7 +1016,7 @@ body.language-settled .tab-panel {
 .nav-tab {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #2563eb;
+  color: var(--secondary-text);
   transition: color 0.15s ease;
   padding: 2px 0;
 }
@@ -1026,17 +1026,16 @@ body.language-settled .tab-panel {
 }
 
 .nav-tab.active {
-  color: #1d4ed8;
+  color: #2563eb;
   font-weight: 600;
 }
 
-html.dark .nav-tab {
-  color: #38bdf8;
+html.dark .nav-tab:hover {
+  color: #f87171;
 }
 
-html.dark .nav-tab:hover,
 html.dark .nav-tab.active {
-  color: #7dd3fc;
+  color: #ef4444;
 }
 
 html[data-theme-reveal]::view-transition-old(root),
