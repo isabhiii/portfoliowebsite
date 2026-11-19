@@ -1503,6 +1503,8 @@ html.dark .row-icon img {
 }
 
 .fav-controls {
+  position: relative;
+  z-index: 40;
   display: flex;
   align-items: center;
   gap: 16px;
@@ -1596,6 +1598,7 @@ html.dark .row-icon img {
 
 .fav-list-wrap {
   position: relative;
+  z-index: 10;
   width: 100%;
 }
 
