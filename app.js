@@ -3411,8 +3411,8 @@ function initLanguageSwitcher() {
     }
   };
 
-  let currentLanguage = localStorage.getItem('lang') || 'en';
-  if (!TRANSLATIONS[currentLanguage]) currentLanguage = 'en';
+  let currentLanguage = localStorage.getItem('lang') || 'de';
+  if (!TRANSLATIONS[currentLanguage]) currentLanguage = 'de';
   let blurTimer = null;
   let applyTimer = null;
 
