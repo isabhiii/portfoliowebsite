@@ -1569,6 +1569,24 @@ html.dark .social-icon-link[data-social="github"]:focus-visible {
   z-index: 20;
 }
 
+.social-icon-link[data-social="linkedin"] .social-note {
+  background: linear-gradient(135deg, #0a66c2 0%, #004182 100%);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.social-icon-link[data-social="github"] .social-note {
+  background: linear-gradient(135deg, #2b3137 0%, #14171a 100%);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.social-icon-link[data-social="instagram"] .social-note {
+  background: linear-gradient(135deg, #f58529 0%, #dd2a7b 52%, #8134af 100%);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
 .social-icon-link:hover .social-note,
 .social-icon-link:focus-visible .social-note {
   opacity: 1;
