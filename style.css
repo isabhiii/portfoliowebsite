@@ -2534,3 +2534,160 @@ html.dark .wixon-footer-wordmark-letters {
 html.dark .wixon-footer-wordmark-link:hover .wixon-footer-wordmark-letters {
   color: rgba(255, 255, 255, 0.18);
 }
+
+/* ── WORK TAB (EDITORIAL CASE FEED) ── */
+.work-intro {
+  margin-bottom: 28px;
+}
+
+.work-intro-text {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--secondary-text);
+  margin-bottom: 16px;
+}
+
+.work-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.work-filter-btn {
+  appearance: none;
+  background: transparent;
+  border: 1px solid var(--divider);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--secondary-text);
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.work-filter-btn:hover {
+  color: var(--primary-text);
+  border-color: var(--muted-text);
+}
+
+.work-filter-btn.active {
+  color: var(--primary-text);
+  background: var(--hover-bg);
+  border-color: var(--primary-text);
+}
+
+.work-feed {
+  display: flex;
+  flex-direction: column;
+}
+
+.work-feed .divider {
+  margin: 34px 0;
+}
+
+.work-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.work-entry[hidden],
+.work-entry[hidden] + .divider {
+  display: none;
+}
+
+.work-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.75rem;
+  color: var(--muted-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.work-tags {
+  color: var(--secondary-text);
+}
+
+.work-header-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.work-title {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--primary-text);
+}
+
+.work-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.8125rem;
+  color: var(--secondary-text);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.work-link:hover {
+  color: var(--primary-text);
+}
+
+.work-summary {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--secondary-text);
+}
+
+.work-media-empty {
+  aspect-ratio: 16 / 10;
+  width: 100%;
+  border: 1px dashed var(--divider);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted-text);
+  margin: 4px 0;
+}
+
+.work-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  padding: 12px 0 2px;
+  border-top: 1px solid var(--divider);
+}
+
+.work-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.work-metric-val {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--primary-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.work-metric-label {
+  font-size: 0.75rem;
+  color: var(--secondary-text);
+}
+
+@media (max-width: 640px) {
+  .work-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+}

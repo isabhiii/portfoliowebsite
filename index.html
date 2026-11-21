@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=100">
+  <link rel="stylesheet" href="style.css?v=101">
   <script>
     try {
       if (localStorage.getItem('theme') === 'dark') {
@@ -198,6 +198,7 @@
       <div class="header-name">Abhishek Kanani <span class="aka" data-i18n="headerAka">aka</span> @isabhiii</div>
       <nav class="top-nav" aria-label="Main navigation">
         <a href="#home" class="nav-tab active" data-tab="home" aria-current="page" data-i18n="navHome">Home</a>
+        <a href="#work" class="nav-tab" data-tab="work" data-i18n="navWork">Work</a>
         <a href="#favorites" class="nav-tab" data-tab="favorites" data-i18n="navFavorites">Favorites</a>
         <a href="#photography" class="nav-tab" data-tab="photography" data-i18n="navPhotography">Photography</a>
         <div class="language-options" aria-label="Language options">
@@ -522,6 +523,177 @@
         </a>
       </footer>
 
+    </section>
+
+    <!-- ══════════════ WORK TAB (Editorial Case Feed) ══════════════ -->
+    <section id="panel-work" class="tab-panel gutter-x">
+      <div class="work-intro animate-in animate-delay-1">
+        <p class="work-intro-text" data-i18n="workIntro">
+          Selected products, AI systems, and engineering builds — focused on real-world impact, clean architecture, and measurable performance.
+        </p>
+        <div class="work-filters" role="group" aria-label="Filter work by category">
+          <button type="button" class="work-filter-btn active" data-work-filter="all" data-sound="press">All</button>
+          <button type="button" class="work-filter-btn" data-work-filter="products" data-sound="press">Products</button>
+          <button type="button" class="work-filter-btn" data-work-filter="ai" data-sound="press">AI / ML</button>
+          <button type="button" class="work-filter-btn" data-work-filter="engineering" data-sound="press">Engineering</button>
+        </div>
+      </div>
+
+      <div class="work-feed animate-in animate-delay-2">
+
+        <article class="work-entry" data-work-cat="products">
+          <div class="work-meta-row">
+            <span class="work-index">01 · iOS App</span>
+            <span class="work-tags">Swift · SwiftUI · iOS</span>
+          </div>
+          <div class="work-header-row">
+            <h2 class="work-title">Word of Supreme</h2>
+            <a href="https://wordofsupreme.com/" target="_blank" rel="noreferrer" class="work-link">wordofsupreme.com <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
+          </div>
+          <p class="work-summary">Minimalist Bhagavad Gītā iOS app built with native SwiftUI, crafted for calm daily reading, distraction-free typography, and instant verse navigation.</p>
+          <div class="work-media-empty" aria-label="Project photos placeholder">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          </div>
+          <div class="work-metrics">
+            <div class="work-metric"><span class="work-metric-val">18</span><span class="work-metric-label">Chapters indexed</span></div>
+            <div class="work-metric"><span class="work-metric-val">700</span><span class="work-metric-label">Verses structured</span></div>
+            <div class="work-metric"><span class="work-metric-val">Native</span><span class="work-metric-label">SwiftUI architecture</span></div>
+          </div>
+        </article>
+
+        <div class="divider"></div>
+
+        <article class="work-entry" data-work-cat="products">
+          <div class="work-meta-row">
+            <span class="work-index">02 · Browser Extension</span>
+            <span class="work-tags">TypeScript · Chrome · Firefox</span>
+          </div>
+          <div class="work-header-row">
+            <h2 class="work-title">RenameMail</h2>
+            <a href="https://renamemail.com/" target="_blank" rel="noreferrer" class="work-link">renamemail.com <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
+          </div>
+          <p class="work-summary">Turns Gmail into a visual tracker and pipeline by letting you rename threads inline, organize job or client stages, and keep your inbox clean.</p>
+          <div class="work-media-empty" aria-label="Project photos placeholder">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          </div>
+          <div class="work-metrics">
+            <div class="work-metric"><span class="work-metric-val">Cross-browser</span><span class="work-metric-label">Chrome &amp; Firefox</span></div>
+            <div class="work-metric"><span class="work-metric-val">Inline</span><span class="work-metric-label">Gmail DOM pipeline</span></div>
+            <div class="work-metric"><span class="work-metric-val">Zero</span><span class="work-metric-label">External data leaves browser</span></div>
+          </div>
+        </article>
+
+        <div class="divider"></div>
+
+        <article class="work-entry" data-work-cat="engineering">
+          <div class="work-meta-row">
+            <span class="work-index">03 · Open Source</span>
+            <span class="work-tags">TypeScript · React · Raycast</span>
+          </div>
+          <div class="work-header-row">
+            <h2 class="work-title">Apple Reminders (Raycast)</h2>
+            <a href="https://www.raycast.com/raycast/apple-reminders" target="_blank" rel="noreferrer" class="work-link">raycast.com <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
+          </div>
+          <p class="work-summary">Contributed pull requests adding recurrence rules, calendar event integration, priority controls, and tag workflows to the official Raycast Apple Reminders extension.</p>
+          <div class="work-media-empty" aria-label="Project photos placeholder">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          </div>
+          <div class="work-metrics">
+            <div class="work-metric"><span class="work-metric-val">Merged PRs</span><span class="work-metric-label">Official Raycast store</span></div>
+            <div class="work-metric"><span class="work-metric-val">4+</span><span class="work-metric-label">Core workflows added</span></div>
+            <div class="work-metric"><span class="work-metric-val">macOS</span><span class="work-metric-label">Native EventKit bridge</span></div>
+          </div>
+        </article>
+
+        <div class="divider"></div>
+
+        <article class="work-entry" data-work-cat="ai">
+          <div class="work-meta-row">
+            <span class="work-index">04 · AI / Retrieval</span>
+            <span class="work-tags">Python · Docker · ChromaDB · SQL</span>
+          </div>
+          <div class="work-header-row">
+            <h2 class="work-title">Manufacturing Quality RAG</h2>
+            <a href="https://github.com/isabhiii/Manufacturing-Quality-RAG" target="_blank" rel="noreferrer" class="work-link">isabhiii/rag <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
+          </div>
+          <p class="work-summary">Sub-second semantic document search across manufacturing quality specifications and inspection logs using ChromaDB vector embeddings and SQL metadata filtering.</p>
+          <div class="work-media-empty" aria-label="Project photos placeholder">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          </div>
+          <div class="work-metrics">
+            <div class="work-metric"><span class="work-metric-val">&lt; 1s</span><span class="work-metric-label">Semantic query latency</span></div>
+            <div class="work-metric"><span class="work-metric-val">ChromaDB</span><span class="work-metric-label">Vector + SQL retrieval</span></div>
+            <div class="work-metric"><span class="work-metric-val">Docker</span><span class="work-metric-label">Containerized deployment</span></div>
+          </div>
+        </article>
+
+        <div class="divider"></div>
+
+        <article class="work-entry" data-work-cat="ai">
+          <div class="work-meta-row">
+            <span class="work-index">05 · Machine Learning</span>
+            <span class="work-tags">Python · Scikit-learn · SQL</span>
+          </div>
+          <div class="work-header-row">
+            <h2 class="work-title">ML Vehicle Sales</h2>
+            <a href="https://github.com/isabhiii/ML-Vehicle-Sales-Prediction" target="_blank" rel="noreferrer" class="work-link">isabhiii/ml-sales <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
+          </div>
+          <p class="work-summary">End-to-end gradient-boosted regression pipeline predicting vehicle resale and market pricing from historical SQL sales records and engineered vehicle features.</p>
+          <div class="work-media-empty" aria-label="Project photos placeholder">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          </div>
+          <div class="work-metrics">
+            <div class="work-metric"><span class="work-metric-val">92%</span><span class="work-metric-label">R² prediction accuracy</span></div>
+            <div class="work-metric"><span class="work-metric-val">GBDT</span><span class="work-metric-label">Gradient-boosted model</span></div>
+            <div class="work-metric"><span class="work-metric-val">SQL + Py</span><span class="work-metric-label">Automated feature pipeline</span></div>
+          </div>
+        </article>
+
+        <div class="divider"></div>
+
+        <article class="work-entry" data-work-cat="ai engineering">
+          <div class="work-meta-row">
+            <span class="work-index">06 · Computer Vision</span>
+            <span class="work-tags">Python · ONNX · OpenCV</span>
+          </div>
+          <div class="work-header-row">
+            <h2 class="work-title">Object Detection DNN</h2>
+            <a href="https://github.com/isabhiii/Object-Detection-using-DNN" target="_blank" rel="noreferrer" class="work-link">isabhiii/dnn <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
+          </div>
+          <p class="work-summary">Real-time object detection pipeline optimized with ONNX Runtime to achieve smooth CPU-only inference without requiring dedicated GPU hardware.</p>
+          <div class="work-media-empty" aria-label="Project photos placeholder">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          </div>
+          <div class="work-metrics">
+            <div class="work-metric"><span class="work-metric-val">30+ FPS</span><span class="work-metric-label">CPU-only inference</span></div>
+            <div class="work-metric"><span class="work-metric-val">ONNX</span><span class="work-metric-label">Optimized runtime graph</span></div>
+            <div class="work-metric"><span class="work-metric-val">0 GPU</span><span class="work-metric-label">Edge-ready execution</span></div>
+          </div>
+        </article>
+
+        <div class="divider"></div>
+
+        <article class="work-entry" data-work-cat="ai engineering">
+          <div class="work-meta-row">
+            <span class="work-index">07 · Data &amp; NLP</span>
+            <span class="work-tags">Python · NLP · Streaming</span>
+          </div>
+          <div class="work-header-row">
+            <h2 class="work-title">Reddit Stock Sentiment</h2>
+            <a href="https://github.com/isabhiii/Reddit-Stock-Sentiment-Analyzer" target="_blank" rel="noreferrer" class="work-link">isabhiii/sentiment <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
+          </div>
+          <p class="work-summary">Real-time NLP streaming pipeline extracting ticker mentions from live Reddit discussions and scoring market sentiment trends as they emerge.</p>
+          <div class="work-media-empty" aria-label="Project photos placeholder">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          </div>
+          <div class="work-metrics">
+            <div class="work-metric"><span class="work-metric-val">Live</span><span class="work-metric-label">Streaming NLP ingestion</span></div>
+            <div class="work-metric"><span class="work-metric-val">Ticker</span><span class="work-metric-label">Entity extraction</span></div>
+            <div class="work-metric"><span class="work-metric-val">Python</span><span class="work-metric-label">Real-time scoring</span></div>
+          </div>
+        </article>
+
+      </div>
     </section>
 
     <!-- ══════════════ FAVORITES TAB (DesignerDada pixel-by-pixel) ══════════════ -->

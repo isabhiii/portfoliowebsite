@@ -66,6 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   initSkyStars();
   initTabs();
+  initWorkFilter();
   initEmailCopy();
   initFavorites();
   initPhotography();
@@ -957,7 +958,7 @@ function initTabs() {
   }
 
   const hash = window.location.hash.replace('#', '');
-  const initialTab = ['home', 'favorites', 'photography'].includes(hash) ? hash : 'home';
+  const initialTab = ['home', 'work', 'favorites', 'photography'].includes(hash) ? hash : 'home';
   activateTab(initialTab, true, true);
 
   window.addEventListener('pageshow', (e) => {
@@ -978,9 +979,36 @@ function initTabs() {
 
   window.addEventListener('hashchange', () => {
     const h = window.location.hash.replace('#', '') || 'home';
-    if (['home', 'favorites', 'photography'].includes(h) && h !== currentActiveTab) {
+    if (['home', 'work', 'favorites', 'photography'].includes(h) && h !== currentActiveTab) {
       activateTab(h, true, false);
     }
+  });
+}
+
+function initWorkFilter() {
+  const buttons = document.querySelectorAll('.work-filter-btn');
+  const entries = document.querySelectorAll('.work-entry');
+  if (!buttons.length || !entries.length) return;
+
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const filter = btn.dataset.workFilter;
+      buttons.forEach((b) => b.classList.toggle('active', b === btn));
+      let lastVisible = null;
+      entries.forEach((entry) => {
+        const cats = (entry.dataset.workCat || '').split(/\s+/);
+        const show = filter === 'all' || cats.includes(filter);
+        entry.hidden = !show;
+        if (show) lastVisible = entry;
+      });
+      // Hide trailing divider after the last visible entry
+      document.querySelectorAll('.work-feed .divider').forEach((d) => {
+        d.style.display = '';
+      });
+      if (lastVisible && lastVisible.nextElementSibling?.classList.contains('divider')) {
+        lastVisible.nextElementSibling.style.display = 'none';
+      }
+    });
   });
 }
 
@@ -1421,6 +1449,7 @@ function initLanguageSwitcher() {
   const TRANSLATIONS = {
     en: {
       navHome: 'Home',
+      navWork: 'Work',
       navFavorites: 'Favorites',
       navPhotography: 'Photography',
       headerAka: 'aka',
@@ -1513,6 +1542,7 @@ function initLanguageSwitcher() {
     },
     de: {
       navHome: 'Start',
+      navWork: 'Projekte',
       navFavorites: 'Favoriten',
       navPhotography: 'Fotografie',
       headerAka: 'alias',
