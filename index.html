@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=101">
+  <link rel="stylesheet" href="style.css?v=117">
   <script>
     try {
       if (localStorage.getItem('theme') === 'dark') {
@@ -411,7 +411,7 @@
         <span class="ruru-section-label gutter-x" data-i18n="sectionProjects">Projects</span>
         <div class="ruru-list">
 
-          <a href="https://raycast.com/raycast/apple-reminders" target="_blank" rel="noreferrer" class="ruru-row">
+          <a href="https://github.com/raycast/extensions/pulls?q=is%3Apr+author%3Aisabhiii+apple-reminders" target="_blank" rel="noreferrer" class="ruru-row">
             <div class="ruru-row-left">
               <span class="row-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
@@ -424,7 +424,7 @@
                 <svg viewBox="0 0 24 24" fill="currentColor" title="TypeScript"><path d="M3 3h18v18H3V3zm8 8v7h2v-7h2.5V9.5h-7V11H11zm5.5 4.2c-.8-.2-1.2-.5-1.2-1s.4-.8 1.1-.8c.6 0 1 .2 1.4.5l.9-1.2c-.6-.5-1.3-.8-2.3-.8-1.6 0-2.7.9-2.7 2.2 0 1.4.9 2 2.4 2.4.9.2 1.2.5 1.2 1s-.5.9-1.3.9c-.8 0-1.4-.3-1.9-.8l-1 1.2c.7.6 1.7 1 2.9 1 1.7 0 2.9-.9 2.9-2.3 0-1.3-.8-2-2.4-2.3z"/></svg>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" title="React"><circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/></svg>
               </div>
-              <div class="row-hover-domain">raycast.com <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></div>
+              <div class="row-hover-domain">raycast/extensions <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></div>
             </div>
           </a>
 
@@ -532,10 +532,9 @@
           Selected products, AI systems, and engineering builds — focused on real-world impact, clean architecture, and measurable performance.
         </p>
         <div class="work-filters" role="group" aria-label="Filter work by category">
-          <button type="button" class="work-filter-btn active" data-work-filter="all" data-sound="press">All</button>
-          <button type="button" class="work-filter-btn" data-work-filter="products" data-sound="press">Products</button>
-          <button type="button" class="work-filter-btn" data-work-filter="ai" data-sound="press">AI / ML</button>
-          <button type="button" class="work-filter-btn" data-work-filter="engineering" data-sound="press">Engineering</button>
+          <button type="button" class="work-filter-btn active" data-work-filter="ai" data-sound="press" data-i18n="workFilterAi">AI / ML</button>
+          <button type="button" class="work-filter-btn" data-work-filter="products" data-sound="press" data-i18n="workFilterProducts">Products</button>
+          <button type="button" class="work-filter-btn" data-work-filter="opensource" data-sound="press" data-i18n="workFilterOpenSource">Open Source Contributions</button>
         </div>
       </div>
 
@@ -543,21 +542,50 @@
 
         <article class="work-entry" data-work-cat="products">
           <div class="work-meta-row">
-            <span class="work-index">01 · iOS App</span>
+            <span class="work-index" data-i18n="workIdxWos">01 · iOS App</span>
             <span class="work-tags">Swift · SwiftUI · iOS</span>
           </div>
           <div class="work-header-row">
             <h2 class="work-title">Word of Supreme</h2>
-            <a href="https://wordofsupreme.com/" target="_blank" rel="noreferrer" class="work-link">wordofsupreme.com <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
+            <a href="https://wordofsupreme.com/" target="_blank" rel="noreferrer" class="work-link"><img src="wos-icon.png" alt="" class="work-link-icon">wordofsupreme.com <svg class="work-link-arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
           </div>
-          <p class="work-summary">Minimalist Bhagavad Gītā iOS app built with native SwiftUI, crafted for calm daily reading, distraction-free typography, and instant verse navigation.</p>
-          <div class="work-media-empty" aria-label="Project photos placeholder">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <p class="work-summary" data-i18n="workWosSummary">Minimalist Bhagavad Gītā iOS app built with native SwiftUI, crafted for calm daily reading, distraction-free typography, and instant verse navigation.</p>
+          <div class="work-media-grid work-media-strip">
+            <div class="work-strip-item">
+              <div class="work-media-link work-media-video" role="button" tabindex="0" data-video-caption="Browse Chapters" aria-label="Expand Browse Chapters demo video">
+                <video src="wos-browse-chapters.mp4" loop muted playsinline preload="metadata" poster="wos-browse-chapters-poster.jpg"></video>
+              </div>
+              <span class="work-strip-label" data-i18n="workWosChapters">Browse Chapters</span>
+            </div>
+            <div class="work-strip-item">
+              <div class="work-media-link work-media-video" role="button" tabindex="0" data-video-caption="Personal Reflections" aria-label="Expand Personal Reflections demo video">
+                <video src="wos-personal-reflections.mp4" loop muted playsinline preload="none" poster="wos-personal-reflections-poster.jpg"></video>
+              </div>
+              <span class="work-strip-label" data-i18n="workWosReflections">Personal Reflections</span>
+            </div>
+            <div class="work-strip-item">
+              <div class="work-media-link work-media-video" role="button" tabindex="0" data-video-caption="Focus Read" aria-label="Expand Focus Read demo video">
+                <video src="wos-focus-read.mp4" loop muted playsinline preload="none" poster="wos-focus-read-poster.jpg"></video>
+              </div>
+              <span class="work-strip-label" data-i18n="workWosFocus">Focus Read</span>
+            </div>
+            <div class="work-strip-item">
+              <div class="work-media-link work-media-video" role="button" tabindex="0" data-video-caption="Discover" aria-label="Expand Discover demo video">
+                <video src="wos-discover.mp4" loop muted playsinline preload="none" poster="wos-discover-poster.jpg"></video>
+              </div>
+              <span class="work-strip-label" data-i18n="workWosDiscover">Discover</span>
+            </div>
+            <div class="work-strip-item">
+              <div class="work-media-link work-media-video" role="button" tabindex="0" data-video-caption="Daily Shloka" aria-label="Expand Daily Shloka demo video">
+                <video src="wos-daily-shloka.mp4" loop muted playsinline preload="none" poster="wos-daily-shloka-poster.jpg"></video>
+              </div>
+              <span class="work-strip-label" data-i18n="workWosDaily">Daily Shloka</span>
+            </div>
           </div>
           <div class="work-metrics">
-            <div class="work-metric"><span class="work-metric-val">18</span><span class="work-metric-label">Chapters indexed</span></div>
-            <div class="work-metric"><span class="work-metric-val">700</span><span class="work-metric-label">Verses structured</span></div>
-            <div class="work-metric"><span class="work-metric-val">Native</span><span class="work-metric-label">SwiftUI architecture</span></div>
+            <div class="work-metric"><span class="work-metric-val">18</span><span class="work-metric-label" data-i18n="wmWos1L">Chapters indexed</span></div>
+            <div class="work-metric"><span class="work-metric-val">700</span><span class="work-metric-label" data-i18n="wmWos2L">Verses structured</span></div>
+            <div class="work-metric"><span class="work-metric-val" data-i18n="wmWos3V">Native</span><span class="work-metric-label" data-i18n="wmWos3L">SwiftUI architecture</span></div>
           </div>
         </article>
 
@@ -565,43 +593,78 @@
 
         <article class="work-entry" data-work-cat="products">
           <div class="work-meta-row">
-            <span class="work-index">02 · Browser Extension</span>
+            <span class="work-index" data-i18n="workIdxRenameMail">02 · Browser Extension</span>
             <span class="work-tags">TypeScript · Chrome · Firefox</span>
           </div>
           <div class="work-header-row">
             <h2 class="work-title">RenameMail</h2>
-            <a href="https://renamemail.com/" target="_blank" rel="noreferrer" class="work-link">renamemail.com <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
+            <a href="https://renamemail.com/" target="_blank" rel="noreferrer" class="work-link"><img src="renamemail-icon.png" alt="" class="work-link-icon">renamemail.com <svg class="work-link-arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
           </div>
-          <p class="work-summary">Turns Gmail into a visual tracker and pipeline by letting you rename threads inline, organize job or client stages, and keep your inbox clean.</p>
-          <div class="work-media-empty" aria-label="Project photos placeholder">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <p class="work-summary" data-i18n="workRenameMailSummary">Turns Gmail into a visual tracker and pipeline by letting you rename threads inline, organize job or client stages, and keep your inbox clean.</p>
+          <div class="work-media-link work-media-photo">
+            <img src="renamemail-preview.jpg" alt="RenameMail header preview" loading="lazy">
           </div>
           <div class="work-metrics">
-            <div class="work-metric"><span class="work-metric-val">Cross-browser</span><span class="work-metric-label">Chrome &amp; Firefox</span></div>
-            <div class="work-metric"><span class="work-metric-val">Inline</span><span class="work-metric-label">Gmail DOM pipeline</span></div>
-            <div class="work-metric"><span class="work-metric-val">Zero</span><span class="work-metric-label">External data leaves browser</span></div>
+            <div class="work-metric"><span class="work-metric-val" data-i18n="wmRm1V">Cross-browser</span><span class="work-metric-label" data-i18n="wmRm1L">Chrome &amp; Firefox</span></div>
+            <div class="work-metric"><span class="work-metric-val" data-i18n="wmRm2V">Inline</span><span class="work-metric-label" data-i18n="wmRm2L">Gmail DOM pipeline</span></div>
+            <div class="work-metric"><span class="work-metric-val" data-i18n="wmRm3V">Zero</span><span class="work-metric-label" data-i18n="wmRm3L">External data leaves browser</span></div>
           </div>
         </article>
 
         <div class="divider"></div>
 
-        <article class="work-entry" data-work-cat="engineering">
+        <article class="work-entry" data-work-cat="opensource">
           <div class="work-meta-row">
-            <span class="work-index">03 · Open Source</span>
+            <span class="work-index" data-i18n="workIdxOpen1">01 · Open Source</span>
             <span class="work-tags">TypeScript · React · Raycast</span>
           </div>
           <div class="work-header-row">
-            <h2 class="work-title">Apple Reminders (Raycast)</h2>
-            <a href="https://www.raycast.com/raycast/apple-reminders" target="_blank" rel="noreferrer" class="work-link">raycast.com <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
+            <h2 class="work-title" data-i18n="projRemindersTitle">Apple Reminders (Raycast)</h2>
+            <div class="work-links-group">
+              <a href="https://www.raycast.com/raycast/apple-reminders" target="_blank" rel="noreferrer" class="work-link work-icon-only" aria-label="Apple Reminders on Raycast" title="Raycast"><svg class="work-link-icon" viewBox="0 0 28 28" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M7 18.079V21L0 14L1.46 12.54L7 18.081V18.079ZM9.921 21H7L14 28L15.46 26.54L9.921 21ZM26.535 15.462L27.996 14L13.996 0L12.538 1.466L18.077 7.004H14.73L10.864 3.146L9.404 4.606L11.809 7.01H10.129V17.876H20.994V16.196L23.399 18.6L24.859 17.14L20.994 13.274V9.927L26.535 15.462ZM7.73 6.276L6.265 7.738L7.833 9.304L9.294 7.844L7.73 6.276ZM20.162 18.708L18.702 20.17L20.268 21.738L21.73 20.276L20.162 18.708ZM4.596 9.41L3.134 10.872L7 14.738V11.815L4.596 9.41ZM16.192 21.006H13.268L17.134 24.872L18.596 23.41L16.192 21.006Z" fill="#FF6363"/></svg></a>
+              <a href="https://github.com/raycast/extensions/pulls?q=is%3Apr+author%3Aisabhiii+apple-reminders" target="_blank" rel="noreferrer" class="work-link work-icon-only" aria-label="Apple Reminders contributions on GitHub" title="GitHub PRs"><svg class="work-link-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
+            </div>
           </div>
-          <p class="work-summary">Contributed pull requests adding recurrence rules, calendar event integration, priority controls, and tag workflows to the official Raycast Apple Reminders extension.</p>
-          <div class="work-media-empty" aria-label="Project photos placeholder">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <p class="work-summary" data-i18n="workRemindersSummary">Contributed pull requests adding recurrence rules, calendar event integration, priority controls, and tag workflows to the official Raycast Apple Reminders extension.</p>
+          <div class="work-media-link work-media-photo">
+            <img src="raycast-reminders-preview.jpg" alt="Apple Reminders Raycast extension contributors preview" loading="lazy">
           </div>
           <div class="work-metrics">
-            <div class="work-metric"><span class="work-metric-val">Merged PRs</span><span class="work-metric-label">Official Raycast store</span></div>
-            <div class="work-metric"><span class="work-metric-val">4+</span><span class="work-metric-label">Core workflows added</span></div>
-            <div class="work-metric"><span class="work-metric-val">macOS</span><span class="work-metric-label">Native EventKit bridge</span></div>
+            <div class="work-metric"><span class="work-metric-val" data-i18n="wmRem1V">Merged PRs</span><span class="work-metric-label" data-i18n="wmRem1L">Official Raycast store</span></div>
+            <div class="work-metric"><span class="work-metric-val">10+</span><span class="work-metric-label" data-i18n="wmRem2L">Core workflows added</span></div>
+            <div class="work-metric"><span class="work-metric-val">macOS</span><span class="work-metric-label" data-i18n="wmRem3L">Native EventKit bridge</span></div>
+          </div>
+        </article>
+
+        <div class="divider"></div>
+
+        <article class="work-entry" data-work-cat="opensource">
+          <div class="work-meta-row">
+            <span class="work-index" data-i18n="workIdxOpen2">02 · Open Source</span>
+            <span class="work-tags">TypeScript · Browser · Automation</span>
+          </div>
+          <div class="work-header-row">
+            <h2 class="work-title">CRA Browser</h2>
+            <div class="work-links-group">
+              <a href="https://crabrowser.app/" target="_blank" rel="noreferrer" class="work-link work-icon-only" aria-label="CRA Browser website" title="CRA Browser"><img src="cra-icon.svg" alt="CRA Browser" class="work-link-icon"></a>
+              <a href="https://lnkd.in/p/eADDnxFB" target="_blank" rel="noreferrer" class="work-link work-icon-only" aria-label="View CRA Browser post on LinkedIn" title="LinkedIn"><svg class="work-link-icon" viewBox="0 0 256 256"><path d="M218.123 218.127h-37.931v-59.403c0-14.165-.253-32.4-19.728-32.4-19.756 0-22.779 15.434-22.779 31.369v60.43h-37.93V95.967h36.413v16.694h.51a39.907 39.907 0 0 1 35.928-19.733c38.445 0 45.533 25.288 45.533 58.186l-.016 67.013ZM56.955 79.27c-12.157.002-22.014-9.852-22.016-22.009-.002-12.157 9.851-22.014 22.008-22.016 12.157-.003 22.014 9.851 22.016 22.008A22.013 22.013 0 0 1 56.955 79.27m18.966 138.858H37.95V95.967h37.97v122.16ZM237.033.018H18.89C8.58-.098.125 8.161-.001 18.471v219.053c.122 10.315 8.576 18.582 18.89 18.474h218.144c10.336.128 18.823-8.139 18.966-18.474V18.454c-.147-10.33-8.635-18.588-18.966-18.453" fill="#0A66C2"/></svg></a>
+            </div>
+          </div>
+          <p class="work-summary" data-i18n="workCraSummary">Open-source contributions to CRA Browser — building and refining browser interaction, tab workflow, and UI engineering features.</p>
+          <div class="work-media-grid">
+            <div class="work-media-link work-media-video" role="button" tabindex="0" aria-label="Expand CRA Browser demo video 1">
+              <video src="cra-demo-1.mp4" loop muted playsinline preload="metadata" poster="cra-demo-1-poster.jpg"></video>
+              <span class="work-media-badge">Click to expand ↗</span>
+            </div>
+            <div class="work-media-link work-media-video" role="button" tabindex="0" aria-label="Expand CRA Browser Find or Ask demo video">
+              <video src="cra-demo-2.mp4" loop muted playsinline preload="none" poster="cra-demo-2-poster.jpg"></video>
+              <span class="work-media-badge">Click to expand ↗</span>
+            </div>
+          </div>
+          <div class="work-metrics">
+            <div class="work-metric"><span class="work-metric-val" data-i18n="wmCra1V">Open Source</span><span class="work-metric-label" data-i18n="wmCra1L">Community repository</span></div>
+            <div class="work-metric"><span class="work-metric-val" data-i18n="wmCra2V">Browser</span><span class="work-metric-label" data-i18n="wmCra2L">Core UI &amp; workflows</span></div>
+            <div class="work-metric"><span class="work-metric-val" data-i18n="wmCra3V">Merged PRs</span><span class="work-metric-label" data-i18n="wmCra3L">Feature contributions</span></div>
           </div>
         </article>
 
@@ -609,21 +672,25 @@
 
         <article class="work-entry" data-work-cat="ai">
           <div class="work-meta-row">
-            <span class="work-index">04 · AI / Retrieval</span>
+            <span class="work-index" data-i18n="workIdxRag">01 · AI / Retrieval</span>
             <span class="work-tags">Python · Docker · ChromaDB · SQL</span>
           </div>
           <div class="work-header-row">
-            <h2 class="work-title">Manufacturing Quality RAG</h2>
-            <a href="https://github.com/isabhiii/Manufacturing-Quality-RAG" target="_blank" rel="noreferrer" class="work-link">isabhiii/rag <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
+            <h2 class="work-title" data-i18n="projRagTitle">Manufacturing Quality RAG</h2>
+            <div class="work-links-group">
+              <a href="https://github.com/isabhiii/Manufacturing-Quality-RAG" target="_blank" rel="noreferrer" class="work-link work-icon-only" aria-label="Manufacturing Quality RAG on GitHub" title="GitHub"><svg class="work-link-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
+              <a href="https://lnkd.in/p/eYtdeSTv" target="_blank" rel="noreferrer" class="work-link work-icon-only" aria-label="View Manufacturing Quality RAG on LinkedIn" title="LinkedIn"><svg class="work-link-icon" viewBox="0 0 256 256"><path d="M218.123 218.127h-37.931v-59.403c0-14.165-.253-32.4-19.728-32.4-19.756 0-22.779 15.434-22.779 31.369v60.43h-37.93V95.967h36.413v16.694h.51a39.907 39.907 0 0 1 35.928-19.733c38.445 0 45.533 25.288 45.533 58.186l-.016 67.013ZM56.955 79.27c-12.157.002-22.014-9.852-22.016-22.009-.002-12.157 9.851-22.014 22.008-22.016 12.157-.003 22.014 9.851 22.016 22.008A22.013 22.013 0 0 1 56.955 79.27m18.966 138.858H37.95V95.967h37.97v122.16ZM237.033.018H18.89C8.58-.098.125 8.161-.001 18.471v219.053c.122 10.315 8.576 18.582 18.89 18.474h218.144c10.336.128 18.823-8.139 18.966-18.474V18.454c-.147-10.33-8.635-18.588-18.966-18.453" fill="#0A66C2"/></svg></a>
+            </div>
           </div>
-          <p class="work-summary">Sub-second semantic document search across manufacturing quality specifications and inspection logs using ChromaDB vector embeddings and SQL metadata filtering.</p>
-          <div class="work-media-empty" aria-label="Project photos placeholder">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <p class="work-summary" data-i18n="workRagSummary">Sub-second semantic document search across manufacturing quality specifications and inspection logs using ChromaDB vector embeddings and SQL metadata filtering.</p>
+          <div class="work-media-link work-media-video" role="button" tabindex="0" aria-label="Expand Manufacturing Quality RAG demo video">
+            <video src="rag-demo.mp4" loop muted playsinline preload="metadata" poster="rag-preview.jpg"></video>
+            <span class="work-media-badge">Click to expand ↗</span>
           </div>
           <div class="work-metrics">
-            <div class="work-metric"><span class="work-metric-val">&lt; 1s</span><span class="work-metric-label">Semantic query latency</span></div>
-            <div class="work-metric"><span class="work-metric-val">ChromaDB</span><span class="work-metric-label">Vector + SQL retrieval</span></div>
-            <div class="work-metric"><span class="work-metric-val">Docker</span><span class="work-metric-label">Containerized deployment</span></div>
+            <div class="work-metric"><span class="work-metric-val">&lt; 1s</span><span class="work-metric-label" data-i18n="wmRag1L">Semantic query latency</span></div>
+            <div class="work-metric"><span class="work-metric-val">ChromaDB</span><span class="work-metric-label" data-i18n="wmRag2L">Vector + SQL retrieval</span></div>
+            <div class="work-metric"><span class="work-metric-val">Docker</span><span class="work-metric-label" data-i18n="wmRag3L">Containerized deployment</span></div>
           </div>
         </article>
 
@@ -631,65 +698,110 @@
 
         <article class="work-entry" data-work-cat="ai">
           <div class="work-meta-row">
-            <span class="work-index">05 · Machine Learning</span>
+            <span class="work-index" data-i18n="workIdxSales">02 · Machine Learning</span>
             <span class="work-tags">Python · Scikit-learn · SQL</span>
           </div>
           <div class="work-header-row">
-            <h2 class="work-title">ML Vehicle Sales</h2>
-            <a href="https://github.com/isabhiii/ML-Vehicle-Sales-Prediction" target="_blank" rel="noreferrer" class="work-link">isabhiii/ml-sales <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
+            <h2 class="work-title" data-i18n="projSalesTitle">ML Vehicle Sales</h2>
+            <a href="https://github.com/isabhiii/ML-Vehicle-Sales-Prediction" target="_blank" rel="noreferrer" class="work-link work-icon-only" aria-label="ML Vehicle Sales on GitHub" title="GitHub"><svg class="work-link-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
           </div>
-          <p class="work-summary">End-to-end gradient-boosted regression pipeline predicting vehicle resale and market pricing from historical SQL sales records and engineered vehicle features.</p>
-          <div class="work-media-empty" aria-label="Project photos placeholder">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <p class="work-summary" data-i18n="workSalesSummary">End-to-end gradient-boosted regression pipeline predicting vehicle resale and market pricing from historical SQL sales records and engineered vehicle features.</p>
+          <div class="work-media-svg" aria-label="ML Vehicle Sales predicted vs actual regression chart">
+            <svg viewBox="0 0 600 320" width="100%" height="100%" role="img" aria-label="Predicted vs Actual vehicle price scatter plot with R² = 0.92">
+              <g stroke="currentColor" stroke-opacity="0.08" stroke-width="1">
+                <line x1="52" y1="54" x2="332" y2="54"/><line x1="52" y1="112" x2="332" y2="112"/>
+                <line x1="52" y1="170" x2="332" y2="170"/><line x1="52" y1="228" x2="332" y2="228"/>
+                <line x1="52" y1="274" x2="332" y2="274"/>
+                <line x1="52" y1="42" x2="52" y2="274"/><line x1="122" y1="42" x2="122" y2="274"/>
+                <line x1="192" y1="42" x2="192" y2="274"/><line x1="262" y1="42" x2="262" y2="274"/>
+                <line x1="332" y1="42" x2="332" y2="274"/>
+              </g>
+              <text x="52" y="28" fill="currentColor" fill-opacity="0.55" font-size="11" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">PREDICTED VS ACTUAL · GBDT</text>
+              <line x1="60" y1="264" x2="324" y2="50" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="4 4" stroke-opacity="0.85"/>
+              <g fill="#2563eb" fill-opacity="0.78">
+                <circle cx="72" cy="252" r="3.2"/><circle cx="84" cy="246" r="3.2"/><circle cx="95" cy="233" r="3.2"/>
+                <circle cx="104" cy="229" r="3.2"/><circle cx="115" cy="214" r="3.2"/><circle cx="126" cy="212" r="3.2"/>
+                <circle cx="136" cy="198" r="3.2"/><circle cx="148" cy="194" r="3.2"/><circle cx="158" cy="180" r="3.2"/>
+                <circle cx="169" cy="177" r="3.2"/><circle cx="180" cy="162" r="3.2"/><circle cx="192" cy="158" r="3.2"/>
+                <circle cx="204" cy="144" r="3.2"/><circle cx="215" cy="139" r="3.2"/><circle cx="228" cy="126" r="3.2"/>
+                <circle cx="238" cy="121" r="3.2"/><circle cx="250" cy="107" r="3.2"/><circle cx="264" cy="99" r="3.2"/>
+                <circle cx="275" cy="87" r="3.2"/><circle cx="288" cy="81" r="3.2"/><circle cx="302" cy="68" r="3.2"/>
+                <circle cx="316" cy="59" r="3.2"/>
+              </g>
+              <g fill="currentColor" fill-opacity="0.45" font-size="10" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+                <text x="52" y="294">Actual Price</text>
+                <text x="278" y="294">R² = 0.92</text>
+              </g>
+              <line x1="364" y1="36" x2="364" y2="286" stroke="currentColor" stroke-opacity="0.1"/>
+              <text x="386" y="28" fill="currentColor" fill-opacity="0.55" font-size="11" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">FEATURE IMPORTANCE</text>
+              <g font-size="11" fill="currentColor" fill-opacity="0.72" font-family="inherit">
+                <text x="386" y="72">Vehicle Age</text>
+                <rect x="386" y="80" width="176" height="8" rx="4" fill="currentColor" fill-opacity="0.08"/>
+                <rect x="386" y="80" width="152" height="8" rx="4" fill="#2563eb" fill-opacity="0.85"/>
+                <text x="386" y="124">Mileage (km)</text>
+                <rect x="386" y="132" width="176" height="8" rx="4" fill="currentColor" fill-opacity="0.08"/>
+                <rect x="386" y="132" width="118" height="8" rx="4" fill="#2563eb" fill-opacity="0.7"/>
+                <text x="386" y="176">Engine Power</text>
+                <rect x="386" y="184" width="176" height="8" rx="4" fill="currentColor" fill-opacity="0.08"/>
+                <rect x="386" y="184" width="84" height="8" rx="4" fill="#2563eb" fill-opacity="0.55"/>
+                <text x="386" y="228">Make &amp; Trim</text>
+                <rect x="386" y="236" width="176" height="8" rx="4" fill="currentColor" fill-opacity="0.08"/>
+                <rect x="386" y="236" width="54" height="8" rx="4" fill="#2563eb" fill-opacity="0.4"/>
+              </g>
+            </svg>
           </div>
           <div class="work-metrics">
-            <div class="work-metric"><span class="work-metric-val">92%</span><span class="work-metric-label">R² prediction accuracy</span></div>
-            <div class="work-metric"><span class="work-metric-val">GBDT</span><span class="work-metric-label">Gradient-boosted model</span></div>
-            <div class="work-metric"><span class="work-metric-val">SQL + Py</span><span class="work-metric-label">Automated feature pipeline</span></div>
+            <div class="work-metric"><span class="work-metric-val">92%</span><span class="work-metric-label" data-i18n="wmSales1L">R² prediction accuracy</span></div>
+            <div class="work-metric"><span class="work-metric-val">GBDT</span><span class="work-metric-label" data-i18n="wmSales2L">Gradient-boosted model</span></div>
+            <div class="work-metric"><span class="work-metric-val">SQL + Py</span><span class="work-metric-label" data-i18n="wmSales3L">Automated feature pipeline</span></div>
           </div>
         </article>
 
         <div class="divider"></div>
 
-        <article class="work-entry" data-work-cat="ai engineering">
+        <article class="work-entry" data-work-cat="ai">
           <div class="work-meta-row">
-            <span class="work-index">06 · Computer Vision</span>
+            <span class="work-index" data-i18n="workIdxDnn">03 · Computer Vision</span>
             <span class="work-tags">Python · ONNX · OpenCV</span>
           </div>
           <div class="work-header-row">
-            <h2 class="work-title">Object Detection DNN</h2>
-            <a href="https://github.com/isabhiii/Object-Detection-using-DNN" target="_blank" rel="noreferrer" class="work-link">isabhiii/dnn <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
+            <h2 class="work-title" data-i18n="projDnnTitle">Object Detection DNN</h2>
+            <a href="https://github.com/isabhiii/Object-Detection-using-DNN" target="_blank" rel="noreferrer" class="work-link work-icon-only" aria-label="Object Detection DNN on GitHub" title="GitHub"><svg class="work-link-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
           </div>
-          <p class="work-summary">Real-time object detection pipeline optimized with ONNX Runtime to achieve smooth CPU-only inference without requiring dedicated GPU hardware.</p>
-          <div class="work-media-empty" aria-label="Project photos placeholder">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <p class="work-summary" data-i18n="workDnnSummary">Real-time object detection pipeline optimized with ONNX Runtime to achieve smooth CPU-only inference without requiring dedicated GPU hardware.</p>
+          <div class="work-media-link work-media-photo">
+            <img src="dnn-preview.jpg" alt="Object Detection DNN bounding box inference preview" loading="lazy">
           </div>
           <div class="work-metrics">
-            <div class="work-metric"><span class="work-metric-val">30+ FPS</span><span class="work-metric-label">CPU-only inference</span></div>
-            <div class="work-metric"><span class="work-metric-val">ONNX</span><span class="work-metric-label">Optimized runtime graph</span></div>
-            <div class="work-metric"><span class="work-metric-val">0 GPU</span><span class="work-metric-label">Edge-ready execution</span></div>
+            <div class="work-metric"><span class="work-metric-val">30+ FPS</span><span class="work-metric-label" data-i18n="wmDnn1L">CPU-only inference</span></div>
+            <div class="work-metric"><span class="work-metric-val">ONNX</span><span class="work-metric-label" data-i18n="wmDnn2L">Optimized runtime graph</span></div>
+            <div class="work-metric"><span class="work-metric-val">0 GPU</span><span class="work-metric-label" data-i18n="wmDnn3L">Edge-ready execution</span></div>
           </div>
         </article>
 
         <div class="divider"></div>
 
-        <article class="work-entry" data-work-cat="ai engineering">
+        <article class="work-entry" data-work-cat="ai">
           <div class="work-meta-row">
-            <span class="work-index">07 · Data &amp; NLP</span>
+            <span class="work-index" data-i18n="workIdxSentiment">04 · Data &amp; NLP</span>
             <span class="work-tags">Python · NLP · Streaming</span>
           </div>
           <div class="work-header-row">
-            <h2 class="work-title">Reddit Stock Sentiment</h2>
-            <a href="https://github.com/isabhiii/Reddit-Stock-Sentiment-Analyzer" target="_blank" rel="noreferrer" class="work-link">isabhiii/sentiment <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
+            <h2 class="work-title" data-i18n="projSentimentTitle">Reddit Stock Sentiment</h2>
+            <div class="work-links-group">
+              <a href="https://github.com/isabhiii/Reddit-Stock-Sentiment-Analyzer" target="_blank" rel="noreferrer" class="work-link work-icon-only" aria-label="Reddit Stock Sentiment on GitHub" title="GitHub"><svg class="work-link-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
+              <a href="https://lnkd.in/p/eknigpWp" target="_blank" rel="noreferrer" class="work-link work-icon-only" aria-label="View Reddit Stock Sentiment on LinkedIn" title="LinkedIn"><svg class="work-link-icon" viewBox="0 0 256 256"><path d="M218.123 218.127h-37.931v-59.403c0-14.165-.253-32.4-19.728-32.4-19.756 0-22.779 15.434-22.779 31.369v60.43h-37.93V95.967h36.413v16.694h.51a39.907 39.907 0 0 1 35.928-19.733c38.445 0 45.533 25.288 45.533 58.186l-.016 67.013ZM56.955 79.27c-12.157.002-22.014-9.852-22.016-22.009-.002-12.157 9.851-22.014 22.008-22.016 12.157-.003 22.014 9.851 22.016 22.008A22.013 22.013 0 0 1 56.955 79.27m18.966 138.858H37.95V95.967h37.97v122.16ZM237.033.018H18.89C8.58-.098.125 8.161-.001 18.471v219.053c.122 10.315 8.576 18.582 18.89 18.474h218.144c10.336.128 18.823-8.139 18.966-18.474V18.454c-.147-10.33-8.635-18.588-18.966-18.453" fill="#0A66C2"/></svg></a>
+            </div>
           </div>
-          <p class="work-summary">Real-time NLP streaming pipeline extracting ticker mentions from live Reddit discussions and scoring market sentiment trends as they emerge.</p>
-          <div class="work-media-empty" aria-label="Project photos placeholder">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <p class="work-summary" data-i18n="workSentimentSummary">Real-time NLP streaming pipeline extracting ticker mentions from live Reddit discussions and scoring market sentiment trends as they emerge.</p>
+          <div class="work-media-link work-media-video" role="button" tabindex="0" aria-label="Expand Reddit Stock Sentiment demo video">
+            <video src="sentiment-demo.mp4" loop muted playsinline preload="metadata" poster="sentiment-preview.jpg"></video>
+            <span class="work-media-badge">Click to expand ↗</span>
           </div>
           <div class="work-metrics">
-            <div class="work-metric"><span class="work-metric-val">Live</span><span class="work-metric-label">Streaming NLP ingestion</span></div>
-            <div class="work-metric"><span class="work-metric-val">Ticker</span><span class="work-metric-label">Entity extraction</span></div>
-            <div class="work-metric"><span class="work-metric-val">Python</span><span class="work-metric-label">Real-time scoring</span></div>
+            <div class="work-metric"><span class="work-metric-val" data-i18n="wmSent1V">Live</span><span class="work-metric-label" data-i18n="wmSent1L">Streaming NLP ingestion</span></div>
+            <div class="work-metric"><span class="work-metric-val" data-i18n="wmSent2V">Ticker</span><span class="work-metric-label" data-i18n="wmSent2L">Entity extraction</span></div>
+            <div class="work-metric"><span class="work-metric-val">Python</span><span class="work-metric-label" data-i18n="wmSent3L">Real-time scoring</span></div>
           </div>
         </article>
 

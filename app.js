@@ -67,6 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initSkyStars();
   initTabs();
   initWorkFilter();
+  initWorkVideoModal();
   initEmailCopy();
   initFavorites();
   initPhotography();
@@ -990,25 +991,354 @@ function initWorkFilter() {
   const entries = document.querySelectorAll('.work-entry');
   if (!buttons.length || !entries.length) return;
 
-  buttons.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const filter = btn.dataset.workFilter;
-      buttons.forEach((b) => b.classList.toggle('active', b === btn));
-      let lastVisible = null;
-      entries.forEach((entry) => {
-        const cats = (entry.dataset.workCat || '').split(/\s+/);
-        const show = filter === 'all' || cats.includes(filter);
-        entry.hidden = !show;
-        if (show) lastVisible = entry;
-      });
-      // Hide trailing divider after the last visible entry
-      document.querySelectorAll('.work-feed .divider').forEach((d) => {
-        d.style.display = '';
-      });
-      if (lastVisible && lastVisible.nextElementSibling?.classList.contains('divider')) {
-        lastVisible.nextElementSibling.style.display = 'none';
+  function applyFilter(filter, animate = false) {
+    buttons.forEach((b) => b.classList.toggle('active', b.dataset.workFilter === filter));
+    let lastVisible = null;
+    const shown = [];
+    entries.forEach((entry) => {
+      const cats = (entry.dataset.workCat || '').split(/\s+/);
+      const show = cats.includes(filter);
+      entry.hidden = !show;
+      if (show) {
+        lastVisible = entry;
+        shown.push(entry);
       }
     });
+    document.querySelectorAll('.work-feed .divider').forEach((d) => {
+      d.style.display = '';
+    });
+    if (lastVisible && lastVisible.nextElementSibling?.classList.contains('divider')) {
+      lastVisible.nextElementSibling.style.display = 'none';
+    }
+    if (animate && shown.length) {
+      shown.forEach((el) => el.classList.add('is-filtering-in'));
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          shown.forEach((el) => el.classList.remove('is-filtering-in'));
+        });
+      });
+    }
+  }
+
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => applyFilter(btn.dataset.workFilter, true));
+  });
+
+  const initialBtn = document.querySelector('.work-filter-btn.active') || buttons[0];
+  if (initialBtn) applyFilter(initialBtn.dataset.workFilter, false);
+}
+
+function initWorkVideoModal() {
+  const cards = document.querySelectorAll('.work-media-video');
+  if (!cards.length) return;
+
+  const modal = document.createElement('div');
+  modal.className = 'work-video-modal';
+  modal.setAttribute('role', 'dialog');
+  modal.setAttribute('aria-modal', 'true');
+  modal.setAttribute('aria-label', 'Expanded project demo video');
+  modal.innerHTML = `
+    <div class="work-video-backdrop"></div>
+    <div class="work-video-frame">
+      <div class="work-video-stage">
+        <button type="button" class="work-video-close" aria-label="Close video">&times;</button>
+        <button type="button" class="work-video-nav work-video-nav--prev" aria-label="Previous video">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button type="button" class="work-video-nav work-video-nav--next" aria-label="Next video">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <video controls playsinline loop></video>
+      </div>
+      <div class="work-video-caption"></div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  const stage = modal.querySelector('.work-video-stage');
+  const stageVideo = modal.querySelector('video');
+  const captionEl = modal.querySelector('.work-video-caption');
+  const backdrop = modal.querySelector('.work-video-backdrop');
+  const closeBtn = modal.querySelector('.work-video-close');
+  const prevBtn = modal.querySelector('.work-video-nav--prev');
+  const nextBtn = modal.querySelector('.work-video-nav--next');
+  let activeInlineVideo = null;
+  let closeTimer = null;
+
+  function updateModalCaption(inlineVideo) {
+    const text = inlineVideo?.closest('.work-media-video')?.dataset.videoCaption || '';
+    captionEl.textContent = text;
+  }
+
+  function updateModalNav() {
+    const grid = activeInlineVideo?.closest('.work-media-grid');
+    if (!grid) {
+      prevBtn.classList.remove('is-visible');
+      nextBtn.classList.remove('is-visible');
+      return;
+    }
+    const gridVideos = [...grid.querySelectorAll('.work-media-video video')];
+    const idx = gridVideos.indexOf(activeInlineVideo);
+    prevBtn.classList.toggle('is-visible', idx > 0);
+    nextBtn.classList.toggle('is-visible', idx >= 0 && idx < gridVideos.length - 1);
+  }
+
+  function switchModalVideo(step) {
+    if (!modal.classList.contains('is-open') || !activeInlineVideo) return;
+    const grid = activeInlineVideo.closest('.work-media-grid');
+    if (!grid) return;
+    const gridVideos = [...grid.querySelectorAll('.work-media-video video')];
+    if (gridVideos.length <= 1) return;
+    const idx = gridVideos.indexOf(activeInlineVideo);
+    const nextIdx = idx + step;
+    if (nextIdx < 0 || nextIdx >= gridVideos.length) return;
+    const nextVideo = gridVideos[nextIdx];
+    activeInlineVideo = nextVideo;
+    updateModalNav();
+    updateModalCaption(nextVideo);
+
+    stageVideo.style.opacity = '0';
+    stageVideo.style.transform = `translateX(${step * 14}px)`;
+    setTimeout(() => {
+      sizeStageToVideo(nextVideo);
+      stageVideo.src = nextVideo.currentSrc || nextVideo.getAttribute('src');
+      stageVideo.poster = nextVideo.getAttribute('poster') || '';
+      stageVideo.currentTime = nextVideo.currentTime || 0;
+      stageVideo.style.transform = `translateX(${step * -10}px)`;
+      requestAnimationFrame(() => {
+        stageVideo.style.opacity = '1';
+        stageVideo.style.transform = 'translateX(0)';
+        stageVideo.play().catch(() => {
+          stageVideo.muted = true;
+          stageVideo.play().catch(() => {});
+        });
+      });
+    }, 110);
+  }
+
+  function sizeStageToVideo(inlineEl) {
+    const from = inlineEl.getBoundingClientRect();
+    const ratio = from.width && from.height ? from.width / from.height : 16 / 9;
+    const maxW = Math.min(window.innerWidth * 0.92, 960);
+    const maxH = window.innerHeight * 0.80;
+    let targetW = maxW;
+    let targetH = targetW / ratio;
+    if (targetH > maxH) {
+      targetH = maxH;
+      targetW = targetH * ratio;
+    }
+    stage.style.width = `${targetW.toFixed(2)}px`;
+    stage.style.height = `${targetH.toFixed(2)}px`;
+  }
+
+  function getFlipTransform(inlineEl, stageEl) {
+    const from = inlineEl.getBoundingClientRect();
+    const to = stageEl.getBoundingClientRect();
+    if (!from.width || !to.width || !from.height || !to.height) return 'translate(0px, 0px) scale(0.92)';
+    const dx = (from.left + from.width / 2) - (to.left + to.width / 2);
+    const dy = (from.top + from.height / 2) - (to.top + to.height / 2);
+    const sx = from.width / to.width;
+    const sy = from.height / to.height;
+    return `translate(${dx.toFixed(2)}px, ${dy.toFixed(2)}px) scale(${sx.toFixed(4)}, ${sy.toFixed(4)})`;
+  }
+
+  function openModal(inlineVideo) {
+    if (!inlineVideo) return;
+    if (closeTimer) {
+      clearTimeout(closeTimer);
+      closeTimer = null;
+    }
+    activeInlineVideo = inlineVideo;
+    stageVideo.src = inlineVideo.currentSrc || inlineVideo.getAttribute('src');
+    stageVideo.poster = inlineVideo.getAttribute('poster') || '';
+    stageVideo.currentTime = inlineVideo.currentTime || 0;
+    stageVideo.muted = false;
+
+    modal.classList.remove('is-closing');
+    modal.classList.add('is-open');
+    updateModalNav();
+    updateModalCaption(inlineVideo);
+    sizeStageToVideo(inlineVideo);
+    stage.style.transition = 'none';
+    stage.style.opacity = '1';
+    stage.style.transform = getFlipTransform(inlineVideo, stage);
+    void stage.offsetWidth;
+
+    document.body.style.overflow = 'hidden';
+    syncInlinePlayback();
+    requestAnimationFrame(() => {
+      stage.style.transition = 'transform 0.42s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease';
+      stage.style.transform = 'translate(0px, 0px) scale(1, 1)';
+      stageVideo.play().catch(() => {
+        stageVideo.muted = true;
+        stageVideo.play().catch(() => {});
+      });
+    });
+  }
+
+  function closeModal() {
+    if (!modal.classList.contains('is-open')) return;
+    modal.classList.remove('is-open');
+    modal.classList.add('is-closing');
+    document.body.style.overflow = '';
+
+    if (activeInlineVideo && Number.isFinite(stageVideo.currentTime)) {
+      activeInlineVideo.currentTime = stageVideo.currentTime;
+    }
+    stageVideo.pause();
+
+    // Reset transform first to measure natural center-stage rect, then FLIP back to inline video
+    stage.style.transition = 'none';
+    stage.style.transform = 'translate(0px, 0px) scale(1, 1)';
+    void stage.offsetWidth;
+    const targetTransform = activeInlineVideo
+      ? getFlipTransform(activeInlineVideo, stage)
+      : 'translate(0px, 0px) scale(0.92)';
+
+    requestAnimationFrame(() => {
+      stage.style.transition = 'transform 0.38s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.24s ease 0.14s';
+      stage.style.transform = targetTransform;
+      stage.style.opacity = '0';
+    });
+
+    closeTimer = setTimeout(() => {
+      modal.classList.remove('is-closing');
+      stage.style.transition = '';
+      stage.style.transform = '';
+      stage.style.opacity = '';
+      stage.style.width = '';
+      stage.style.height = '';
+      stageVideo.removeAttribute('src');
+      stageVideo.load();
+      captionEl.textContent = '';
+      closeTimer = null;
+      syncInlinePlayback();
+    }, 400);
+  }
+
+  cards.forEach((card) => {
+    const inlineVideo = card.querySelector('video');
+    card.addEventListener('click', () => openModal(inlineVideo));
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openModal(inlineVideo);
+        return;
+      }
+      const grid = card.closest('.work-media-grid');
+      if (!grid || (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft')) return;
+      const gridCards = [...grid.querySelectorAll('.work-media-video')];
+      if (gridCards.length <= 1) return;
+      e.preventDefault();
+      const idx = gridCards.indexOf(card);
+      const step = e.key === 'ArrowRight' ? 1 : -1;
+      const nextCard = gridCards[(idx + step + gridCards.length) % gridCards.length];
+      nextCard.focus();
+    });
+  });
+
+  // Keep all inline videos paused unless the cursor is hovering (or keyboard focusing) that video.
+  const inlineVideos = [...document.querySelectorAll('.work-media-video video')];
+  const visibleMap = new WeakMap();
+  const workPanel = document.getElementById('panel-work');
+  let hoveredVideo = null;
+
+  cards.forEach((card) => {
+    const v = card.querySelector('video');
+    if (!v) return;
+    const onEnter = () => {
+      if (hoveredVideo !== v) {
+        hoveredVideo = v;
+        syncInlinePlayback();
+      }
+    };
+    const onLeave = () => {
+      if (hoveredVideo === v) {
+        hoveredVideo = null;
+        syncInlinePlayback();
+      }
+    };
+    card.addEventListener('mouseenter', onEnter);
+    card.addEventListener('mouseleave', onLeave);
+    card.addEventListener('focusin', onEnter);
+    card.addEventListener('focusout', onLeave);
+  });
+
+  function syncInlinePlayback() {
+    const workActive = !workPanel || workPanel.classList.contains('active');
+    const modalOpen = modal.classList.contains('is-open');
+    inlineVideos.forEach((v) => {
+      if (workActive && !modalOpen && !document.hidden && visibleMap.get(v) && hoveredVideo === v) {
+        v.play().catch(() => {});
+      } else {
+        v.pause();
+      }
+    });
+  }
+
+  if ('IntersectionObserver' in window && inlineVideos.length) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          visibleMap.set(entry.target, entry.isIntersecting);
+        });
+        syncInlinePlayback();
+      },
+      { threshold: 0.6 }
+    );
+    inlineVideos.forEach((v) => {
+      v.pause();
+      observer.observe(v);
+    });
+  }
+
+  document.addEventListener('visibilitychange', syncInlinePlayback);
+  if (workPanel && 'MutationObserver' in window) {
+    new MutationObserver(syncInlinePlayback).observe(workPanel, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+  }
+
+  // Gently warm up remaining videos one-by-one during browser idle time
+  if (!navigator.connection?.saveData && inlineVideos.length) {
+    const scheduleIdle = window.requestIdleCallback || ((cb) => setTimeout(cb, 500));
+    const startWarmup = () => {
+      let idx = 0;
+      const warmNext = () => {
+        if (idx >= inlineVideos.length) return;
+        const v = inlineVideos[idx++];
+        if (v.preload === 'none') {
+          v.preload = 'metadata';
+        }
+        setTimeout(() => scheduleIdle(warmNext), 700);
+      };
+      setTimeout(() => scheduleIdle(warmNext), 1200);
+    };
+    if (document.readyState === 'complete') {
+      startWarmup();
+    } else {
+      window.addEventListener('load', startWarmup, { once: true });
+    }
+  }
+
+  backdrop.addEventListener('click', closeModal);
+  closeBtn.addEventListener('click', closeModal);
+  prevBtn.addEventListener('click', (e) => { e.stopPropagation(); switchModalVideo(-1); });
+  nextBtn.addEventListener('click', (e) => { e.stopPropagation(); switchModalVideo(1); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeModal();
+      return;
+    }
+    if (!modal.classList.contains('is-open') || !activeInlineVideo) return;
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      switchModalVideo(1);
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      switchModalVideo(-1);
+    }
   });
 }
 
@@ -1451,6 +1781,66 @@ function initLanguageSwitcher() {
       navHome: 'Home',
       navWork: 'Work',
       navFavorites: 'Favorites',
+      workIntro: 'Selected products, AI systems, and engineering builds — focused on real-world impact, clean architecture, and measurable performance.',
+      workFilterAll: 'All',
+      workFilterProducts: 'Products',
+      workFilterAi: 'AI / ML',
+      workFilterOpenSource: 'Open Source Contributions',
+      workWosSummary: 'Minimalist Bhagavad Gītā iOS app built with native SwiftUI, crafted for calm daily reading, distraction-free typography, and instant verse navigation.',
+      workWosChapters: 'Browse Chapters',
+      workWosReflections: 'Personal Reflections',
+      workWosFocus: 'Focus Read',
+      workWosDiscover: 'Discover',
+      workWosDaily: 'Daily Shloka',
+      workRenameMailSummary: 'Turns Gmail into a visual tracker and pipeline by letting you rename threads inline, organize job or client stages, and keep your inbox clean.',
+      workRemindersSummary: 'Contributed pull requests adding recurrence rules, calendar event integration, priority controls, and tag workflows to the official Raycast Apple Reminders extension.',
+      workCraSummary: 'Open-source contributions to CRA Browser — building and refining browser interaction, tab workflow, and UI engineering features.',
+      workRagSummary: 'Sub-second semantic document search across manufacturing quality specifications and inspection logs using ChromaDB vector embeddings and SQL metadata filtering.',
+      workSalesSummary: 'End-to-end gradient-boosted regression pipeline predicting vehicle resale and market pricing from historical SQL sales records and engineered vehicle features.',
+      workDnnSummary: 'Real-time object detection pipeline optimized with ONNX Runtime to achieve smooth CPU-only inference without requiring dedicated GPU hardware.',
+      workSentimentSummary: 'Real-time NLP streaming pipeline extracting ticker mentions from live Reddit discussions and scoring market sentiment trends as they emerge.',
+      wmWos1L: 'Chapters indexed',
+      wmWos2L: 'Verses structured',
+      wmWos3V: 'Native',
+      wmWos3L: 'SwiftUI architecture',
+      wmRm1V: 'Cross-browser',
+      wmRm1L: 'Chrome & Firefox',
+      wmRm2V: 'Inline',
+      wmRm2L: 'Gmail DOM pipeline',
+      wmRm3V: 'Zero',
+      wmRm3L: 'External data leaves browser',
+      wmRem1V: 'Merged PRs',
+      wmRem1L: 'Official Raycast store',
+      wmRem2L: 'Core workflows added',
+      wmRem3L: 'Native EventKit bridge',
+      wmCra1V: 'Open Source',
+      wmCra1L: 'Community repository',
+      wmCra2V: 'Browser',
+      wmCra2L: 'Core UI & workflows',
+      wmCra3V: 'Merged PRs',
+      wmCra3L: 'Feature contributions',
+      wmRag1L: 'Semantic query latency',
+      wmRag2L: 'Vector + SQL retrieval',
+      wmRag3L: 'Containerized deployment',
+      wmSales1L: 'R² prediction accuracy',
+      wmSales2L: 'Gradient-boosted model',
+      wmSales3L: 'Automated feature pipeline',
+      wmDnn1L: 'CPU-only inference',
+      wmDnn2L: 'Optimized runtime graph',
+      wmDnn3L: 'Edge-ready execution',
+      wmSent1V: 'Live',
+      wmSent1L: 'Streaming NLP ingestion',
+      wmSent2V: 'Ticker',
+      wmSent2L: 'Entity extraction',
+      wmSent3L: 'Real-time scoring',
+      workIdxWos: '01 · iOS App',
+      workIdxRenameMail: '02 · Browser Extension',
+      workIdxOpen1: '01 · Open Source',
+      workIdxOpen2: '02 · Open Source',
+      workIdxRag: '01 · AI / Retrieval',
+      workIdxSales: '02 · Machine Learning',
+      workIdxDnn: '03 · Computer Vision',
+      workIdxSentiment: '04 · Data & NLP',
       navPhotography: 'Photography',
       headerAka: 'aka',
       pullLampMorning: 'Pull for morning',
@@ -1544,6 +1934,66 @@ function initLanguageSwitcher() {
       navHome: 'Start',
       navWork: 'Projekte',
       navFavorites: 'Favoriten',
+      workIntro: 'Ausgewählte Produkte, KI-Systeme und Engineering-Projekte — mit Fokus auf echten Nutzen, saubere Architektur und messbare Performance.',
+      workFilterAll: 'Alle',
+      workFilterProducts: 'Produkte',
+      workFilterAi: 'KI / ML',
+      workFilterOpenSource: 'Open-Source-Beiträge',
+      workWosSummary: 'Minimalistische Bhagavad-Gītā-iOS-App in nativem SwiftUI — gestaltet für ruhiges tägliches Lesen, ablenkungsfreie Typografie und schnelle Versnavigation.',
+      workWosChapters: 'Kapitel durchsuchen',
+      workWosReflections: 'Persönliche Notizen',
+      workWosFocus: 'Fokus-Lesemodus',
+      workWosDiscover: 'Entdecken',
+      workWosDaily: 'Täglicher Shloka',
+      workRenameMailSummary: 'Macht Gmail zum visuellen Tracker und zur Pipeline — E-Mail-Threads direkt umbenennen, Bewerbungs- oder Kundenphasen organisieren und den Posteingang sauber halten.',
+      workRemindersSummary: 'Pull Requests mit Wiederholungsregeln, Kalender-Integration, Prioritäten und Tag-Workflows für die offizielle Raycast-Apple-Reminders-Erweiterung beigesteuert.',
+      workCraSummary: 'Open-Source-Beiträge für CRA Browser — Entwicklung und Verfeinerung von Browser-Interaktionen, Tab-Workflows und UI-Engineering-Features.',
+      workRagSummary: 'Semantische Dokumentensuche im Sub-Sekunden-Bereich über Fertigungsqualitäts-Spezifikationen und Prüfprotokolle mit ChromaDB-Vektoren und SQL-Metadatenfilterung.',
+      workSalesSummary: 'Durchgängige Gradient-Boosted-Regression-Pipeline zur Vorhersage von Fahrzeug-Wiederverkaufspreisen aus historischen SQL-Verkaufsdaten und technischen Merkmalen.',
+      workDnnSummary: 'Echtzeit-Objekterkennungspipeline, optimiert mit ONNX Runtime für flüssige reine CPU-Inferenz ohne dedizierte GPU-Hardware.',
+      workSentimentSummary: 'Echtzeit-NLP-Streaming-Pipeline zur Extraktion von Ticker-Erwähnungen aus Live-Reddit-Diskussionen und Bewertung von Marktstimmungstrends.',
+      wmWos1L: 'Kapitel indexiert',
+      wmWos2L: 'Verse strukturiert',
+      wmWos3V: 'Nativ',
+      wmWos3L: 'SwiftUI-Architektur',
+      wmRm1V: 'Cross-Browser',
+      wmRm1L: 'Chrome & Firefox',
+      wmRm2V: 'Inline',
+      wmRm2L: 'Gmail-DOM-Pipeline',
+      wmRm3V: 'Null',
+      wmRm3L: 'Daten bleiben lokal im Browser',
+      wmRem1V: 'Merged PRs',
+      wmRem1L: 'Offizieller Raycast Store',
+      wmRem2L: 'Kern-Workflows ergänzt',
+      wmRem3L: 'Native EventKit-Bridge',
+      wmCra1V: 'Open Source',
+      wmCra1L: 'Community-Repository',
+      wmCra2V: 'Browser',
+      wmCra2L: 'Kern-UI & Workflows',
+      wmCra3V: 'Merged PRs',
+      wmCra3L: 'Feature-Beiträge',
+      wmRag1L: 'Semantische Suchlatenz',
+      wmRag2L: 'Vektor- & SQL-Suche',
+      wmRag3L: 'Containerisiertes Deployment',
+      wmSales1L: 'R²-Vorhersagegenauigkeit',
+      wmSales2L: 'Gradient-Boosted-Modell',
+      wmSales3L: 'Automatisierte Feature-Pipeline',
+      wmDnn1L: 'Reine CPU-Inferenz',
+      wmDnn2L: 'Optimierter Runtime-Graph',
+      wmDnn3L: 'Edge-bereite Ausführung',
+      wmSent1V: 'Live',
+      wmSent1L: 'Streaming-NLP-Erfassung',
+      wmSent2V: 'Ticker',
+      wmSent2L: 'Entity-Extraktion',
+      wmSent3L: 'Echtzeit-Scoring',
+      workIdxWos: '01 · iOS-App',
+      workIdxRenameMail: '02 · Browser-Erweiterung',
+      workIdxOpen1: '01 · Open Source',
+      workIdxOpen2: '02 · Open Source',
+      workIdxRag: '01 · KI / Retrieval',
+      workIdxSales: '02 · Maschinelles Lernen',
+      workIdxDnn: '03 · Computer Vision',
+      workIdxSentiment: '04 · Daten & NLP',
       navPhotography: 'Fotografie',
       headerAka: 'alias',
       pullLampMorning: 'Ziehen für den Morgen',
@@ -1636,6 +2086,67 @@ function initLanguageSwitcher() {
     hi: {
       navHome: 'होम',
       navFavorites: 'पसंदीदा',
+      navWork: 'प्रोजेक्ट्स',
+      workIntro: 'चयनित प्रोडक्ट्स, AI सिस्टम्स और इंजीनियरिंग बिल्ड्स — वास्तविक प्रभाव, साफ आर्किटेक्चर और मापने योग्य परफॉर्मेंस पर केंद्रित।',
+      workFilterAll: 'सभी',
+      workFilterProducts: 'प्रोडक्ट्स',
+      workFilterAi: 'AI / ML',
+      workFilterOpenSource: 'ओपन सोर्स योगदान',
+      workWosSummary: 'नेटिव SwiftUI में बना मिनिमलिस्ट भगवद गीता iOS ऐप — शांत दैनिक पठन, स्पष्ट टाइपोग्राफी और त्वरित श्लोक नेविगेशन के लिए।',
+      workWosChapters: 'अध्याय देखें',
+      workWosReflections: 'व्यक्तिगत विचार',
+      workWosFocus: 'फोकस रीड',
+      workWosDiscover: 'खोजें',
+      workWosDaily: 'दैनिक श्लोक',
+      workRenameMailSummary: 'Gmail को विज़ुअल ट्रैकर और पाइपलाइन में बदलता है — थ्रेड्स को इनलाइन रीनेम करें, जॉब या क्लाइंट स्टेज व्यवस्थित करें और इनबॉक्स साफ रखें।',
+      workRemindersSummary: 'आधिकारिक Raycast Apple Reminders एक्सटेंशन में रिकरेंस नियम, कैलेंडर इंटीग्रेशन, प्राथमिकता और टैग वर्कफ़्लो जोड़ने वाले PR योगदान दिए।',
+      workCraSummary: 'CRA Browser में ओपन-सोर्स योगदान — ब्राउज़र इंटरैक्शन, टैब वर्कफ़्लो और UI इंजीनियरिंग फ़ीचर्स का निर्माण और सुधार।',
+      workRagSummary: 'ChromaDB वेक्टर एम्बेडिंग और SQL मेटाडेटा फ़िल्टरिंग के साथ मैन्युफैक्चरिंग क्वालिटी दस्तावेज़ों में सब-सेकंड सेमेंटिक खोज।',
+      workSalesSummary: 'ऐतिहासिक SQL बिक्री रिकॉर्ड और वाहन फीचर्स से रीसेल और मार्केट कीमत का अनुमान लगाने वाली एंड-टू-एंड GBDT रिग्रेशन पाइपलाइन।',
+      workDnnSummary: 'बिना GPU हार्डवेयर के सुचारू CPU-ओनली इनफरेंस के लिए ONNX Runtime से अनुकूलित रियल-टाइम ऑब्जेक्ट डिटेक्शन पाइपलाइन।',
+      workSentimentSummary: 'लाइव Reddit चर्चाओं से टिकर उल्लेख निकालने और बाज़ार सेंटीमेंट ट्रेंड स्कोर करने वाली रियल-टाइम NLP स्ट्रीमिंग पाइपलाइन।',
+      wmWos1L: 'अध्याय अनुक्रमित',
+      wmWos2L: 'श्लोक व्यवस्थित',
+      wmWos3V: 'नेटिव',
+      wmWos3L: 'SwiftUI आर्किटेक्चर',
+      wmRm1V: 'क्रॉस-ब्राउज़र',
+      wmRm1L: 'Chrome और Firefox',
+      wmRm2V: 'इनलाइन',
+      wmRm2L: 'Gmail DOM पाइपलाइन',
+      wmRm3V: 'शून्य',
+      wmRm3L: 'कोई डेटा ब्राउज़र से बाहर नहीं',
+      wmRem1V: 'मर्ज्ड PRs',
+      wmRem1L: 'आधिकारिक Raycast स्टोर',
+      wmRem2L: 'मुख्य वर्कफ़्लो जोड़े गए',
+      wmRem3L: 'नेटिव EventKit ब्रिज',
+      wmCra1V: 'ओपन सोर्स',
+      wmCra1L: 'कम्युनिटी रिपॉजिटरी',
+      wmCra2V: 'ब्राउज़र',
+      wmCra2L: 'कोर UI और वर्कफ़्लो',
+      wmCra3V: 'मर्ज्ड PRs',
+      wmCra3L: 'फ़ीचर योगदान',
+      wmRag1L: 'सेमेंटिक क्वेरी लेटेंसी',
+      wmRag2L: 'वेक्टर + SQL खोज',
+      wmRag3L: 'कंटेनराइज़्ड डिप्लॉयमेंट',
+      wmSales1L: 'R² अनुमान सटीकता',
+      wmSales2L: 'ग्रेडिएंट-बूस्टेड मॉडल',
+      wmSales3L: 'स्वचालित फ़ीचर पाइपलाइन',
+      wmDnn1L: 'केवल CPU इनफरेंस',
+      wmDnn2L: 'अनुकूलित रनटाइम ग्राफ़',
+      wmDnn3L: 'एज-रेडी निष्पादन',
+      wmSent1V: 'लाइव',
+      wmSent1L: 'स्ट्रीमिंग NLP इनजेशन',
+      wmSent2V: 'टिकर',
+      wmSent2L: 'एंटिटी निष्कर्षण',
+      wmSent3L: 'रियल-टाइम स्कोरिंग',
+      workIdxWos: '01 · iOS ऐप',
+      workIdxRenameMail: '02 · ब्राउज़र एक्सटेंशन',
+      workIdxOpen1: '01 · ओपन सोर्स',
+      workIdxOpen2: '02 · ओपन सोर्स',
+      workIdxRag: '01 · AI / रिट्रीवल',
+      workIdxSales: '02 · मशीन लर्निंग',
+      workIdxDnn: '03 · कंप्यूटर विज़न',
+      workIdxSentiment: '04 · डेटा और NLP',
       navPhotography: 'फ़ोटोग्राफ़ी',
       headerAka: 'उर्फ़',
       pullLampMorning: 'सुबह के लिए खींचें',
@@ -1728,6 +2239,67 @@ function initLanguageSwitcher() {
     fr: {
       navHome: 'Accueil',
       navFavorites: 'Favoris',
+      navWork: 'Projets',
+      workIntro: 'Produits, systèmes d’IA et projets d’ingénierie sélectionnés — axés sur l’impact concret, une architecture propre et des performances mesurables.',
+      workFilterAll: 'Tous',
+      workFilterProducts: 'Produits',
+      workFilterAi: 'IA / ML',
+      workFilterOpenSource: 'Contributions Open Source',
+      workWosSummary: 'Application iOS minimaliste de la Bhagavad Gītā en SwiftUI natif, conçue pour une lecture quotidienne sereine et une navigation instantanée entre les versets.',
+      workWosChapters: 'Parcourir les chapitres',
+      workWosReflections: 'Réflexions personnelles',
+      workWosFocus: 'Lecture concentrée',
+      workWosDiscover: 'Découvrir',
+      workWosDaily: 'Shloka du jour',
+      workRenameMailSummary: 'Transforme Gmail en suivi visuel et pipeline en renommant les fils en ligne pour organiser vos candidatures ou clients.',
+      workRemindersSummary: 'Pull requests ajoutant récurrence, intégration calendrier, priorités et tags à l’extension officielle Raycast Apple Reminders.',
+      workCraSummary: 'Contributions open source à CRA Browser — développement et amélioration des interactions, onglets et composants d’interface.',
+      workRagSummary: 'Recherche sémantique sub-seconde dans les spécifications qualité via ChromaDB et filtrage de métadonnées SQL.',
+      workSalesSummary: 'Pipeline de régression par gradient boosting prédisant la valeur de revente automobile à partir de données SQL historiques.',
+      workDnnSummary: 'Pipeline de détection d’objets en temps réel optimisé avec ONNX Runtime pour une inférence fluide sur CPU uniquement.',
+      workSentimentSummary: 'Pipeline NLP en temps réel extrayant les mentions boursières sur Reddit pour mesurer le sentiment du marché.',
+      wmWos1L: 'Chapitres indexés',
+      wmWos2L: 'Versets structurés',
+      wmWos3V: 'Natif',
+      wmWos3L: 'Architecture SwiftUI',
+      wmRm1V: 'Multi-navigateurs',
+      wmRm1L: 'Chrome & Firefox',
+      wmRm2V: 'En ligne',
+      wmRm2L: 'Pipeline DOM Gmail',
+      wmRm3V: 'Zéro',
+      wmRm3L: 'Données locales au navigateur',
+      wmRem1V: 'PRs fusionnées',
+      wmRem1L: 'Store officiel Raycast',
+      wmRem2L: 'Workflows clés ajoutés',
+      wmRem3L: 'Pont EventKit natif',
+      wmCra1V: 'Open Source',
+      wmCra1L: 'Dépôt communautaire',
+      wmCra2V: 'Navigateur',
+      wmCra2L: 'UI & workflows centraux',
+      wmCra3V: 'PRs fusionnées',
+      wmCra3L: 'Contributions fonctionnelles',
+      wmRag1L: 'Latence de requête sémantique',
+      wmRag2L: 'Recherche vecteur + SQL',
+      wmRag3L: 'Déploiement conteneurisé',
+      wmSales1L: 'Précision R²',
+      wmSales2L: 'Modèle Gradient Boosting',
+      wmSales3L: 'Pipeline de features automatisé',
+      wmDnn1L: 'Inférence 100% CPU',
+      wmDnn2L: 'Graphe d’exécution optimisé',
+      wmDnn3L: 'Exécution prête pour l’Edge',
+      wmSent1V: 'Direct',
+      wmSent1L: 'Ingestion NLP en streaming',
+      wmSent2V: 'Ticker',
+      wmSent2L: 'Extraction d’entités',
+      wmSent3L: 'Scoring en temps réel',
+      workIdxWos: '01 · App iOS',
+      workIdxRenameMail: '02 · Extension navigateur',
+      workIdxOpen1: '01 · Open Source',
+      workIdxOpen2: '02 · Open Source',
+      workIdxRag: '01 · IA / Recherche',
+      workIdxSales: '02 · Apprentissage automatique',
+      workIdxDnn: '03 · Vision par ordinateur',
+      workIdxSentiment: '04 · Données & NLP',
       navPhotography: 'Photographie',
       headerAka: 'alias',
       pullLampMorning: 'Tirer pour le matin',
@@ -1820,6 +2392,67 @@ function initLanguageSwitcher() {
     es: {
       navHome: 'Inicio',
       navFavorites: 'Favoritos',
+      navWork: 'Proyectos',
+      workIntro: 'Productos, sistemas de IA y proyectos de ingeniería seleccionados — enfocados en impacto real, arquitectura limpia y rendimiento medible.',
+      workFilterAll: 'Todos',
+      workFilterProducts: 'Productos',
+      workFilterAi: 'IA / ML',
+      workFilterOpenSource: 'Contribuciones Open Source',
+      workWosSummary: 'App iOS minimalista del Bhagavad Gītā en SwiftUI nativo, diseñada para lectura diaria tranquila, tipografía limpia y navegación instantánea.',
+      workWosChapters: 'Explorar capítulos',
+      workWosReflections: 'Reflexiones personales',
+      workWosFocus: 'Lectura enfocada',
+      workWosDiscover: 'Descubrir',
+      workWosDaily: 'Shloka diario',
+      workRenameMailSummary: 'Convierte Gmail en un rastreador visual y pipeline renombrando hilos en línea para organizar etapas de empleo o clientes.',
+      workRemindersSummary: 'Pull requests añadiendo reglas de recurrencia, integración con calendario, prioridades y etiquetas a Raycast Apple Reminders.',
+      workCraSummary: 'Contribuciones open source a CRA Browser — desarrollo y mejora de interacciones, pestañas e ingeniería de interfaz.',
+      workRagSummary: 'Búsqueda semántica sub-segundo en documentación de calidad industrial con embeddings ChromaDB y filtros SQL.',
+      workSalesSummary: 'Pipeline de regresión gradient-boosted para predecir precios de reventa de vehículos desde registros SQL históricos.',
+      workDnnSummary: 'Pipeline de detección de objetos en tiempo real optimizado con ONNX Runtime para inferencia fluida solo en CPU.',
+      workSentimentSummary: 'Pipeline NLP en streaming en tiempo real que extrae tickers en Reddit y puntúa el sentimiento del mercado.',
+      wmWos1L: 'Capítulos indexados',
+      wmWos2L: 'Versos estructurados',
+      wmWos3V: 'Nativo',
+      wmWos3L: 'Arquitectura SwiftUI',
+      wmRm1V: 'Multi-navegador',
+      wmRm1L: 'Chrome y Firefox',
+      wmRm2V: 'En línea',
+      wmRm2L: 'Pipeline DOM de Gmail',
+      wmRm3V: 'Cero',
+      wmRm3L: 'Datos locales en el navegador',
+      wmRem1V: 'PRs fusionados',
+      wmRem1L: 'Tienda oficial de Raycast',
+      wmRem2L: 'Flujos clave añadidos',
+      wmRem3L: 'Puente nativo EventKit',
+      wmCra1V: 'Open Source',
+      wmCra1L: 'Repositorio comunitario',
+      wmCra2V: 'Navegador',
+      wmCra2L: 'UI y flujos centrales',
+      wmCra3V: 'PRs fusionados',
+      wmCra3L: 'Contribuciones de funciones',
+      wmRag1L: 'Latencia de consulta semántica',
+      wmRag2L: 'Búsqueda vectorial + SQL',
+      wmRag3L: 'Despliegue en contenedores',
+      wmSales1L: 'Precisión R²',
+      wmSales2L: 'Modelo Gradient Boosting',
+      wmSales3L: 'Pipeline automático de features',
+      wmDnn1L: 'Inferencia solo en CPU',
+      wmDnn2L: 'Grafo de ejecución optimizado',
+      wmDnn3L: 'Ejecución lista para Edge',
+      wmSent1V: 'En vivo',
+      wmSent1L: 'Ingesta NLP en streaming',
+      wmSent2V: 'Ticker',
+      wmSent2L: 'Extracción de entidades',
+      wmSent3L: 'Puntuación en tiempo real',
+      workIdxWos: '01 · App iOS',
+      workIdxRenameMail: '02 · Extensión de navegador',
+      workIdxOpen1: '01 · Open Source',
+      workIdxOpen2: '02 · Open Source',
+      workIdxRag: '01 · IA / Recuperación',
+      workIdxSales: '02 · Aprendizaje automático',
+      workIdxDnn: '03 · Visión por computadora',
+      workIdxSentiment: '04 · Datos y NLP',
       navPhotography: 'Fotografía',
       headerAka: 'alias',
       pullLampMorning: 'Tira para la mañana',
@@ -1912,6 +2545,67 @@ function initLanguageSwitcher() {
     zh: {
       navHome: '首页',
       navFavorites: '收藏',
+      navWork: '作品',
+      workIntro: '精选产品、AI 系统与工程项目——专注于实际影响、清晰架构与可衡量的性能。',
+      workFilterAll: '全部',
+      workFilterProducts: '产品',
+      workFilterAi: 'AI / 机器学习',
+      workFilterOpenSource: '开源贡献',
+      workWosSummary: '基于原生 SwiftUI 打造的极简《薄伽梵歌》iOS 应用，提供宁静的日常阅读、无干扰排版与即时诗节跳转。',
+      workWosChapters: '浏览章节',
+      workWosReflections: '个人感悟',
+      workWosFocus: '专注阅读',
+      workWosDiscover: '发现',
+      workWosDaily: '每日诗节',
+      workRenameMailSummary: '支持在 Gmail 中直接重命名邮件主题，将其变成可视化的求职或客户追踪看板。',
+      workRemindersSummary: '为官方 Raycast Apple Reminders 扩展提交 PR，新增重复规则、日历集成、优先级与标签工作流。',
+      workCraSummary: '为 CRA Browser 提交开源贡献，构建并优化浏览器交互、标签工作流与界面工程体验。',
+      workRagSummary: '结合 ChromaDB 向量检索与 SQL 元数据过滤，实现制造业质量文档的亚秒级语义搜索。',
+      workSalesSummary: '基于历史 SQL 销售记录与车辆特征的端到端梯度提升回归管道，预测二手车市场价格。',
+      workDnnSummary: '使用 ONNX Runtime 优化的实时目标检测管道，无需独立 GPU 即可在纯 CPU 上流畅推理。',
+      workSentimentSummary: '实时 NLP 流式管道，从 Reddit 讨论中提取股票代码并评估市场情绪趋势。',
+      wmWos1L: '已索引章节',
+      wmWos2L: '已结构化诗节',
+      wmWos3V: '原生',
+      wmWos3L: 'SwiftUI 架构',
+      wmRm1V: '跨浏览器',
+      wmRm1L: 'Chrome 与 Firefox',
+      wmRm2V: '内联',
+      wmRm2L: 'Gmail DOM 管线',
+      wmRm3V: '零',
+      wmRm3L: '数据不离开浏览器',
+      wmRem1V: '已合并 PR',
+      wmRem1L: 'Raycast 官方商店',
+      wmRem2L: '新增核心工作流',
+      wmRem3L: '原生 EventKit 桥接',
+      wmCra1V: '开源',
+      wmCra1L: '社区代码仓库',
+      wmCra2V: '浏览器',
+      wmCra2L: '核心界面与工作流',
+      wmCra3V: '已合并 PR',
+      wmCra3L: '功能贡献',
+      wmRag1L: '语义查询延迟',
+      wmRag2L: '向量 + SQL 检索',
+      wmRag3L: '容器化部署',
+      wmSales1L: 'R² 预测准确率',
+      wmSales2L: '梯度提升模型',
+      wmSales3L: '自动化特征管线',
+      wmDnn1L: '纯 CPU 推理',
+      wmDnn2L: '优化运行时计算图',
+      wmDnn3L: '边缘端就绪执行',
+      wmSent1V: '实时',
+      wmSent1L: '流式 NLP 接入',
+      wmSent2V: '股票代码',
+      wmSent2L: '实体提取',
+      wmSent3L: '实时情绪评分',
+      workIdxWos: '01 · iOS 应用',
+      workIdxRenameMail: '02 · 浏览器扩展',
+      workIdxOpen1: '01 · 开源项目',
+      workIdxOpen2: '02 · 开源项目',
+      workIdxRag: '01 · AI / 检索',
+      workIdxSales: '02 · 机器学习',
+      workIdxDnn: '03 · 计算机视觉',
+      workIdxSentiment: '04 · 数据与 NLP',
       navPhotography: '摄影',
       headerAka: '又名',
       pullLampMorning: '拉动切换至清晨',
@@ -2004,6 +2698,67 @@ function initLanguageSwitcher() {
     ja: {
       navHome: 'ホーム',
       navFavorites: 'お気に入り',
+      navWork: 'プロジェクト',
+      workIntro: '厳選されたプロダクト、AIシステム、エンジニアリング実装 — 実用的なインパクト、クリーンな設計、計測可能なパフォーマンスを重視。',
+      workFilterAll: 'すべて',
+      workFilterProducts: 'プロダクト',
+      workFilterAi: 'AI / ML',
+      workFilterOpenSource: 'OSSコントリビューション',
+      workWosSummary: 'ネイティブ SwiftUI で構築したミニマルなバガヴァッド・ギーター iOS アプリ。落ち着いた毎日の読書と素早い節ナビゲーションを実現。',
+      workWosChapters: '章を見る',
+      workWosReflections: '個人のメモ',
+      workWosFocus: 'フォーカス閲覧',
+      workWosDiscover: '探索',
+      workWosDaily: '今日のシュローカ',
+      workRenameMailSummary: 'Gmail のスレッドをインラインでリネームし、選考や顧客管理のビジュアルパイプラインに変える拡張機能。',
+      workRemindersSummary: '公式 Raycast Apple Reminders 拡張に繰り返しルール、カレンダー連携、優先度、タグ機能を追加する PR を貢献。',
+      workCraSummary: 'CRA Browser へのオープンソース貢献 — ブラウザ操作、タブワークフロー、UI エンジニアリング機能の構築と改善。',
+      workRagSummary: 'ChromaDB ベクトル検索と SQL メタデータフィルタを用いた製造品質ドキュメントのサブ秒セマンティック検索。',
+      workSalesSummary: '過去の SQL 販売データから車両の再販価格を予測するエンドツーエンドの勾配ブースティング回帰パイプライン。',
+      workDnnSummary: 'ONNX Runtime で最適化されたリアルタイム物体検出パイプラインにより、GPU なしの CPU のみで高速推論を実現。',
+      workSentimentSummary: 'Reddit のライブ投稿からティッカー言及を抽出し、市場センチメントをスコア化するリアルタイム NLP パイプライン。',
+      wmWos1L: '索引済み章数',
+      wmWos2L: '構造化詩節数',
+      wmWos3V: 'ネイティブ',
+      wmWos3L: 'SwiftUI アーキテクチャ',
+      wmRm1V: 'クロスブラウザ',
+      wmRm1L: 'Chrome & Firefox',
+      wmRm2V: 'インライン',
+      wmRm2L: 'Gmail DOM パイプライン',
+      wmRm3V: 'ゼロ',
+      wmRm3L: '外部データ送信なし',
+      wmRem1V: 'マージ済み PR',
+      wmRem1L: '公式 Raycast ストア',
+      wmRem2L: '主要ワークフロー追加',
+      wmRem3L: 'EventKit ネイティブ連携',
+      wmCra1V: 'OSS',
+      wmCra1L: 'コミュニティリポジトリ',
+      wmCra2V: 'ブラウザ',
+      wmCra2L: 'コア UI・ワークフロー',
+      wmCra3V: 'マージ済み PR',
+      wmCra3L: '機能コントリビューション',
+      wmRag1L: 'セマンティック検索レイテンシ',
+      wmRag2L: 'ベクトル + SQL 検索',
+      wmRag3L: 'コンテナデプロイ',
+      wmSales1L: 'R² 予測精度',
+      wmSales2L: '勾配ブースティングモデル',
+      wmSales3L: '自動特徴量パイプライン',
+      wmDnn1L: 'CPU のみで推論',
+      wmDnn2L: '最適化ランタイムグラフ',
+      wmDnn3L: 'エッジ対応実行',
+      wmSent1V: 'ライブ',
+      wmSent1L: 'ストリーミング NLP 取込',
+      wmSent2V: 'ティッカー',
+      wmSent2L: 'エンティティ抽出',
+      wmSent3L: 'リアルタイムスコアリング',
+      workIdxWos: '01 · iOS アプリ',
+      workIdxRenameMail: '02 · ブラウザ拡張',
+      workIdxOpen1: '01 · オープンソース',
+      workIdxOpen2: '02 · オープンソース',
+      workIdxRag: '01 · AI / 検索',
+      workIdxSales: '02 · 機械学習',
+      workIdxDnn: '03 · コンピュータビジョン',
+      workIdxSentiment: '04 · データ・NLP',
       navPhotography: '写真',
       headerAka: '別名',
       pullLampMorning: '引いて朝にする',
@@ -2096,6 +2851,67 @@ function initLanguageSwitcher() {
     ko: {
       navHome: '홈',
       navFavorites: '즐겨찾기',
+      navWork: '프로젝트',
+      workIntro: '엄선된 프로덕트, AI 시스템 및 엔지니어링 작업 — 실질적 임팩트, 깔끔한 아키텍처, 측정 가능한 성능에 집중합니다.',
+      workFilterAll: '전체',
+      workFilterProducts: '프로덕트',
+      workFilterAi: 'AI / ML',
+      workFilterOpenSource: '오픈소스 기여',
+      workWosSummary: '네이티브 SwiftUI로 제작한 미니멀한 바가바드 기타 iOS 앱 — 차분한 일상 독서와 즉각적인 구절 탐색을 제공합니다.',
+      workWosChapters: '장 탐색',
+      workWosReflections: '개인 성찰',
+      workWosFocus: '집중 읽기',
+      workWosDiscover: '둘러보기',
+      workWosDaily: '오늘의 슐로카',
+      workRenameMailSummary: 'Gmail 스레드 제목을 인라인으로 변경해 지원 현황이나 고객 파이프라인을 시각적으로 정리합니다.',
+      workRemindersSummary: '공식 Raycast Apple Reminders 확장에 반복 규칙, 캘린더 연동, 우선순위 및 태그 워크플로우 PR을 기여했습니다.',
+      workCraSummary: 'CRA Browser 오픈소스 기여 — 브라우저 인터랙션, 탭 워크플로우 및 UI 엔지니어링 기능 구축 및 개선.',
+      workRagSummary: 'ChromaDB 벡터 임베딩과 SQL 메타데이터 필터링을 활용한 제조 품질 문서의 1초 미만 시맨틱 검색.',
+      workSalesSummary: '과거 SQL 판매 데이터로 차량 리세일 가격을 예측하는 엔드투엔드 그래디언트 부스팅 회귀 파이프라인.',
+      workDnnSummary: '전용 GPU 없이 CPU만으로 부드러운 추론을 달성하도록 ONNX Runtime으로 최적화한 실시간 객체 탐지 파이프라인.',
+      workSentimentSummary: '실시간 Reddit 토론에서 티커 언급을 추출해 시장 심리를 점수화하는 실시간 NLP 스트리밍 파이프라인.',
+      wmWos1L: '색인된 장',
+      wmWos2L: '구조화된 구절',
+      wmWos3V: '네이티브',
+      wmWos3L: 'SwiftUI 아키텍처',
+      wmRm1V: '크로스 브라우저',
+      wmRm1L: 'Chrome & Firefox',
+      wmRm2V: '인라인',
+      wmRm2L: 'Gmail DOM 파이프라인',
+      wmRm3V: '제로',
+      wmRm3L: '외부 데이터 전송 없음',
+      wmRem1V: '병합된 PR',
+      wmRem1L: '공식 Raycast 스토어',
+      wmRem2L: '핵심 워크플로우 추가',
+      wmRem3L: '네이티브 EventKit 브리지',
+      wmCra1V: '오픈소스',
+      wmCra1L: '커뮤니티 저장소',
+      wmCra2V: '브라우저',
+      wmCra2L: '핵심 UI 및 워크플로우',
+      wmCra3V: '병합된 PR',
+      wmCra3L: '기능 기여',
+      wmRag1L: '시맨틱 쿼리 지연시간',
+      wmRag2L: '벡터 + SQL 검색',
+      wmRag3L: '컨테이너 기반 배포',
+      wmSales1L: 'R² 예측 정확도',
+      wmSales2L: '그래디언트 부스팅 모델',
+      wmSales3L: '자동 피처 파이프라인',
+      wmDnn1L: 'CPU 전용 추론',
+      wmDnn2L: '최적화 런타임 그래프',
+      wmDnn3L: '엣지 환경 실행 지원',
+      wmSent1V: '실시간',
+      wmSent1L: '스트리밍 NLP 수집',
+      wmSent2V: '티커',
+      wmSent2L: '개체 추출',
+      wmSent3L: '실시간 스코어링',
+      workIdxWos: '01 · iOS 앱',
+      workIdxRenameMail: '02 · 브라우저 확장',
+      workIdxOpen1: '01 · 오픈소스',
+      workIdxOpen2: '02 · 오픈소스',
+      workIdxRag: '01 · AI / 검색',
+      workIdxSales: '02 · 머신러닝',
+      workIdxDnn: '03 · 컴퓨터 비전',
+      workIdxSentiment: '04 · 데이터 및 NLP',
       navPhotography: '사진',
       headerAka: '일명',
       pullLampMorning: '당겨서 아침으로',
@@ -2188,6 +3004,67 @@ function initLanguageSwitcher() {
     it: {
       navHome: 'Home',
       navFavorites: 'Preferiti',
+      navWork: 'Progetti',
+      workIntro: 'Prodotti, sistemi AI e progetti di ingegneria selezionati — focalizzati su impatto reale, architettura pulita e prestazioni misurabili.',
+      workFilterAll: 'Tutti',
+      workFilterProducts: 'Prodotti',
+      workFilterAi: 'AI / ML',
+      workFilterOpenSource: 'Contributi Open Source',
+      workWosSummary: 'App iOS minimalista della Bhagavad Gītā in SwiftUI nativo, pensata per una lettura quotidiana serena e navigazione istantanea.',
+      workWosChapters: 'Sfoglia capitoli',
+      workWosReflections: 'Riflessioni personali',
+      workWosFocus: 'Lettura focus',
+      workWosDiscover: 'Scopri',
+      workWosDaily: 'Shloka del giorno',
+      workRenameMailSummary: 'Trasforma Gmail in un tracker visivo e pipeline rinominando le conversazioni in linea.',
+      workRemindersSummary: 'Pull request con regole di ricorrenza, integrazione calendario, priorità e tag per Raycast Apple Reminders.',
+      workCraSummary: 'Contributi open source a CRA Browser — sviluppo e perfezionamento di interazioni, schede e UI engineering.',
+      workRagSummary: 'Ricerca semantica sub-secondo su documenti di qualità industriale con ChromaDB e filtri SQL.',
+      workSalesSummary: 'Pipeline di regressione gradient-boosted per stimare i prezzi di rivendita auto da dati SQL storici.',
+      workDnnSummary: 'Pipeline di object detection in tempo reale ottimizzata con ONNX Runtime per inferenza fluida su sola CPU.',
+      workSentimentSummary: 'Pipeline NLP in streaming per estrarre ticker da Reddit e valutare il sentiment di mercato in tempo reale.',
+      wmWos1L: 'Capitoli indicizzati',
+      wmWos2L: 'Versetti strutturati',
+      wmWos3V: 'Nativo',
+      wmWos3L: 'Architettura SwiftUI',
+      wmRm1V: 'Cross-browser',
+      wmRm1L: 'Chrome e Firefox',
+      wmRm2V: 'In linea',
+      wmRm2L: 'Pipeline DOM Gmail',
+      wmRm3V: 'Zero',
+      wmRm3L: 'Dati locali nel browser',
+      wmRem1V: 'PR unite',
+      wmRem1L: 'Store ufficiale Raycast',
+      wmRem2L: 'Flussi chiave aggiunti',
+      wmRem3L: 'Bridge nativo EventKit',
+      wmCra1V: 'Open Source',
+      wmCra1L: 'Repository comunitaria',
+      wmCra2V: 'Browser',
+      wmCra2L: 'UI e flussi principali',
+      wmCra3V: 'PR unite',
+      wmCra3L: 'Contributi funzionali',
+      wmRag1L: 'Latenza query semantica',
+      wmRag2L: 'Ricerca vettoriale + SQL',
+      wmRag3L: 'Deploy containerizzato',
+      wmSales1L: 'Accuratezza R²',
+      wmSales2L: 'Modello Gradient Boosting',
+      wmSales3L: 'Pipeline feature automatica',
+      wmDnn1L: 'Inferenza solo CPU',
+      wmDnn2L: 'Grafo runtime ottimizzato',
+      wmDnn3L: 'Esecuzione pronta per Edge',
+      wmSent1V: 'Live',
+      wmSent1L: 'Acquisizione NLP in streaming',
+      wmSent2V: 'Ticker',
+      wmSent2L: 'Estrazione entità',
+      wmSent3L: 'Scoring in tempo reale',
+      workIdxWos: '01 · App iOS',
+      workIdxRenameMail: '02 · Estensione browser',
+      workIdxOpen1: '01 · Open Source',
+      workIdxOpen2: '02 · Open Source',
+      workIdxRag: '01 · AI / Retrieval',
+      workIdxSales: '02 · Machine Learning',
+      workIdxDnn: '03 · Computer Vision',
+      workIdxSentiment: '04 · Dati e NLP',
       navPhotography: 'Fotografia',
       headerAka: 'alias',
       pullLampMorning: 'Tira per il mattino',
@@ -2280,6 +3157,67 @@ function initLanguageSwitcher() {
     pt: {
       navHome: 'Início',
       navFavorites: 'Favoritos',
+      navWork: 'Projetos',
+      workIntro: 'Produtos, sistemas de IA e projetos de engenharia selecionados — focados em impacto real, arquitetura limpa e desempenho mensurável.',
+      workFilterAll: 'Todos',
+      workFilterProducts: 'Produtos',
+      workFilterAi: 'IA / ML',
+      workFilterOpenSource: 'Contribuições Open Source',
+      workWosSummary: 'App iOS minimalista da Bhagavad Gītā em SwiftUI nativo, criado para leitura diária tranquila e navegação instantânea.',
+      workWosChapters: 'Explorar capítulos',
+      workWosReflections: 'Reflexões pessoais',
+      workWosFocus: 'Leitura focada',
+      workWosDiscover: 'Descobrir',
+      workWosDaily: 'Shloka diário',
+      workRenameMailSummary: 'Transforma o Gmail em um rastreador visual e pipeline permitindo renomear threads diretamente na caixa de entrada.',
+      workRemindersSummary: 'Pull requests adicionando recorrência, calendário, prioridades e tags à extensão oficial Raycast Apple Reminders.',
+      workCraSummary: 'Contribuições open source para o CRA Browser — construindo e refinando interações, abas e engenharia de UI.',
+      workRagSummary: 'Busca semântica sub-segundo em especificações de qualidade industrial usando ChromaDB e metadados SQL.',
+      workSalesSummary: 'Pipeline de regressão gradient-boosted para prever preços de revenda de veículos a partir de registros SQL históricos.',
+      workDnnSummary: 'Pipeline de detecção de objetos em tempo real otimizado com ONNX Runtime para inferência fluida apenas em CPU.',
+      workSentimentSummary: 'Pipeline NLP em streaming em tempo real extraindo menções de tickers no Reddit e pontuando o sentimento do mercado.',
+      wmWos1L: 'Capítulos indexados',
+      wmWos2L: 'Versos estruturados',
+      wmWos3V: 'Nativo',
+      wmWos3L: 'Arquitetura SwiftUI',
+      wmRm1V: 'Multi-navegador',
+      wmRm1L: 'Chrome e Firefox',
+      wmRm2V: 'Inline',
+      wmRm2L: 'Pipeline DOM do Gmail',
+      wmRm3V: 'Zero',
+      wmRm3L: 'Dados ficam no navegador',
+      wmRem1V: 'PRs mesclados',
+      wmRem1L: 'Loja oficial Raycast',
+      wmRem2L: 'Fluxos principais adicionados',
+      wmRem3L: 'Ponte nativa EventKit',
+      wmCra1V: 'Open Source',
+      wmCra1L: 'Repositório da comunidade',
+      wmCra2V: 'Navegador',
+      wmCra2L: 'UI e fluxos centrais',
+      wmCra3V: 'PRs mesclados',
+      wmCra3L: 'Contribuições de recursos',
+      wmRag1L: 'Latência de consulta semântica',
+      wmRag2L: 'Busca vetorial + SQL',
+      wmRag3L: 'Deploy em contêiner',
+      wmSales1L: 'Precisão R²',
+      wmSales2L: 'Modelo Gradient Boosting',
+      wmSales3L: 'Pipeline automático de features',
+      wmDnn1L: 'Inferência apenas em CPU',
+      wmDnn2L: 'Grafo de execução otimizado',
+      wmDnn3L: 'Execução pronta para Edge',
+      wmSent1V: 'Ao vivo',
+      wmSent1L: 'Ingestão NLP em streaming',
+      wmSent2V: 'Ticker',
+      wmSent2L: 'Extração de entidades',
+      wmSent3L: 'Pontuação em tempo real',
+      workIdxWos: '01 · App iOS',
+      workIdxRenameMail: '02 · Extensão de navegador',
+      workIdxOpen1: '01 · Open Source',
+      workIdxOpen2: '02 · Open Source',
+      workIdxRag: '01 · IA / Recuperação',
+      workIdxSales: '02 · Aprendizado de máquina',
+      workIdxDnn: '03 · Visão computacional',
+      workIdxSentiment: '04 · Dados e NLP',
       navPhotography: 'Fotografia',
       headerAka: 'vulgo',
       pullLampMorning: 'Puxe para a manhã',
@@ -2372,6 +3310,67 @@ function initLanguageSwitcher() {
     nl: {
       navHome: 'Home',
       navFavorites: 'Favorieten',
+      navWork: 'Projecten',
+      workIntro: 'Geselecteerde producten, AI-systemen en engineering-projecten — gericht op echte impact, schone architectuur en meetbare prestaties.',
+      workFilterAll: 'Alle',
+      workFilterProducts: 'Producten',
+      workFilterAi: 'AI / ML',
+      workFilterOpenSource: 'Open-source bijdragen',
+      workWosSummary: 'Minimalistische Bhagavad Gītā iOS-app in native SwiftUI, ontworpen voor rustig dagelijks lezen en directe versnavigatie.',
+      workWosChapters: 'Hoofdstukken bekijken',
+      workWosReflections: 'Persoonlijke reflecties',
+      workWosFocus: 'Focus-lezen',
+      workWosDiscover: 'Ontdekken',
+      workWosDaily: 'Dagelijkse Shloka',
+      workRenameMailSummary: 'Verandert Gmail in een visuele tracker en pijplijn door threads inline te hernoemen.',
+      workRemindersSummary: 'Pull requests met herhalingsregels, agenda-integratie, prioriteiten en tags voor Raycast Apple Reminders.',
+      workCraSummary: 'Open-source bijdragen aan CRA Browser — bouwen en verfijnen van browserinteracties, tab-workflows en UI-engineering.',
+      workRagSummary: 'Sub-seconde semantisch zoeken door kwaliteitsdocumentatie met ChromaDB-vectoren en SQL-metadatafilters.',
+      workSalesSummary: 'End-to-end gradient-boosted regressiepijplijn voor het voorspellen van voertuigprijzen uit historische SQL-verkoopdata.',
+      workDnnSummary: 'Realtime objectdetectie geoptimaliseerd met ONNX Runtime voor vloeiende CPU-inferentie zonder GPU.',
+      workSentimentSummary: 'Realtime NLP-streamingpijplijn die tickers uit Reddit-discussies haalt en marktsentiment scoort.',
+      wmWos1L: 'Hoofdstukken geïndexeerd',
+      wmWos2L: 'Verzen gestructureerd',
+      wmWos3V: 'Native',
+      wmWos3L: 'SwiftUI-architectuur',
+      wmRm1V: 'Cross-browser',
+      wmRm1L: 'Chrome & Firefox',
+      wmRm2V: 'Inline',
+      wmRm2L: 'Gmail DOM-pijplijn',
+      wmRm3V: 'Nul',
+      wmRm3L: 'Geen data buiten browser',
+      wmRem1V: 'Gemergede PRs',
+      wmRem1L: 'Officiële Raycast-store',
+      wmRem2L: 'Kernworkflows toegevoegd',
+      wmRem3L: 'Native EventKit-bridge',
+      wmCra1V: 'Open Source',
+      wmCra1L: 'Community-repository',
+      wmCra2V: 'Browser',
+      wmCra2L: 'Kern-UI & workflows',
+      wmCra3V: 'Gemergede PRs',
+      wmCra3L: 'Functiebijdragen',
+      wmRag1L: 'Semantische zoektijd',
+      wmRag2L: 'Vector- & SQL-zoekopdracht',
+      wmRag3L: 'Gecontaineriseerde uitrol',
+      wmSales1L: 'R²-voorspellingsnauwkeurigheid',
+      wmSales2L: 'Gradient-boosted model',
+      wmSales3L: 'Geautomatiseerde featurepijplijn',
+      wmDnn1L: 'Alleen CPU-inferentie',
+      wmDnn2L: 'Geoptimaliseerde runtime-graaf',
+      wmDnn3L: 'Edge-ready uitvoering',
+      wmSent1V: 'Live',
+      wmSent1L: 'Streaming NLP-inname',
+      wmSent2V: 'Ticker',
+      wmSent2L: 'Entiteitextractie',
+      wmSent3L: 'Realtime scoring',
+      workIdxWos: '01 · iOS-app',
+      workIdxRenameMail: '02 · Browser-extensie',
+      workIdxOpen1: '01 · Open Source',
+      workIdxOpen2: '02 · Open Source',
+      workIdxRag: '01 · AI / Retrieval',
+      workIdxSales: '02 · Machine Learning',
+      workIdxDnn: '03 · Computer Vision',
+      workIdxSentiment: '04 · Data & NLP',
       navPhotography: 'Fotografie',
       headerAka: 'alias',
       pullLampMorning: 'Trek voor de ochtend',
@@ -2464,6 +3463,67 @@ function initLanguageSwitcher() {
     ar: {
       navHome: 'الرئيسية',
       navFavorites: 'المفضلة',
+      navWork: 'الأعمال',
+      workIntro: 'مختارات من المنتجات وأنظمة الذكاء الاصطناعي ومشاريع الهندسة — تركّز على الأثر الفعلي والهندسة النظيفة والأداء القابل للقياس.',
+      workFilterAll: 'الكل',
+      workFilterProducts: 'المنتجات',
+      workFilterAi: 'الذكاء الاصطناعي',
+      workFilterOpenSource: 'مساهمات مفتوحة المصدر',
+      workWosSummary: 'تطبيق iOS بسيط للـ Bhagavad Gītā مبني بـ SwiftUI الأصلي لقراءة يومية هادئة وتنقّل فوري بين الآيات.',
+      workWosChapters: 'تصفح الفصول',
+      workWosReflections: 'تأملات شخصية',
+      workWosFocus: 'قراءة مركزة',
+      workWosDiscover: 'استكشف',
+      workWosDaily: 'شلوكا اليوم',
+      workRenameMailSummary: 'يحوّل Gmail إلى متتبّع بصري ومسار عمل عبر إعادة تسمية المحادثات مباشرة وتنظيم المراحل.',
+      workRemindersSummary: 'مساهمات Pull Requests تضيف قواعد التكرار والتقويم والأولويات والوسوم لإضافة Raycast Apple Reminders.',
+      workCraSummary: 'مساهمات مفتوحة المصدر في متصفح CRA — تطوير وتحسين تفاعلات المتصفح وتدفق التبويبات وواجهات المستخدم.',
+      workRagSummary: 'بحث دلالي بأقل من ثانية في وثائق جودة التصنيع باستخدام ChromaDB وتصفية بيانات SQL.',
+      workSalesSummary: 'مسار انحدار Gradient-Boosted للتنبؤ بأسعار إعادة بيع المركبات من سجلات مبيعات SQL التاريخية.',
+      workDnnSummary: 'مسار كشف كائنات بالزمن الحقيقي محسّن بـ ONNX Runtime لاستنتاج سلس على المعالج CPU فقط.',
+      workSentimentSummary: 'مسار معالجة لغة طبيعية بالبث الحي لاستخراج رموز الأسهم من نقاشات Reddit وتقييم اتجاهات السوق.',
+      wmWos1L: 'فصول مفهرسة',
+      wmWos2L: 'آيات منظمة',
+      wmWos3V: 'أصلي',
+      wmWos3L: 'بنية SwiftUI',
+      wmRm1V: 'متعدد المتصفحات',
+      wmRm1L: 'Chrome و Firefox',
+      wmRm2V: 'مباشر',
+      wmRm2L: 'مسار DOM لـ Gmail',
+      wmRm3V: 'صفر',
+      wmRm3L: 'البيانات تبقى داخل المتصفح',
+      wmRem1V: 'طلبات دمج',
+      wmRem1L: 'متجر Raycast الرسمي',
+      wmRem2L: 'إضافة تدفقات أساسية',
+      wmRem3L: 'جسر EventKit الأصلي',
+      wmCra1V: 'مفتوح المصدر',
+      wmCra1L: 'مستودع مجتمعي',
+      wmCra2V: 'متصفح',
+      wmCra2L: 'واجهة وتدفقات أساسية',
+      wmCra3V: 'طلبات دمج',
+      wmCra3L: 'مساهمات ميزات',
+      wmRag1L: 'زمن استعلام دلالي',
+      wmRag2L: 'استرجاع متجهي + SQL',
+      wmRag3L: 'نشر بالحاويات',
+      wmSales1L: 'دقة التنبؤ R²',
+      wmSales2L: 'نموذج Gradient Boosting',
+      wmSales3L: 'مسار ميزات مؤتمت',
+      wmDnn1L: 'استنتاج على CPU فقط',
+      wmDnn2L: 'مخطط تشغيل محسّن',
+      wmDnn3L: 'تنفيذ جاهز للطرفية',
+      wmSent1V: 'مباشر',
+      wmSent1L: 'بث NLP مباشر',
+      wmSent2V: 'الرمز',
+      wmSent2L: 'استخراج الكيانات',
+      wmSent3L: 'تقييم فوري',
+      workIdxWos: '01 · تطبيق iOS',
+      workIdxRenameMail: '02 · إضافة متصفح',
+      workIdxOpen1: '01 · مفتوح المصدر',
+      workIdxOpen2: '02 · مفتوح المصدر',
+      workIdxRag: '01 · ذكاء اصطناعي / استرجاع',
+      workIdxSales: '02 · تعلم الآلة',
+      workIdxDnn: '03 · الرؤية الحاسوبية',
+      workIdxSentiment: '04 · البيانات و NLP',
       navPhotography: 'التصوير',
       headerAka: 'المعروف بـ',
       pullLampMorning: 'اسحب للصباح',
