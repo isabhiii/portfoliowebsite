@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=120">
+  <link rel="stylesheet" href="style.css?v=123">
   <script>
     try {
       if (localStorage.getItem('theme') === 'dark') {
@@ -195,7 +195,7 @@
         <img src="profile.jpg" alt="Abhishek Kanani" class="header-avatar header-avatar-light">
         <img src="profile-dark.jpg" alt="Abhishek Kanani" class="header-avatar header-avatar-dark">
       </a>
-      <div class="header-name">Abhishek Kanani <span class="aka" data-i18n="headerAka">aka</span> @isabhiii</div>
+      <div class="header-name">Abhishek Kanani <span class="aka" data-i18n="headerAka">aka</span> <span data-verse-text="@isabhiii" data-verse-seed="1610" data-verse-once="true">@isabhiii</span></div>
       <nav class="top-nav" aria-label="Main navigation">
         <a href="#home" class="nav-tab active" data-tab="home" aria-current="page" data-i18n="navHome">Home</a>
         <a href="#work" class="nav-tab" data-tab="work" data-i18n="navWork">Work</a>
@@ -215,7 +215,7 @@
     <section id="panel-home" class="tab-panel active">
 
       <article>
-        <h1 class="intro-title gutter-x animate-in animate-delay-1" style="margin-bottom: 18px;" data-i18n="introTitle">I'm Abhishek</h1>
+        <h1 class="intro-title gutter-x animate-in animate-delay-1" style="margin-bottom: 18px;" data-i18n="introTitle">I'm <span data-verse-text="Abhishek" data-verse-seed="2026">Abhishek</span></h1>
 
         <div class="intro-body gutter-x">
           <span class="intro-p hi animate-in animate-delay-2" data-i18n="introGreeting">Hi, Guten Tag, नमस्ते</span>
@@ -498,6 +498,14 @@
           </a>
 
         </div>
+      </div>
+
+      <div class="divider animate-in animate-delay-9"></div>
+
+      <!-- ── BOOKSHELF SECTION ── -->
+      <div class="ruru-section gutter-x animate-in animate-delay-9">
+        <div class="section-label" data-i18n="secBookshelf">Bookshelf</div>
+        <div id="bookshelfRoot" class="bookshelf" role="region" aria-label="Bookshelf"></div>
       </div>
 
       <div class="divider animate-in animate-delay-9"></div>
@@ -916,6 +924,7 @@
   </div>
 
   <div id="copyToast" class="copy-toast"></div>
-  <script src="app.js?v=87"></script>
+  <script src="verse-text.js?v=1"></script>
+  <script src="app.js?v=88"></script>
 </body>
 </html>

@@ -2604,6 +2604,307 @@ html.dark .wixon-footer-wordmark-link:hover .wixon-footer-wordmark-letters {
   color: rgba(255, 255, 255, 0.18);
 }
 
+/* ── BOOKSHELF (akoder-style single-row shelf) ── */
+.bookshelf {
+  --shelf-scale: 1;
+  --lift-amount: 10px;
+  position: relative;
+  width: 100%;
+}
+
+.bookshelf-rail {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  padding: 14px 4px 0;
+  overflow-x: auto;
+  overflow-y: visible;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.bookshelf-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.bookshelf-book:first-child {
+  margin-left: auto;
+}
+
+.bookshelf-book:last-child {
+  margin-right: auto;
+}
+
+.bookshelf-book {
+  position: relative;
+  flex: 0 0 auto;
+  width: calc(var(--spine-w) * var(--shelf-scale));
+  height: calc(var(--book-h) * var(--shelf-scale));
+  padding: 0;
+  border: 0;
+  border-radius: 3px 3px 0 0;
+  background: transparent;
+  cursor: pointer;
+  overflow: hidden;
+  transform: translateY(0);
+  transition:
+    width 0.36s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: width, transform;
+}
+
+.bookshelf-book:focus-visible {
+  outline: 2px solid var(--primary-text);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .bookshelf-book[aria-pressed="false"]:hover {
+    transform: translateY(calc(var(--lift-amount) * -1));
+  }
+}
+
+.bookshelf-book[aria-pressed="true"] {
+  width: calc(var(--open-w) * var(--shelf-scale));
+  transform: translateY(0);
+}
+
+.bookshelf-spine,
+.bookshelf-cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  border-radius: 3px 3px 0 0;
+  pointer-events: none;
+  transition: opacity 0.26s ease;
+}
+
+.bookshelf-spine {
+  opacity: 1;
+}
+
+.bookshelf-cover {
+  opacity: 0;
+}
+
+.bookshelf-book[aria-pressed="true"] .bookshelf-spine {
+  opacity: 0;
+}
+
+.bookshelf-book[aria-pressed="true"] .bookshelf-cover {
+  opacity: 1;
+}
+
+.bookshelf-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 10px 8px;
+  border: 1px solid var(--divider);
+  border-radius: 3px 3px 0 0;
+  background: var(--hover-bg);
+  color: var(--primary-text);
+  text-align: left;
+  font-size: 0.72rem;
+  line-height: 1.25;
+}
+
+.bookshelf-fallback small {
+  color: var(--secondary-text);
+  font-size: 0.65rem;
+  margin-top: 2px;
+}
+
+.bookshelf-ledge {
+  width: 100%;
+  height: 8px;
+  background: var(--hover-bg);
+  border-top: 1px solid var(--divider);
+  border-bottom: 1px solid var(--divider);
+  border-radius: 2px;
+}
+
+.bookshelf-empty {
+  font-size: 0.875rem;
+  color: var(--secondary-text);
+  padding: 16px 0;
+}
+
+@media (max-width: 480px) {
+  .bookshelf {
+    --shelf-scale: 0.78;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bookshelf {
+    --lift-amount: 0px;
+  }
+  .bookshelf-book,
+  .bookshelf-spine,
+  .bookshelf-cover {
+    transition: none;
+  }
+}
+
+/* ── VERSE TEXT (Spider-Verse comic misregistration & glitch) ── */
+.vt-root {
+  color: var(--vt-ink, oklch(0.2 0 0));
+}
+
+html.dark .vt-root {
+  --vt-ink: oklch(0.955 0 0);
+  --vt-blend: screen;
+}
+
+.vt-word {
+  --vt-paint-violet: var(--vt-violet, oklch(0.48 0.29 272));
+  --vt-paint-magenta: var(--vt-magenta, oklch(0.64 0.3 328));
+  --vt-paint-green: var(--vt-green, oklch(0.72 0.25 145));
+  --vt-paint-gold: var(--vt-gold, oklch(0.82 0.17 82));
+  --vt-paint-key: var(--vt-key, oklch(0.12 0 0));
+  --vt-paint-dot: var(--vt-dot-red, oklch(0.6 0.25 25));
+  position: relative;
+  display: inline-block;
+}
+
+.vt-word[data-state="waiting"],
+.vt-word[data-key="false"] {
+  color: transparent;
+}
+
+.vt-glitch {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.vt-copy,
+.vt-plate,
+.vt-key-ink,
+.vt-comb-ink,
+.vt-shard-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  white-space: pre;
+}
+
+.vt-copy,
+.vt-plate {
+  mix-blend-mode: var(--vt-blend, multiply);
+}
+
+.vt-plate[data-plate="c"] {
+  color: var(--vt-plate-c, oklch(0.76 0.15 222));
+}
+
+.vt-plate[data-plate="m"] {
+  color: var(--vt-plate-m, oklch(0.6 0.26 355));
+}
+
+.vt-plate[data-plate="y"] {
+  color: var(--vt-plate-y, oklch(0.93 0.19 104));
+}
+
+.vt-comb {
+  position: absolute;
+  inset: -0.75em -1em;
+}
+
+.vt-comb-body {
+  position: absolute;
+  inset: 0.75em 1em;
+}
+
+.vt-key-ink {
+  color: var(--vt-ink, oklch(0.2 0 0));
+}
+
+.vt-comb-ink {
+  mix-blend-mode: var(--vt-blend, multiply);
+}
+
+.vt-comb-ink[data-tint="c"] {
+  color: var(--vt-plate-c, oklch(0.76 0.15 222));
+}
+
+.vt-comb-ink[data-tint="m"] {
+  color: var(--vt-plate-m, oklch(0.6 0.26 355));
+}
+
+.vt-gap {
+  position: absolute;
+  inset: 0;
+  background-color: var(--vt-key, oklch(0.12 0 0));
+}
+
+.vt-rim,
+.vt-shard {
+  position: absolute;
+  inset: -30% -15%;
+}
+
+.vt-rim {
+  background-color: var(--vt-key, oklch(0.12 0 0));
+}
+
+.vt-shard {
+  background-color: var(--vt-shard);
+}
+
+.vt-shard[data-color="violet"] {
+  --vt-shard: var(--vt-violet, oklch(0.48 0.29 272));
+}
+
+.vt-shard[data-color="magenta"] {
+  --vt-shard: var(--vt-magenta, oklch(0.64 0.3 328));
+}
+
+.vt-shard[data-color="green"] {
+  --vt-shard: var(--vt-green, oklch(0.72 0.25 145));
+}
+
+.vt-shard[data-color="gold"] {
+  --vt-shard: var(--vt-gold, oklch(0.82 0.17 82));
+}
+
+.vt-shard[data-streak="true"] {
+  background-image: repeating-linear-gradient(
+    var(--streak),
+    transparent 0 0.05em,
+    color-mix(in oklab, var(--vt-shard), black 28%) 0.05em 0.085em
+  );
+}
+
+.vt-shard-text {
+  inset: 18.75% 11.538%;
+}
+
+.vt-shard[data-ink="light"] .vt-shard-text {
+  color: oklch(0.99 0 0);
+}
+
+.vt-shard[data-ink="dark"] .vt-shard-text {
+  color: var(--vt-key, oklch(0.12 0 0));
+}
+
+.vt-bit {
+  position: absolute;
+}
+
+.vt-bit[data-kind="dot"],
+.vt-bit[data-kind="speck"] {
+  border-radius: 50%;
+}
+
 /* ── WORK TAB (EDITORIAL CASE FEED) ── */
 .work-intro {
   margin-bottom: 28px;

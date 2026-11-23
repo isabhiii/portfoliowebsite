@@ -68,6 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTabs();
   initWorkFilter();
   initWorkVideoModal();
+  initBookshelf();
   initEmailCopy();
   initFavorites();
   initPhotography();
@@ -117,7 +118,7 @@ function initTheme() {
       }
 
       const master = audioCtx.createGain();
-      master.gain.value = 0.12;
+      master.gain.value = 0.42;
       master.connect(audioCtx.destination);
 
       // Crisp metallic chain click noise
@@ -956,6 +957,9 @@ function initTabs() {
         replayStaggerReveal(p, includeHeader);
       }
     });
+    if (!isInitial && window.replayVerseTexts) {
+      window.replayVerseTexts();
+    }
   }
 
   const hash = window.location.hash.replace('#', '');
@@ -1342,6 +1346,283 @@ function initWorkVideoModal() {
   });
 }
 
+function makeSpineSvg({ id, bg, fg, accent, title, title2, author, width = 34, height = 244, border, verticalWord, topLabel, serif, rotateAuthor = true }) {
+  const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const cx = width / 2;
+  const stroke = border || fg;
+  const strokeOp = border ? '0.9' : '0.14';
+  const fontFam = serif ? 'Georgia, "Times New Roman", serif' : 'Inter, -apple-system, BlinkMacSystemFont, sans-serif';
+
+  let content = '';
+  if (verticalWord) {
+    // e.g. The 48 Laws of Power
+    if (topLabel) {
+      content += `<text x="${cx}" y="14" fill="${accent || fg}" font-family="Inter,sans-serif" font-size="4.6" font-weight="600" letter-spacing="0.06em" text-anchor="middle">${esc(topLabel)}</text>`;
+    }
+    verticalWord.split('').forEach((ch, idx) => {
+      content += `<text x="${cx}" y="${42 + idx * 33}" fill="${accent || fg}" font-family="Georgia,serif" font-size="21" font-weight="500" text-anchor="middle">${esc(ch)}</text>`;
+    });
+    content += `<text x="${cx}" y="${height - 26}" fill="#e11d48" font-family="Inter,sans-serif" font-size="4.2" font-weight="700" letter-spacing="0.02em" text-anchor="middle">${esc(author)}</text>`;
+    content += `<ellipse cx="${cx}" cy="${height - 11}" rx="3.5" ry="5" fill="#f97316"/><ellipse cx="${cx}" cy="${height - 11}" rx="1.8" ry="3" fill="#ffffff"/>`;
+  } else {
+    const titleY = Math.round(height * 0.39);
+    if (title2) {
+      content += `<text x="${cx + 4.5}" y="${titleY}" fill="${fg}" font-family='${fontFam}' font-size="8.2" font-weight="800" letter-spacing="0.02em" text-anchor="middle" dominant-baseline="middle" transform="rotate(90 ${cx + 4.5} ${titleY})">${esc(title)}</text>`;
+      content += `<text x="${cx - 5}" y="${titleY}" fill="${fg}" font-family='${fontFam}' font-size="8.2" font-weight="800" letter-spacing="0.02em" text-anchor="middle" dominant-baseline="middle" transform="rotate(90 ${cx - 5} ${titleY})">${esc(title2)}</text>`;
+    } else {
+      const fSize = id === 'steve-jobs' ? '14' : id === 'atomic-habits' ? '12.5' : '11';
+      const fWeight = id === 'atomic-habits' ? '500' : '700';
+      content += `<text x="${cx}" y="${titleY}" fill="${fg}" font-family='${fontFam}' font-size="${fSize}" font-weight="${fWeight}" letter-spacing="${serif ? '0.08em' : '0.01em'}" text-anchor="middle" dominant-baseline="middle" transform="rotate(90 ${cx} ${titleY})">${esc(title)}</text>`;
+    }
+    if (accent) {
+      content += `<line x1="6" y1="${height - 76}" x2="${width - 6}" y2="${height - 76}" stroke="${accent}" stroke-width="1.2"/>`;
+      content += `<line x1="6" y1="${height - 8}" x2="${width - 6}" y2="${height - 8}" stroke="${accent}" stroke-width="1.2"/>`;
+    }
+    if (rotateAuthor) {
+      const ay = height - 42;
+      content += `<text x="${cx}" y="${ay}" fill="${fg}" fill-opacity="0.72" font-family="Inter,sans-serif" font-size="5.2" font-weight="600" letter-spacing="0.04em" text-anchor="middle" dominant-baseline="middle" transform="rotate(90 ${cx} ${ay})">${esc(author)}</text>`;
+    } else {
+      const parts = String(author).split(' ');
+      if (parts.length === 2) {
+        content += `<text x="${cx}" y="${height - 21}" fill="${fg}" fill-opacity="0.85" font-family="Inter,sans-serif" font-size="6.8" font-weight="600" text-anchor="middle">${esc(parts[0])}</text>`;
+        content += `<text x="${cx}" y="${height - 12}" fill="${fg}" fill-opacity="0.85" font-family="Inter,sans-serif" font-size="6.8" font-weight="600" text-anchor="middle">${esc(parts[1])}</text>`;
+      } else {
+        content += `<text x="${cx}" y="${height - 14}" fill="${fg}" fill-opacity="0.85" font-family="Inter,sans-serif" font-size="6.2" font-weight="600" text-anchor="middle">${esc(author)}</text>`;
+      }
+    }
+    if (topLabel) {
+      content += `<rect x="7" y="10" width="${width - 14}" height="12" rx="2" fill="${accent || fg}" fill-opacity="0.18"/><text x="${cx}" y="18.5" fill="${accent || fg}" font-family="Inter,sans-serif" font-size="6.2" font-weight="700" text-anchor="middle">${esc(topLabel)}</text>`;
+    }
+  }
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" rx="1.5" fill="${bg}" stroke="${stroke}" stroke-opacity="${strokeOp}"/>${content}</svg>`;
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+}
+
+function makeMangaSpineSvg(variant, width, height) {
+  const cx = width / 2;
+  let body = '';
+  if (variant === 'chanakya') {
+    // Penguin Black Classics: matte black spine + iconic orange-red Penguin band + white serif title
+    body = `
+      <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" rx="1.5" fill="#111111" stroke="#ffffff" stroke-opacity="0.14"/>
+      <rect x="4" y="10" width="${width - 8}" height="11" rx="1" fill="#e05d28"/>
+      <text x="${cx}" y="17.5" fill="#ffffff" font-family="Inter,sans-serif" font-size="4.2" font-weight="700" letter-spacing="0.06em" text-anchor="middle">CLASSICS</text>
+      <text x="${cx}" y="${Math.round(height * 0.44)}" fill="#f4f4f5" font-family="Georgia,serif" font-size="11.5" font-weight="600" letter-spacing="0.06em" text-anchor="middle" dominant-baseline="middle" transform="rotate(90 ${cx} ${Math.round(height * 0.44)})">CHANAKYA NITI</text>
+      <text x="${cx}" y="${height - 26}" fill="#d4d4d8" font-family="Inter,sans-serif" font-size="4.4" font-weight="600" letter-spacing="0.05em" text-anchor="middle">CHANAKYA</text>
+      <ellipse cx="${cx}" cy="${height - 11}" rx="3.2" ry="4.5" fill="#e05d28"/><ellipse cx="${cx}" cy="${height - 11}" rx="1.6" ry="2.6" fill="#ffffff"/>
+    `;
+  } else if (variant === 'aot') {
+    // Kodansha standard Vol. 1: crisp white spine + crimson accent block + bold black title
+    body = `
+      <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" rx="1.5" fill="#f8fafc" stroke="#cbd5e1" stroke-opacity="0.9"/>
+      <rect x="0.5" y="0.5" width="${width - 1}" height="28" rx="1.5" fill="#b91c1c"/>
+      <text x="${cx}" y="19" fill="#ffffff" font-family="Inter,sans-serif" font-size="11" font-weight="800" text-anchor="middle">1</text>
+      <text x="${cx}" y="${Math.round(height * 0.44)}" fill="#111827" font-family="Inter,sans-serif" font-size="10.5" font-weight="800" letter-spacing="0.04em" text-anchor="middle" dominant-baseline="middle" transform="rotate(90 ${cx} ${Math.round(height * 0.44)})">ATTACK ON TITAN</text>
+      <text x="${cx}" y="${height - 24}" fill="#4b5563" font-family="Inter,sans-serif" font-size="4.5" font-weight="700" letter-spacing="0.04em" text-anchor="middle">ISAYAMA</text>
+      <rect x="6" y="${height - 15}" width="${width - 12}" height="7" rx="1" fill="#111827"/>
+      <text x="${cx}" y="${height - 10}" fill="#ffffff" font-family="Inter,sans-serif" font-size="3.8" font-weight="700" text-anchor="middle">KODANSHA</text>
+    `;
+  } else if (variant === 'vinland') {
+    // Kodansha Hardcover Book 1: textured dark espresso brown + Nordic gold lettering
+    body = `
+      <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" rx="1.5" fill="#2c1d14" stroke="#d4af37" stroke-opacity="0.28"/>
+      <rect x="5" y="10" width="${width - 10}" height="20" rx="1" fill="none" stroke="#d4af37" stroke-width="1"/>
+      <text x="${cx}" y="23" fill="#fde68a" font-family="Georgia,serif" font-size="7.5" font-weight="700" text-anchor="middle">1</text>
+      <text x="${cx}" y="${Math.round(height * 0.47)}" fill="#f5e6c8" font-family="Georgia,serif" font-size="11.5" font-weight="700" letter-spacing="0.06em" text-anchor="middle" dominant-baseline="middle" transform="rotate(90 ${cx} ${Math.round(height * 0.47)})">VINLAND SAGA</text>
+      <text x="${cx}" y="${height - 14}" fill="#d4af37" font-family="Inter,sans-serif" font-size="4.8" font-weight="600" letter-spacing="0.04em" text-anchor="middle">YUKIMURA</text>
+    `;
+  } else if (variant === 'jojo') {
+    // Steel Ball Run: desert green/teal + gold star + warm desert orange Part 07 block
+    body = `
+      <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" rx="1.5" fill="#0d7a5f" stroke="#fde68a" stroke-opacity="0.25"/>
+      <polygon points="${cx},8 ${cx + 2.4},14 ${cx + 8.5},14 ${cx + 3.6},17.8 ${cx + 5.4},23.8 ${cx},20.2 ${cx - 5.4},23.8 ${cx - 3.6},17.8 ${cx - 8.5},14 ${cx - 2.4},14" fill="#fde047"/>
+      <text x="${cx}" y="${Math.round(height * 0.45)}" fill="#fef9c3" font-family="Inter,sans-serif" font-size="10.5" font-weight="800" letter-spacing="0.05em" text-anchor="middle" dominant-baseline="middle" transform="rotate(90 ${cx} ${Math.round(height * 0.45)})">STEEL BALL RUN</text>
+      <rect x="0.5" y="${height - 32}" width="${width - 1}" height="31.5" rx="1" fill="#ea580c"/>
+      <text x="${cx}" y="${height - 18}" fill="#ffffff" font-family="Inter,sans-serif" font-size="5.5" font-weight="700" letter-spacing="0.04em" text-anchor="middle">PART</text>
+      <text x="${cx}" y="${height - 9}" fill="#fef08a" font-family="Inter,sans-serif" font-size="8.5" font-weight="800" text-anchor="middle">07</text>
+    `;
+  } else if (variant === 'berserk') {
+    // Classic Dark Horse Deluxe Edition: matte black leatherette + raised crimson bands + Brand of Sacrifice
+    const ribs = [12, 42, height - 46, height - 18]
+      .map((y) => `<rect x="2" y="${y}" width="${width - 4}" height="3" rx="1" fill="#dc2626" fill-opacity="0.72"/>`)
+      .join('');
+    body = `
+      <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" rx="1.5" fill="#0b0b0d" stroke="#dc2626" stroke-opacity="0.32"/>
+      ${ribs}
+      <path d="M${cx} 21 L${cx} 36 M${cx - 4} 24 L${cx + 4} 29 M${cx + 4} 24 L${cx - 4} 29 M${cx - 3} 32 L${cx} 36 L${cx + 3} 32" stroke="#dc2626" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+      <text x="${cx}" y="${Math.round(height * 0.48)}" fill="#dc2626" font-family="Georgia,serif" font-size="13.5" font-weight="700" letter-spacing="0.14em" text-anchor="middle" dominant-baseline="middle" transform="rotate(90 ${cx} ${Math.round(height * 0.48)})">BERSERK</text>
+      <text x="${cx}" y="${height - 29}" fill="#a1a1aa" font-family="Inter,sans-serif" font-size="5.2" font-weight="600" letter-spacing="0.06em" text-anchor="middle">MIURA</text>
+    `;
+  } else if (variant === 'jjk') {
+    // VIZ Shonen Jump Vol. 1: crisp white spine + SJ badge + black vertical title + pink/purple accent block
+    body = `
+      <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" rx="1.5" fill="#ffffff" stroke="#e2e8f0" stroke-opacity="0.95"/>
+      <circle cx="${cx}" cy="16" r="7" fill="#111827"/>
+      <text x="${cx}" y="18.2" fill="#ffffff" font-family="Inter,sans-serif" font-size="5.5" font-weight="800" text-anchor="middle">SJ</text>
+      <text x="${cx}" y="${Math.round(height * 0.45)}" fill="#111827" font-family="Inter,sans-serif" font-size="10.5" font-weight="800" letter-spacing="0.03em" text-anchor="middle" dominant-baseline="middle" transform="rotate(90 ${cx} ${Math.round(height * 0.45)})">JUJUTSU KAISEN</text>
+      <rect x="5" y="${height - 34}" width="${width - 10}" height="16" rx="2" fill="#ec4899"/>
+      <text x="${cx}" y="${height - 23}" fill="#ffffff" font-family="Inter,sans-serif" font-size="8" font-weight="800" text-anchor="middle">1</text>
+      <text x="${cx}" y="${height - 8}" fill="#475569" font-family="Inter,sans-serif" font-size="4.8" font-weight="700" letter-spacing="0.03em" text-anchor="middle">AKUTAMI</text>
+    `;
+  }
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${body}</svg>`;
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+}
+
+const BOOKSHELF_BOOKS = [
+  {
+    id: 'atomic-habits',
+    title: 'Atomic Habits',
+    author: 'James Clear',
+    cover: { src: 'books/atomic-habits.jpg', width: 331, height: 500, alt: 'Atomic Habits by James Clear' },
+    spine: { src: makeSpineSvg({ id: 'atomic-habits', bg: '#f5f2eb', fg: '#3b3326', title: 'Atomic Habits', author: 'James Clear', width: 34, height: 246, border: '#e3dfd5', serif: true, rotateAuthor: false }), width: 34, height: 246 },
+  },
+  {
+    id: '48-laws-of-power',
+    title: 'The 48 Laws of Power',
+    author: 'Robert Greene',
+    cover: { src: 'books/48-laws-of-power.jpg', width: 350, height: 500, alt: 'The 48 Laws of Power by Robert Greene' },
+    spine: { src: makeSpineSvg({ id: '48-laws-of-power', bg: '#1e2c6b', fg: '#e5e7eb', accent: '#c9a64d', topLabel: 'THE 48 LAWS OF', title: 'POWER', author: 'ROBERT GREENE', width: 42, height: 268, verticalWord: 'POWER' }), width: 42, height: 268 },
+  },
+  {
+    id: 'steve-jobs',
+    title: 'Steve Jobs',
+    author: 'Walter Isaacson',
+    cover: { src: 'books/steve-jobs.jpg', width: 163, height: 250, alt: 'Steve Jobs by Walter Isaacson' },
+    spine: { src: makeSpineSvg({ id: 'steve-jobs', bg: '#ffffff', fg: '#111111', title: 'Steve Jobs', author: 'Walter Isaacson', width: 40, height: 278, border: '#e4e4e7' }), width: 40, height: 278 },
+  },
+  {
+    id: 'subtle-art',
+    title: 'The Subtle Art of Not Giving a F*ck',
+    author: 'Mark Manson',
+    cover: { src: 'books/subtle-art.jpg', width: 327, height: 500, alt: 'The Subtle Art of Not Giving a F*ck by Mark Manson' },
+    spine: { src: makeSpineSvg({ id: 'subtle-art', bg: '#ff4f00', fg: '#111111', title: 'THE SUBTLE ART OF', title2: 'NOT GIVING A F*CK', author: 'MARK MANSON', width: 34, height: 238 }), width: 34, height: 238 },
+  },
+  {
+    id: 'chanakya-niti',
+    title: 'Chanakya Niti',
+    author: 'Acharya Chanakya',
+    cover: { src: 'books/chanakya-niti.jpg', width: 327, height: 500, alt: 'Chanakya Niti by Acharya Chanakya' },
+    spine: { src: makeMangaSpineSvg('chanakya', 36, 248), width: 36, height: 248 },
+  },
+  {
+    id: 'attack-on-titan',
+    title: 'Attack on Titan',
+    author: 'Hajime Isayama',
+    cover: { src: 'books/attack-on-titan.jpg', width: 460, height: 687, alt: 'Attack on Titan by Hajime Isayama' },
+    spine: { src: makeMangaSpineSvg('aot', 34, 242), width: 34, height: 242 },
+  },
+  {
+    id: 'vinland-saga',
+    title: 'Vinland Saga',
+    author: 'Makoto Yukimura',
+    cover: { src: 'books/vinland-saga.jpg', width: 460, height: 695, alt: 'Vinland Saga by Makoto Yukimura' },
+    spine: { src: makeMangaSpineSvg('vinland', 36, 252), width: 36, height: 252 },
+  },
+  {
+    id: 'jojo-part-7',
+    title: "JoJo's Part 7: Steel Ball Run",
+    author: 'Hirohiko Araki',
+    cover: { src: 'books/jojo-part-7.jpg', width: 460, height: 724, alt: "JoJo's Bizarre Adventure Part 7: Steel Ball Run by Hirohiko Araki" },
+    spine: { src: makeMangaSpineSvg('jojo', 34, 244), width: 34, height: 244 },
+  },
+  {
+    id: 'berserk',
+    title: 'Berserk',
+    author: 'Kentaro Miura',
+    cover: { src: 'books/berserk.jpg', width: 460, height: 657, alt: 'Berserk by Kentaro Miura' },
+    spine: { src: makeMangaSpineSvg('berserk', 40, 262), width: 40, height: 262 },
+  },
+  {
+    id: 'jujutsu-kaisen',
+    title: 'Jujutsu Kaisen',
+    author: 'Gege Akutami',
+    cover: { src: 'books/jujutsu-kaisen.jpg', width: 460, height: 720, alt: 'Jujutsu Kaisen by Gege Akutami' },
+    spine: { src: makeMangaSpineSvg('jjk', 34, 240), width: 34, height: 240 },
+  },
+];
+
+function initBookshelf() {
+  const root = document.getElementById('bookshelfRoot');
+  if (!root) return;
+
+  if (!BOOKSHELF_BOOKS.length) {
+    root.innerHTML = '<p class="bookshelf-empty">More books will find their way here.</p>';
+    return;
+  }
+
+  const rail = document.createElement('div');
+  rail.className = 'bookshelf-rail';
+  const ledge = document.createElement('div');
+  ledge.className = 'bookshelf-ledge';
+  ledge.setAttribute('aria-hidden', 'true');
+
+  let openId = null;
+
+  function setOpen(nextId) {
+    openId = nextId;
+    rail.querySelectorAll('.bookshelf-book').forEach((btn) => {
+      const isOpen = btn.dataset.bookId === openId;
+      btn.setAttribute('aria-pressed', isOpen ? 'true' : 'false');
+      if (isOpen) {
+        btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    });
+  }
+
+  BOOKSHELF_BOOKS.forEach((book) => {
+    const openWidth = Math.round(book.spine.height * (book.cover.width / book.cover.height));
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'bookshelf-book';
+    btn.dataset.bookId = book.id;
+    btn.setAttribute('aria-label', `${book.title} by ${book.author}`);
+    btn.setAttribute('aria-pressed', 'false');
+    btn.style.setProperty('--spine-w', `${book.spine.width}px`);
+    btn.style.setProperty('--book-h', `${book.spine.height}px`);
+    btn.style.setProperty('--open-w', `${openWidth}px`);
+
+    const spineImg = document.createElement('img');
+    spineImg.className = 'bookshelf-spine';
+    spineImg.src = book.spine.src;
+    spineImg.alt = '';
+    spineImg.loading = 'eager';
+
+    const coverImg = document.createElement('img');
+    coverImg.className = 'bookshelf-cover';
+    coverImg.src = book.cover.src;
+    coverImg.alt = book.cover.alt;
+    coverImg.loading = 'eager';
+    coverImg.addEventListener('error', () => {
+      if (btn.querySelector('.bookshelf-fallback')) return;
+      const fb = document.createElement('span');
+      fb.className = 'bookshelf-fallback';
+      fb.innerHTML = `<span>${book.title}</span><small>${book.author}</small><small>Cover unavailable</small>`;
+      btn.appendChild(fb);
+    });
+
+    btn.append(spineImg, coverImg);
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      setOpen(openId === book.id ? null : book.id);
+    });
+    rail.appendChild(btn);
+  });
+
+  root.append(rail, ledge);
+
+  document.addEventListener('pointerdown', (e) => {
+    if (openId && !e.target.closest('.bookshelf-book')) {
+      setOpen(null);
+    }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && openId) {
+      setOpen(null);
+    }
+  });
+}
+
 /* ── Copy Email Toast ── */
 function initEmailCopy() {
   const emailEl = document.getElementById('copyEmail');
@@ -1677,14 +1958,14 @@ function initClickSound() {
   function scheduleCue(context, type) {
     const now = context.currentTime;
     const master = context.createGain();
-    master.gain.value = 0.4;
+    master.gain.value = 0.9;
     master.connect(context.destination);
 
     if (type === 'press') {
-      playNoise(context, master, 1700, 1.4, 0.001, 0.02, 0.13, now);
+      playNoise(context, master, 1700, 1.4, 0.001, 0.02, 0.32, now);
     } else {
-      playNoise(context, master, 5400, 1.8, 0.001, 0.018, 0.14, now);
-      playTone(context, master, 2600, 0.001, 0.012, 0.018, now);
+      playNoise(context, master, 5400, 1.8, 0.001, 0.018, 0.34, now);
+      playTone(context, master, 2600, 0.001, 0.012, 0.06, now);
     }
   }
 
@@ -1898,6 +2179,7 @@ function initLanguageSwitcher() {
       prodWosDesc: '~ Minimalist Bhagavad Gītā iOS app',
       prodRenameMailDesc: '~ Turn your Gmail into a visual tracker & pipeline.',
       sectionProjects: 'Projects',
+      secBookshelf: 'Bookshelf',
       projRemindersTitle: 'Apple Reminders (Raycast)',
       projRemindersDesc: '~ Recurrence, calendar events, priorities & tags PRs.',
       projRagTitle: 'Manufacturing Quality RAG',
@@ -2051,6 +2333,7 @@ function initLanguageSwitcher() {
       prodWosDesc: '~ Minimalistische Bhagavad-Gītā iOS-App',
       prodRenameMailDesc: '~ Verwandelt Gmail in einen visuellen Tracker & eine Pipeline.',
       sectionProjects: 'Projekte',
+      secBookshelf: 'Bücherregal',
       projRemindersTitle: 'Apple Erinnerungen (Raycast)',
       projRemindersDesc: '~ PRs für Wiederholungen, Kalendertermine, Prioritäten & Tags.',
       projRagTitle: 'Fertigungsqualität RAG',
@@ -4578,8 +4861,13 @@ function initLanguageSwitcher() {
     document.querySelectorAll('[data-i18n]').forEach((el) => {
       const key = el.dataset.i18n;
       if (!copy[key]) return;
+      if (key === 'introTitle' && /Abhishek/i.test(copy[key])) {
+        el.innerHTML = copy[key].replace(/Abhishek/i, '<span data-verse-text="Abhishek" data-verse-seed="2026">Abhishek</span>');
+        return;
+      }
       updateTranslatedText(el, copy[key], animateGlyphs);
     });
+    if (window.mountVerseTexts) window.mountVerseTexts();
 
     document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
       const key = el.dataset.i18nPlaceholder;
