@@ -1538,7 +1538,7 @@ const BOOKSHELF_BOOKS = [
     title: 'Jujutsu Kaisen',
     author: 'Gege Akutami',
     cover: { src: 'books/jujutsu-kaisen.jpg', width: 460, height: 720, alt: 'Jujutsu Kaisen by Gege Akutami' },
-    spine: { src: makeMangaSpineSvg('jjk', 34, 240), width: 34, height: 240 },
+    spine: { src: 'books/jujutsu-kaisen-spine.jpg', width: 34, height: 240 },
   },
 ];
 
