@@ -1412,15 +1412,18 @@ function makeMangaSpineSvg(variant, width, height) {
       <ellipse cx="${cx}" cy="${height - 11}" rx="3.2" ry="4.5" fill="#e05d28"/><ellipse cx="${cx}" cy="${height - 11}" rx="1.6" ry="2.6" fill="#ffffff"/>
     `;
   } else if (variant === 'aot') {
-    // Kodansha standard Vol. 1: crisp white spine + crimson accent block + bold black title
+    // Kodansha Comics Attack on Titan: warm parchment-amber spine + KC/Kodansha Comics top + white outlined title + 1 + HAJIME ISAYAMA
     body = `
-      <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" rx="1.5" fill="#f8fafc" stroke="#cbd5e1" stroke-opacity="0.9"/>
-      <rect x="0.5" y="0.5" width="${width - 1}" height="28" rx="1.5" fill="#b91c1c"/>
-      <text x="${cx}" y="19" fill="#ffffff" font-family="Inter,sans-serif" font-size="11" font-weight="800" text-anchor="middle">1</text>
-      <text x="${cx}" y="${Math.round(height * 0.44)}" fill="#111827" font-family="Inter,sans-serif" font-size="10.5" font-weight="800" letter-spacing="0.04em" text-anchor="middle" dominant-baseline="middle" transform="rotate(90 ${cx} ${Math.round(height * 0.44)})">ATTACK ON TITAN</text>
-      <text x="${cx}" y="${height - 24}" fill="#4b5563" font-family="Inter,sans-serif" font-size="4.5" font-weight="700" letter-spacing="0.04em" text-anchor="middle">ISAYAMA</text>
-      <rect x="6" y="${height - 15}" width="${width - 12}" height="7" rx="1" fill="#111827"/>
-      <text x="${cx}" y="${height - 10}" fill="#ffffff" font-family="Inter,sans-serif" font-size="3.8" font-weight="700" text-anchor="middle">KODANSHA</text>
+      <defs><linearGradient id="aotBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#d49b56"/><stop offset="100%" stop-color="#9e6226"/></linearGradient></defs>
+      <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" rx="1.5" fill="url(#aotBg)" stroke="#6b3f14" stroke-opacity="0.45"/>
+      <rect x="5" y="7" width="${width - 10}" height="10" rx="1" fill="#dc2626" stroke="#111827" stroke-width="0.7"/>
+      <text x="${cx}" y="14.5" fill="#ffffff" font-family="Inter,sans-serif" font-size="6.8" font-weight="900" text-anchor="middle">KC</text>
+      <text x="${cx}" y="23" fill="#ffffff" stroke="#111827" stroke-width="0.35" paint-order="stroke" font-family="Inter,sans-serif" font-size="4.2" font-weight="800" text-anchor="middle">KODANSHA</text>
+      <text x="${cx}" y="28" fill="#ffffff" stroke="#111827" stroke-width="0.35" paint-order="stroke" font-family="Inter,sans-serif" font-size="4.2" font-weight="800" text-anchor="middle">COMICS</text>
+      <text x="${cx}" y="${Math.round(height * 0.45)}" fill="#ffffff" stroke="#1f160d" stroke-width="1.2" paint-order="stroke" font-family="Inter,sans-serif" font-size="11.5" font-weight="900" letter-spacing="0.03em" text-anchor="middle" dominant-baseline="middle" transform="rotate(90 ${cx} ${Math.round(height * 0.45)})">ATTACK on TITAN</text>
+      <text x="${cx}" y="${height - 52}" fill="#ffffff" stroke="#1f160d" stroke-width="1.2" paint-order="stroke" font-family="Inter,sans-serif" font-size="12" font-weight="900" text-anchor="middle">1</text>
+      <text x="${cx}" y="${height - 22}" fill="#ffffff" stroke="#1f160d" stroke-width="0.4" paint-order="stroke" font-family="Inter,sans-serif" font-size="5.6" font-weight="800" text-anchor="middle" dominant-baseline="middle" transform="rotate(90 ${cx} ${height - 22})">HAJIME</text>
+      <text x="${cx - 6}" y="${height - 22}" fill="#ffffff" stroke="#1f160d" stroke-width="0.4" paint-order="stroke" font-family="Inter,sans-serif" font-size="5.6" font-weight="800" text-anchor="middle" dominant-baseline="middle" transform="rotate(90 ${cx - 6} ${height - 22})">ISAYAMA</text>
     `;
   } else if (variant === 'vinland') {
     // Kodansha Hardcover Book 1: textured dark espresso brown + Nordic gold lettering
