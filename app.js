@@ -1520,7 +1520,7 @@ const BOOKSHELF_BOOKS = [
     title: 'Vinland Saga',
     author: 'Makoto Yukimura',
     cover: { src: 'books/vinland-saga.jpg', width: 460, height: 695, alt: 'Vinland Saga by Makoto Yukimura' },
-    spine: { src: 'books/vinland-saga-spine.jpg', width: 36, height: 252 },
+    spine: { src: makeMangaSpineSvg('vinland', 36, 252), width: 36, height: 252 },
   },
   {
     id: 'jojo-part-7',
