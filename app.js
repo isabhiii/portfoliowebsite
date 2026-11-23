@@ -1449,7 +1449,7 @@ function makeMangaSpineSvg(variant, width, height) {
     body = `
       <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" rx="1.5" fill="#0b0b0d" stroke="#dc2626" stroke-opacity="0.32"/>
       ${ribs}
-      <path d="M${cx} 21 L${cx} 36 M${cx - 4} 24 L${cx + 4} 29 M${cx + 4} 24 L${cx - 4} 29 M${cx - 3} 32 L${cx} 36 L${cx + 3} 32" stroke="#dc2626" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+      <path d="M${cx} 19 L${cx} 39 M${cx - 2.2} 20.8 L${cx} 18.8 L${cx + 2.2} 20.8 M${cx - 3.4} 22 L${cx - 6} 25 L${cx} 29.5 L${cx + 6} 25 L${cx + 3.4} 22 M${cx} 29.5 L${cx - 6} 34 L${cx} 39 L${cx + 6} 34 Z" stroke="#dc2626" stroke-width="1.35" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
       <text x="${cx}" y="${Math.round(height * 0.48)}" fill="#dc2626" font-family="Georgia,serif" font-size="13.5" font-weight="700" letter-spacing="0.14em" text-anchor="middle" dominant-baseline="middle" transform="rotate(90 ${cx} ${Math.round(height * 0.48)})">BERSERK</text>
       <text x="${cx}" y="${height - 29}" fill="#a1a1aa" font-family="Inter,sans-serif" font-size="5.2" font-weight="600" letter-spacing="0.06em" text-anchor="middle">MIURA</text>
     `;
