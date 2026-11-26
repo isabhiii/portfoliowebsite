@@ -19,6 +19,216 @@
   </script>
 </head>
 <body>
+  <!-- ══════════════ BATTERY-CHARGING PRELOADER ══════════════ -->
+  <div id="sitePreloader" class="site-preloader" aria-hidden="true">
+    <style>
+      .site-preloader {
+        position: fixed;
+        inset: 0;
+        z-index: 99999;
+        background: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: translateY(0);
+        transition: transform 0.65s cubic-bezier(0.77, 0, 0.175, 1);
+        will-change: transform;
+      }
+      .site-preloader.is-leaving {
+        transform: translateY(-100%);
+        pointer-events: none;
+      }
+      .site-preloader-stack {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 18px;
+        user-select: none;
+      }
+      .preloader-battery {
+        width: 42px;
+        height: 20px;
+        display: block;
+      }
+      .preloader-battery .bat-seg {
+        fill: #ffffff;
+        transition: fill 0.18s ease;
+      }
+      .preloader-battery[data-level="1"] .bat-seg-1,
+      .preloader-battery[data-level="2"] .bat-seg-1,
+      .preloader-battery[data-level="2"] .bat-seg-2,
+      .preloader-battery[data-level="3"] .bat-seg-1,
+      .preloader-battery[data-level="3"] .bat-seg-2,
+      .preloader-battery[data-level="3"] .bat-seg-3,
+      .preloader-battery[data-level="4"] .bat-seg {
+        fill: #22c55e;
+      }
+      .preloader-scene {
+        width: 128px;
+        height: 112px;
+        display: block;
+        overflow: visible;
+      }
+      .preloader-scene .pose {
+        display: none;
+      }
+      .preloader-scene[data-stage="0"] .pose-slump,
+      .preloader-scene[data-stage="1"] .pose-slump,
+      .preloader-scene[data-stage="2"] .pose-wake,
+      .preloader-scene[data-stage="3"] .pose-type,
+      .preloader-scene[data-stage="4"] .pose-coffee {
+        display: inline;
+      }
+      @keyframes preloader-type-hand {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-1.6px); }
+      }
+      .preloader-scene[data-stage="3"] .typing-hand {
+        animation: preloader-type-hand 0.24s steps(2, end) infinite;
+      }
+    </style>
+    <div class="site-preloader-stack">
+      <svg id="preloaderBattery" class="preloader-battery" viewBox="0 0 42 20" data-level="0" fill="none">
+        <rect x="1.5" y="2" width="34" height="16" rx="3" fill="#ffffff" stroke="#222222" stroke-width="2"/>
+        <rect x="36.5" y="6.5" width="3.5" height="7" rx="1.2" fill="#222222"/>
+        <rect class="bat-seg bat-seg-1" x="5" y="5" width="5.5" height="10" rx="1"/>
+        <rect class="bat-seg bat-seg-2" x="12" y="5" width="5.5" height="10" rx="1"/>
+        <rect class="bat-seg bat-seg-3" x="19" y="5" width="5.5" height="10" rx="1"/>
+        <rect class="bat-seg bat-seg-4" x="26" y="5" width="5.5" height="10" rx="1"/>
+      </svg>
+
+      <svg id="preloaderScene" class="preloader-scene" viewBox="0 0 140 118" data-stage="0" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <!-- Amber office chair backrest behind character's right shoulder -->
+        <path d="M24 54 C24 44, 30 40, 39 40 L46 40 C51 40, 54 44, 54 50 L54 84 L24 84 Z" fill="#F59E0B" stroke="#111111" stroke-width="2"/>
+        <path d="M28 50 C31 46, 36 45, 42 45" stroke="#111111" stroke-width="1.2" opacity="0.45"/>
+
+        <!-- STAGE 0 & 1: Slumped face-down on desk -->
+        <g class="pose pose-slump">
+          <!-- Torso & arms slumped -->
+          <path d="M28 84 C30 68, 42 62, 58 66 L74 74 C78 76, 80 80, 78 84 Z" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+          <path d="M40 72 C46 75, 52 78, 56 84" stroke="#111111" stroke-width="1.3"/>
+          <!-- Forearm resting flat on desk -->
+          <path d="M58 79 L76 81 C79 81, 80 84, 77 84 L55 84 Z" fill="#ffffff" stroke="#111111" stroke-width="1.8"/>
+          <!-- Head resting face-down -->
+          <circle cx="57" cy="70" r="11" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+          <!-- Solid black hair & beard -->
+          <path d="M46 69 C45 61, 52 57, 60 58 C66 59, 69 64, 67 69 C63 65, 56 64, 50 67 Z" fill="#111111"/>
+          <path d="M51 77 C54 81, 61 81, 65 77 C63 79, 55 79, 51 77 Z" fill="#111111"/>
+          <!-- Closed eye -->
+          <path d="M59 71 Q62 73 65 71" stroke="#111111" stroke-width="1.5"/>
+        </g>
+
+        <!-- STAGE 2: Waking up / sitting upright leaning toward laptop -->
+        <g class="pose pose-wake">
+          <!-- Torso -->
+          <path d="M30 84 C31 64, 38 56, 49 56 C58 56, 63 63, 64 74 L64 84 Z" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+          <path d="M39 66 C43 71, 45 77, 45 84" stroke="#111111" stroke-width="1.3"/>
+          <!-- Arm reaching toward laptop -->
+          <path d="M52 67 L70 76 L76 80 L73 83 L66 80 L48 73" fill="#ffffff" stroke="#111111" stroke-width="1.8"/>
+          <!-- Head -->
+          <circle cx="52" cy="42" r="12" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+          <!-- Hair & beard -->
+          <path d="M40 40 C39 31, 47 26, 56 28 C62 29, 65 34, 63 39 C58 35, 48 35, 42 40 Z" fill="#111111"/>
+          <path d="M43 47 C45 54, 56 55, 62 49 C60 51, 55 52, 49 51 C46 50, 44 48, 43 47 Z" fill="#111111"/>
+          <!-- Eyes -->
+          <circle cx="54" cy="42" r="1.2" fill="#111111" stroke="none"/>
+          <circle cx="60" cy="42" r="1.2" fill="#111111" stroke="none"/>
+        </g>
+
+        <!-- STAGE 3: Active flow / typing at laptop -->
+        <g class="pose pose-type">
+          <!-- Upright torso -->
+          <path d="M30 84 C30 62, 37 54, 48 54 C57 54, 62 61, 63 74 L63 84 Z" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+          <path d="M38 64 C42 70, 43 76, 43 84" stroke="#111111" stroke-width="1.3"/>
+          <!-- Typing arm -->
+          <g class="typing-hand">
+            <path d="M50 65 L68 75 L78 79 L76 82 L65 79 L47 71" fill="#ffffff" stroke="#111111" stroke-width="1.8"/>
+          </g>
+          <!-- Head -->
+          <circle cx="50" cy="39" r="12" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+          <!-- Hair & beard -->
+          <path d="M38 37 C37 28, 45 23, 54 25 C60 26, 63 31, 61 36 C56 32, 46 32, 40 37 Z" fill="#111111"/>
+          <path d="M41 44 C43 51, 54 52, 60 46 C58 48, 53 49, 47 48 C44 47, 42 45, 41 44 Z" fill="#111111"/>
+          <!-- Focused eyes -->
+          <circle cx="53" cy="39" r="1.2" fill="#111111" stroke="none"/>
+          <circle cx="59" cy="39" r="1.2" fill="#111111" stroke="none"/>
+        </g>
+
+        <!-- STAGE 4: Energized / sipping coffee -->
+        <g class="pose pose-coffee">
+          <!-- Upright relaxed torso -->
+          <path d="M30 84 C30 62, 37 54, 48 54 C57 54, 62 61, 63 74 L63 84 Z" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+          <path d="M38 64 C42 70, 43 76, 43 84" stroke="#111111" stroke-width="1.3"/>
+          <!-- Head -->
+          <circle cx="49" cy="39" r="12" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+          <!-- Hair & beard -->
+          <path d="M37 37 C36 28, 44 23, 53 25 C59 26, 62 31, 60 36 C55 32, 45 32, 39 37 Z" fill="#111111"/>
+          <path d="M40 44 C42 51, 53 52, 59 46 C57 48, 52 49, 46 48 C43 47, 41 45, 40 44 Z" fill="#111111"/>
+          <!-- Happy eyes & slight smile -->
+          <path d="M51 38 Q53 36 55 38" stroke="#111111" stroke-width="1.4"/>
+          <path d="M57 38 Q59 36 61 38" stroke="#111111" stroke-width="1.4"/>
+          <!-- Both arms holding mug near chin/chest -->
+          <path d="M47 64 L59 57 L64 60 L51 69" fill="#ffffff" stroke="#111111" stroke-width="1.8"/>
+          <!-- Lifted coffee mug -->
+          <rect x="59" y="49" width="11" height="12" rx="2" fill="#ffffff" stroke="#111111" stroke-width="1.8"/>
+          <path d="M70 52 C74 52, 74 58, 70 58" stroke="#111111" stroke-width="1.6"/>
+          <!-- Steam -->
+          <path d="M62 46 Q61 43 63 41" stroke="#111111" stroke-width="1.2" opacity="0.6"/>
+          <path d="M66 46 Q65 43 67 41" stroke="#111111" stroke-width="1.2" opacity="0.6"/>
+        </g>
+
+        <!-- Open Laptop on desk -->
+        <path d="M76 84 L96 84 L106 62 L88 62 Z" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+        <path d="M74 84 L98 84" stroke="#111111" stroke-width="2.4"/>
+
+        <!-- Small flat notepad -->
+        <path d="M104 84 L118 84 L120 81 L106 81 Z" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+
+        <!-- Desk Coffee Mug (hidden in stage 4 when lifted) -->
+        <g class="desk-mug">
+          <rect x="122" y="72" width="10" height="12" rx="1.5" fill="#ffffff" stroke="#111111" stroke-width="1.8"/>
+          <path d="M132 75 C135 75, 135 80, 132 80" stroke="#111111" stroke-width="1.5"/>
+        </g>
+
+        <!-- Minimalist horizontal desk baseline -->
+        <line x1="10" y1="84" x2="136" y2="84" stroke="#111111" stroke-width="2.2"/>
+      </svg>
+    </div>
+    <script>
+      (function () {
+        var preloader = document.getElementById('sitePreloader');
+        var battery = document.getElementById('preloaderBattery');
+        var scene = document.getElementById('preloaderScene');
+        if (!preloader || !battery || !scene) return;
+
+        // 5-stage sequence (~8.2s total: 3.5s longer than the ~4.7s original)
+        var stages = [
+          { level: 0, stage: 0, at: 0 },
+          { level: 1, stage: 1, at: 1500 },
+          { level: 2, stage: 2, at: 3200 },
+          { level: 3, stage: 3, at: 5000 },
+          { level: 4, stage: 4, at: 6700 }
+        ];
+
+        stages.forEach(function (step) {
+          setTimeout(function () {
+            battery.setAttribute('data-level', String(step.level));
+            scene.setAttribute('data-stage', String(step.stage));
+            var deskMug = scene.querySelector('.desk-mug');
+            if (deskMug) deskMug.style.display = step.stage === 4 ? 'none' : 'inline';
+          }, step.at);
+        });
+
+        // Curtain-lift reveal at 8.2s
+        setTimeout(function () {
+          preloader.classList.add('is-leaving');
+          setTimeout(function () {
+            if (preloader.parentNode) preloader.parentNode.removeChild(preloader);
+          }, 700);
+        }, 8200);
+      })();
+    </script>
+  </div>
   <canvas id="clickSparkCanvas" aria-hidden="true"></canvas>
 
   <!-- ══════════════ SKY HORIZON HEADER (Bimanshu-inspired) ══════════════ -->
