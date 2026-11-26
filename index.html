@@ -67,29 +67,41 @@
         if (!preloader || !sprite) return;
         document.documentElement.style.overflow = 'hidden';
 
-        var cols = 5, rows = 8, total = 40, duration = 2800;
-        var start = performance.now();
+        var isMobile = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
+        var cols = 5, rows = 8, total = 40, duration = isMobile ? 3600 : 2800;
 
-        function tick(now) {
-          var t = Math.min(1, (now - start) / duration);
-          var frame = Math.min(total - 1, Math.floor(t * total));
-          var col = frame % cols;
-          var row = Math.floor(frame / cols);
-          sprite.style.backgroundPosition = (col * 100 / (cols - 1)) + '% ' + (row * 100 / (rows - 1)) + '%';
-          if (t < 1) {
-            requestAnimationFrame(tick);
+        function startAnimation() {
+          var start = performance.now();
+          function tick(now) {
+            var t = Math.min(1, (now - start) / duration);
+            var frame = Math.min(total - 1, Math.floor(t * total));
+            var col = frame % cols;
+            var row = Math.floor(frame / cols);
+            sprite.style.backgroundPosition = (col * 100 / (cols - 1)) + '% ' + (row * 100 / (rows - 1)) + '%';
+            if (t < 1) {
+              requestAnimationFrame(tick);
+            }
           }
-        }
-        requestAnimationFrame(tick);
+          requestAnimationFrame(tick);
 
-        // Curtain-lift reveal right after the ~2.80s (1.4x) sprite finishes
-        setTimeout(function () {
-          document.documentElement.style.overflow = '';
-          preloader.classList.add('is-leaving');
+          // Curtain-lift reveal right after the sprite finishes
           setTimeout(function () {
-            if (preloader.parentNode) preloader.parentNode.removeChild(preloader);
-          }, 700);
-        }, 2950);
+            document.documentElement.style.overflow = '';
+            preloader.classList.add('is-leaving');
+            setTimeout(function () {
+              if (preloader.parentNode) preloader.parentNode.removeChild(preloader);
+            }, 700);
+          }, duration + 150);
+        }
+
+        var loader = new Image();
+        loader.onload = startAnimation;
+        loader.onerror = startAnimation;
+        loader.src = 'preloader-sprite.jpg';
+        if (loader.complete) {
+          loader.onload = null;
+          startAnimation();
+        }
       })();
     </script>
   </div>
