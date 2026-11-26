@@ -55,15 +55,22 @@
       }
     </style>
     <div class="site-preloader-stack">
-      <img class="preloader-char-img" src="preloader.webp" alt="" decoding="sync" fetchpriority="high" />
+      <video id="preloaderVideo" class="preloader-char-img" autoplay muted playsinline preload="auto" poster="preloader-character-slump.jpg">
+        <source src="preloader.mp4" type="video/mp4" />
+      </video>
     </div>
     <script>
       (function () {
         var preloader = document.getElementById('sitePreloader');
+        var video = document.getElementById('preloaderVideo');
         if (!preloader) return;
         document.documentElement.style.overflow = 'hidden';
 
-        // Curtain-lift reveal right after the ~2.80s (1.4x) animated WebP finishes
+        if (video && video.play) {
+          video.play().catch(function () {});
+        }
+
+        // Curtain-lift reveal right after the ~2.80s (1.4x) video finishes
         setTimeout(function () {
           document.documentElement.style.overflow = '';
           preloader.classList.add('is-leaving');
