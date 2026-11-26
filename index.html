@@ -25,11 +25,13 @@
       .site-preloader {
         position: fixed;
         inset: 0;
+        height: 100dvh;
         z-index: 99999;
         background: #ffffff;
         display: flex;
         align-items: center;
         justify-content: center;
+        touch-action: none;
         transform: translateY(0);
         transition: transform 0.65s cubic-bezier(0.77, 0, 0.175, 1);
         will-change: transform;
@@ -39,228 +41,36 @@
         pointer-events: none;
       }
       .site-preloader-stack {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 18px;
+        position: relative;
+        width: min(420px, 88vw);
+        aspect-ratio: 16 / 9;
         user-select: none;
       }
-      .preloader-battery {
-        width: 42px;
-        height: 20px;
+      .preloader-char-img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
         display: block;
-      }
-      .preloader-battery .bat-seg {
-        fill: #ffffff;
-        transition: fill 0.18s ease;
-      }
-      .preloader-battery[data-level="1"] .bat-seg-1,
-      .preloader-battery[data-level="2"] .bat-seg-1,
-      .preloader-battery[data-level="2"] .bat-seg-2,
-      .preloader-battery[data-level="3"] .bat-seg-1,
-      .preloader-battery[data-level="3"] .bat-seg-2,
-      .preloader-battery[data-level="3"] .bat-seg-3,
-      .preloader-battery[data-level="4"] .bat-seg {
-        fill: #22c55e;
-      }
-      .preloader-scene {
-        width: 156px;
-        height: 132px;
-        display: block;
-        overflow: visible;
-      }
-      .preloader-scene .pose {
-        display: none;
-      }
-      .preloader-scene[data-stage="0"] .pose-slump,
-      .preloader-scene[data-stage="1"] .pose-slump,
-      .preloader-scene[data-stage="2"] .pose-wake,
-      .preloader-scene[data-stage="3"] .pose-type,
-      .preloader-scene[data-stage="4"] .pose-coffee {
-        display: inline;
-      }
-      @keyframes preloader-breathe {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(1.2px); }
-      }
-      @keyframes preloader-type-hand {
-        0%, 100% { transform: translate(0px, 0px); }
-        50% { transform: translate(0.5px, -1.8px); }
-      }
-      @keyframes preloader-steam {
-        0% { transform: translateY(0px); opacity: 0.65; }
-        100% { transform: translateY(-4px); opacity: 0; }
-      }
-      .preloader-scene[data-stage="0"] .pose-slump,
-      .preloader-scene[data-stage="1"] .pose-slump {
-        animation: preloader-breathe 2.2s ease-in-out infinite;
-      }
-      .preloader-scene[data-stage="3"] .typing-hand {
-        animation: preloader-type-hand 0.22s steps(2, end) infinite;
-      }
-      .preloader-scene[data-stage="4"] .coffee-steam {
-        animation: preloader-steam 1.4s ease-out infinite;
+        mix-blend-mode: multiply;
       }
     </style>
     <div class="site-preloader-stack">
-      <svg id="preloaderBattery" class="preloader-battery" viewBox="0 0 44 20" data-level="0" fill="none">
-        <rect x="1.5" y="2" width="35" height="16" rx="3.2" fill="#ffffff" stroke="#1a1a1a" stroke-width="2"/>
-        <rect x="37.5" y="6.5" width="3.5" height="7" rx="1.2" fill="#1a1a1a"/>
-        <rect class="bat-seg bat-seg-1" x="5" y="5" width="5.8" height="10" rx="1.1"/>
-        <rect class="bat-seg bat-seg-2" x="12.4" y="5" width="5.8" height="10" rx="1.1"/>
-        <rect class="bat-seg bat-seg-3" x="19.8" y="5" width="5.8" height="10" rx="1.1"/>
-        <rect class="bat-seg bat-seg-4" x="27.2" y="5" width="5.8" height="10" rx="1.1"/>
-      </svg>
-
-      <svg id="preloaderScene" class="preloader-scene" viewBox="0 0 160 132" data-stage="0" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <!-- Ergonomic amber office chair backrest -->
-        <path d="M22 96 L22 54 C22 41, 29 36, 41 36 L47 36 C55 36, 59 42, 58 52 L55 96 Z" fill="#F59E0B" stroke="#111111" stroke-width="2"/>
-        <!-- Chair cushion contour & highlight lines -->
-        <path d="M27 52 C27 44, 32 41, 40 41" stroke="#111111" stroke-width="1.2" opacity="0.4"/>
-        <path d="M27 60 L27 88" stroke="#111111" stroke-width="1.2" opacity="0.25"/>
-
-        <!-- STAGE 0 & 1: Slumped face-down exhausted on desk -->
-        <g class="pose pose-slump">
-          <!-- Hoodie / shirt back & shoulders -->
-          <path d="M26 96 C27 78, 36 69, 52 70 C63 71, 72 78, 79 88 L82 96 Z" fill="#ffffff" stroke="#111111" stroke-width="2"/>
-          <!-- Fabric crease lines -->
-          <path d="M36 80 C42 82, 47 87, 49 95" stroke="#111111" stroke-width="1.3"/>
-          <path d="M46 76 C51 79, 54 84, 55 90" stroke="#111111" stroke-width="1.1" opacity="0.65"/>
-          <!-- Resting forearm & hand -->
-          <path d="M56 87 L80 90 C84 90.5, 85 95, 81 96 L53 96 Z" fill="#ffffff" stroke="#111111" stroke-width="1.9"/>
-          <!-- Head resting sideways on arm -->
-          <path d="M51 82 C49 72, 57 65, 67 66 C76 67, 81 75, 78 83 C75 89, 64 91, 56 88 C53 87, 52 85, 51 82 Z" fill="#ffffff" stroke="#111111" stroke-width="2"/>
-          <!-- Textured black hair -->
-          <path d="M50 79 C48 70, 54 63, 64 63 C72 63, 78 68, 78 75 C75 71, 69 69, 63 70 C57 71, 53 74, 50 79 Z" fill="#111111"/>
-          <path d="M55 65 C57 62, 61 61, 65 63" stroke="#111111" stroke-width="1.6"/>
-          <!-- Full beard along jaw -->
-          <path d="M57 86 C62 90, 71 90, 76 85 C74 87, 68 88, 62 87 Z" fill="#111111"/>
-          <!-- Closed tired eye -->
-          <path d="M66 78 Q69.5 80.5 73 78" stroke="#111111" stroke-width="1.6"/>
-        </g>
-
-        <!-- STAGE 2: Waking up / sitting up & leaning toward laptop -->
-        <g class="pose pose-wake">
-          <!-- Torso & hoodie -->
-          <path d="M29 96 C29 73, 36 62, 50 61 C61 61, 67 69, 69 82 L70 96 Z" fill="#ffffff" stroke="#111111" stroke-width="2"/>
-          <!-- Collar & fabric folds -->
-          <path d="M44 62 C47 67, 54 67, 58 62" stroke="#111111" stroke-width="1.4"/>
-          <path d="M38 74 C43 80, 45 87, 45 96" stroke="#111111" stroke-width="1.3"/>
-          <!-- Arm reaching forward to laptop -->
-          <path d="M54 73 L74 84 L84 89 C86 90, 85 93, 82 93 L70 89 L49 80" fill="#ffffff" stroke="#111111" stroke-width="1.9"/>
-          <!-- Head -->
-          <path d="M44 47 C44 37, 52 31, 61 32 C69 33, 73 40, 72 48 C71 56, 64 60, 56 60 C49 60, 44 54, 44 47 Z" fill="#ffffff" stroke="#111111" stroke-width="2"/>
-          <!-- Sculpted hair -->
-          <path d="M43 45 C42 35, 50 28, 61 29 C68 30, 73 35, 72 42 C67 37, 58 36, 50 39 C47 41, 45 43, 43 45 Z" fill="#111111"/>
-          <path d="M51 30 C54 27, 59 27, 63 29" stroke="#111111" stroke-width="1.6"/>
-          <!-- Beard & mustache -->
-          <path d="M47 52 C49 59, 62 61, 69 54 C67 57, 61 59, 55 58 C51 57, 48 55, 47 52 Z" fill="#111111"/>
-          <!-- Eyes -->
-          <circle cx="59" cy="45" r="1.3" fill="#111111" stroke="none"/>
-          <circle cx="66" cy="45" r="1.3" fill="#111111" stroke="none"/>
-        </g>
-
-        <!-- STAGE 3: Active flow / typing at laptop -->
-        <g class="pose pose-type">
-          <!-- Upright torso -->
-          <path d="M29 96 C29 70, 36 59, 49 59 C60 59, 66 67, 67 81 L68 96 Z" fill="#ffffff" stroke="#111111" stroke-width="2"/>
-          <!-- Collar & sleeve folds -->
-          <path d="M43 60 C46 65, 53 65, 57 60" stroke="#111111" stroke-width="1.4"/>
-          <path d="M37 72 C42 78, 43 86, 43 96" stroke="#111111" stroke-width="1.3"/>
-          <!-- Typing arm & hand -->
-          <g class="typing-hand">
-            <path d="M51 71 L72 83 L85 88 C87 89, 86 92, 83 92 L69 88 L47 78" fill="#ffffff" stroke="#111111" stroke-width="1.9"/>
-          </g>
-          <!-- Head -->
-          <path d="M42 43 C42 33, 50 27, 59 28 C67 29, 71 36, 70 44 C69 52, 62 56, 54 56 C47 56, 42 50, 42 43 Z" fill="#ffffff" stroke="#111111" stroke-width="2"/>
-          <!-- Sculpted hair -->
-          <path d="M41 41 C40 31, 48 24, 59 25 C66 26, 71 31, 70 38 C65 33, 56 32, 48 35 C45 37, 43 39, 41 41 Z" fill="#111111"/>
-          <path d="M49 26 C52 23, 57 23, 61 25" stroke="#111111" stroke-width="1.6"/>
-          <!-- Beard -->
-          <path d="M45 48 C47 55, 60 57, 67 50 C65 53, 59 55, 53 54 C49 53, 46 51, 45 48 Z" fill="#111111"/>
-          <!-- Focused eyes -->
-          <circle cx="57" cy="41" r="1.3" fill="#111111" stroke="none"/>
-          <circle cx="64" cy="41" r="1.3" fill="#111111" stroke="none"/>
-        </g>
-
-        <!-- STAGE 4: Energized / sipping coffee -->
-        <g class="pose pose-coffee">
-          <!-- Upright relaxed torso -->
-          <path d="M29 96 C29 70, 36 59, 49 59 C60 59, 66 67, 67 81 L68 96 Z" fill="#ffffff" stroke="#111111" stroke-width="2"/>
-          <path d="M43 60 C46 65, 53 65, 57 60" stroke="#111111" stroke-width="1.4"/>
-          <path d="M37 72 C42 78, 43 86, 43 96" stroke="#111111" stroke-width="1.3"/>
-          <!-- Head -->
-          <path d="M41 43 C41 33, 49 27, 58 28 C66 29, 70 36, 69 44 C68 52, 61 56, 53 56 C46 56, 41 50, 41 43 Z" fill="#ffffff" stroke="#111111" stroke-width="2"/>
-          <!-- Sculpted hair -->
-          <path d="M40 41 C39 31, 47 24, 58 25 C65 26, 70 31, 69 38 C64 33, 55 32, 47 35 C44 37, 42 39, 40 41 Z" fill="#111111"/>
-          <path d="M48 26 C51 23, 56 23, 60 25" stroke="#111111" stroke-width="1.6"/>
-          <!-- Beard -->
-          <path d="M44 48 C46 55, 59 57, 66 50 C64 53, 58 55, 52 54 C48 53, 45 51, 44 48 Z" fill="#111111"/>
-          <!-- Happy eyes -->
-          <path d="M54 40 Q56.5 37.5 59 40" stroke="#111111" stroke-width="1.5"/>
-          <path d="M61 40 Q63.5 37.5 66 40" stroke="#111111" stroke-width="1.5"/>
-          <!-- Arm holding mug up -->
-          <path d="M48 70 L64 62 L69 66 L52 76" fill="#ffffff" stroke="#111111" stroke-width="1.9"/>
-          <!-- Lifted ceramic coffee mug -->
-          <rect x="64" y="53" width="12" height="13" rx="2.2" fill="#ffffff" stroke="#111111" stroke-width="1.9"/>
-          <path d="M76 56 C80 56, 80 63, 76 63" stroke="#111111" stroke-width="1.7"/>
-          <!-- Rising steam -->
-          <g class="coffee-steam">
-            <path d="M68 49 Q66.5 46 68.5 43" stroke="#111111" stroke-width="1.2"/>
-            <path d="M72 49 Q70.5 46 72.5 43" stroke="#111111" stroke-width="1.2"/>
-          </g>
-        </g>
-
-        <!-- Open Laptop with screen back & base -->
-        <path d="M84 96 L108 96 L120 68 L98 68 Z" fill="#ffffff" stroke="#111111" stroke-width="2"/>
-        <path d="M80 96 L110 96" stroke="#111111" stroke-width="2.6"/>
-        <circle cx="105" cy="82" r="1.4" fill="#111111" stroke="none" opacity="0.25"/>
-
-        <!-- Small flat notepad -->
-        <path d="M116 96 L133 96 L135 92 L118 92 Z" fill="#ffffff" stroke="#111111" stroke-width="1.6"/>
-
-        <!-- Desk Coffee Mug (hidden in stage 4 when lifted) -->
-        <g class="desk-mug">
-          <rect x="138" y="83" width="11" height="13" rx="2" fill="#ffffff" stroke="#111111" stroke-width="1.9"/>
-          <path d="M149 86 C153 86, 153 92, 149 92" stroke="#111111" stroke-width="1.6"/>
-        </g>
-
-        <!-- Minimalist horizontal desk baseline -->
-        <line x1="8" y1="96" x2="154" y2="96" stroke="#111111" stroke-width="2.2"/>
-      </svg>
+      <img class="preloader-char-img" src="preloader.webp" alt="" decoding="sync" fetchpriority="high" />
     </div>
     <script>
       (function () {
         var preloader = document.getElementById('sitePreloader');
-        var battery = document.getElementById('preloaderBattery');
-        var scene = document.getElementById('preloaderScene');
-        if (!preloader || !battery || !scene) return;
+        if (!preloader) return;
+        document.documentElement.style.overflow = 'hidden';
 
-        // 5-stage sequence (~8.2s total: 3.5s longer than the ~4.7s original)
-        var stages = [
-          { level: 0, stage: 0, at: 0 },
-          { level: 1, stage: 1, at: 1500 },
-          { level: 2, stage: 2, at: 3200 },
-          { level: 3, stage: 3, at: 5000 },
-          { level: 4, stage: 4, at: 6700 }
-        ];
-
-        stages.forEach(function (step) {
-          setTimeout(function () {
-            battery.setAttribute('data-level', String(step.level));
-            scene.setAttribute('data-stage', String(step.stage));
-            var deskMug = scene.querySelector('.desk-mug');
-            if (deskMug) deskMug.style.display = step.stage === 4 ? 'none' : 'inline';
-          }, step.at);
-        });
-
-        // Curtain-lift reveal at 8.2s
+        // Curtain-lift reveal right after the ~2.80s (1.4x) animated WebP finishes
         setTimeout(function () {
+          document.documentElement.style.overflow = '';
           preloader.classList.add('is-leaving');
           setTimeout(function () {
             if (preloader.parentNode) preloader.parentNode.removeChild(preloader);
           }, 700);
-        }, 8200);
+        }, 2950);
       })();
     </script>
   </div>
