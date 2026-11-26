@@ -1357,22 +1357,26 @@ function makeSpineSvg({ id, bg, fg, accent, title, title2, author, width = 34, h
   if (verticalWord) {
     // e.g. The 48 Laws of Power
     if (topLabel) {
-      content += `<text x="${cx}" y="14" fill="${accent || fg}" font-family="Inter,sans-serif" font-size="4.6" font-weight="600" letter-spacing="0.06em" text-anchor="middle">${esc(topLabel)}</text>`;
+      content += `<text x="${cx}" y="14" fill="#c7c9e2" font-family="Inter,sans-serif" font-size="4.8" font-weight="600" letter-spacing="0.06em" text-anchor="middle">${esc(topLabel)}</text>`;
     }
     verticalWord.split('').forEach((ch, idx) => {
-      content += `<text x="${cx}" y="${42 + idx * 33}" fill="${accent || fg}" font-family="Georgia,serif" font-size="21" font-weight="500" text-anchor="middle">${esc(ch)}</text>`;
+      content += `<text x="${cx}" y="${44 + idx * 34}" fill="${accent || fg}" font-family="Georgia,serif" font-size="22" font-weight="500" text-anchor="middle">${esc(ch)}</text>`;
     });
-    content += `<text x="${cx}" y="${height - 26}" fill="#e11d48" font-family="Inter,sans-serif" font-size="4.2" font-weight="700" letter-spacing="0.02em" text-anchor="middle">${esc(author)}</text>`;
-    content += `<ellipse cx="${cx}" cy="${height - 11}" rx="3.5" ry="5" fill="#f97316"/><ellipse cx="${cx}" cy="${height - 11}" rx="1.8" ry="3" fill="#ffffff"/>`;
+    content += `<text x="${cx}" y="${height - 34}" fill="#c7c9e2" font-family="Inter,sans-serif" font-size="4.4" font-weight="600" letter-spacing="0.06em" text-anchor="middle">${esc(author)}</text>`;
+    content += `<text x="${cx}" y="${height - 25}" fill="#c9a64d" font-family="Inter,sans-serif" font-size="3.1" font-weight="700" letter-spacing="0.04em" text-anchor="middle">A JOOST ELFFERS BOOK</text>`;
+    content += `<ellipse cx="${cx}" cy="${height - 12}" rx="3.6" ry="5.2" fill="#f97316"/><ellipse cx="${cx}" cy="${height - 12}" rx="1.8" ry="3.1" fill="#ffffff"/>`;
   } else {
-    const titleY = Math.round(height * 0.39);
+    const titleY = id === 'steve-jobs' ? Math.round(height * 0.28) : id === 'atomic-habits' ? Math.round(height * 0.36) : Math.round(height * 0.39);
     if (title2) {
-      content += `<text x="${cx + 4.5}" y="${titleY}" fill="${fg}" font-family='${fontFam}' font-size="8.2" font-weight="800" letter-spacing="0.02em" text-anchor="middle" dominant-baseline="middle" transform="rotate(90 ${cx + 4.5} ${titleY})">${esc(title)}</text>`;
-      content += `<text x="${cx - 5}" y="${titleY}" fill="${fg}" font-family='${fontFam}' font-size="8.2" font-weight="800" letter-spacing="0.02em" text-anchor="middle" dominant-baseline="middle" transform="rotate(90 ${cx - 5} ${titleY})">${esc(title2)}</text>`;
+      content += `<text x="${cx + 4.5}" y="${titleY}" fill="${fg}" font-family='${fontFam}' font-size="8.4" font-weight="800" letter-spacing="0.02em" text-anchor="middle" dominant-baseline="middle" transform="rotate(90 ${cx + 4.5} ${titleY})">${esc(title)}</text>`;
+      content += `<text x="${cx - 5}" y="${titleY}" fill="${fg}" font-family='${fontFam}' font-size="8.4" font-weight="800" letter-spacing="0.02em" text-anchor="middle" dominant-baseline="middle" transform="rotate(90 ${cx - 5} ${titleY})">${esc(title2)}</text>`;
+    } else if (id === 'atomic-habits') {
+      content += `<defs><pattern id="ahDots" width="2.2" height="2.2" patternUnits="userSpaceOnUse"><circle cx="1.1" cy="1.1" r="0.82" fill="#8b6b38"/></pattern></defs>`;
+      content += `<text x="${cx}" y="${titleY}" fill="url(#ahDots)" stroke="#7c5e30" stroke-width="0.22" font-family='${fontFam}' font-size="14.5" font-weight="700" letter-spacing="0.03em" text-anchor="middle" dominant-baseline="middle" transform="rotate(90 ${cx} ${titleY})">${esc(title)}</text>`;
     } else {
-      const fSize = id === 'steve-jobs' ? '14' : id === 'atomic-habits' ? '12.5' : '11';
-      const fWeight = id === 'atomic-habits' ? '500' : '700';
-      content += `<text x="${cx}" y="${titleY}" fill="${fg}" font-family='${fontFam}' font-size="${fSize}" font-weight="${fWeight}" letter-spacing="${serif ? '0.08em' : '0.01em'}" text-anchor="middle" dominant-baseline="middle" transform="rotate(90 ${cx} ${titleY})">${esc(title)}</text>`;
+      const fSize = id === 'steve-jobs' ? '16' : '11';
+      const fWeight = id === 'steve-jobs' ? '800' : '700';
+      content += `<text x="${cx}" y="${titleY}" fill="${fg}" font-family='${fontFam}' font-size="${fSize}" font-weight="${fWeight}" letter-spacing="${serif ? '0.08em' : '-0.01em'}" text-anchor="middle" dominant-baseline="middle" transform="rotate(90 ${cx} ${titleY})">${esc(title)}</text>`;
     }
     if (accent) {
       content += `<line x1="6" y1="${height - 76}" x2="${width - 6}" y2="${height - 76}" stroke="${accent}" stroke-width="1.2"/>`;
@@ -1380,14 +1384,14 @@ function makeSpineSvg({ id, bg, fg, accent, title, title2, author, width = 34, h
     }
     if (rotateAuthor) {
       const ay = height - 42;
-      content += `<text x="${cx}" y="${ay}" fill="${fg}" fill-opacity="0.72" font-family="Inter,sans-serif" font-size="5.2" font-weight="600" letter-spacing="0.04em" text-anchor="middle" dominant-baseline="middle" transform="rotate(90 ${cx} ${ay})">${esc(author)}</text>`;
+      content += `<text x="${cx}" y="${ay}" fill="${fg}" fill-opacity="${id === 'steve-jobs' ? '0.52' : '0.78'}" font-family="Inter,sans-serif" font-size="5.6" font-weight="600" letter-spacing="0.04em" text-anchor="middle" dominant-baseline="middle" transform="rotate(90 ${cx} ${ay})">${esc(author)}</text>`;
     } else {
       const parts = String(author).split(' ');
       if (parts.length === 2) {
-        content += `<text x="${cx}" y="${height - 21}" fill="${fg}" fill-opacity="0.85" font-family="Inter,sans-serif" font-size="6.8" font-weight="600" text-anchor="middle">${esc(parts[0])}</text>`;
-        content += `<text x="${cx}" y="${height - 12}" fill="${fg}" fill-opacity="0.85" font-family="Inter,sans-serif" font-size="6.8" font-weight="600" text-anchor="middle">${esc(parts[1])}</text>`;
+        content += `<text x="${cx}" y="${height - 23}" fill="${fg}" fill-opacity="0.88" font-family="Inter,sans-serif" font-size="7.4" font-weight="700" text-anchor="middle">${esc(parts[0])}</text>`;
+        content += `<text x="${cx}" y="${height - 13}" fill="${fg}" fill-opacity="0.88" font-family="Inter,sans-serif" font-size="7.4" font-weight="700" text-anchor="middle">${esc(parts[1])}</text>`;
       } else {
-        content += `<text x="${cx}" y="${height - 14}" fill="${fg}" fill-opacity="0.85" font-family="Inter,sans-serif" font-size="6.2" font-weight="600" text-anchor="middle">${esc(author)}</text>`;
+        content += `<text x="${cx}" y="${height - 14}" fill="${fg}" fill-opacity="0.88" font-family="Inter,sans-serif" font-size="6.2" font-weight="600" text-anchor="middle">${esc(author)}</text>`;
       }
     }
     if (topLabel) {
@@ -1478,28 +1482,28 @@ const BOOKSHELF_BOOKS = [
     title: 'Atomic Habits',
     author: 'James Clear',
     cover: { src: 'books/atomic-habits.jpg', width: 331, height: 500, alt: 'Atomic Habits by James Clear' },
-    spine: { src: makeSpineSvg({ id: 'atomic-habits', bg: '#f5f2eb', fg: '#3b3326', title: 'Atomic Habits', author: 'James Clear', width: 34, height: 246, border: '#e3dfd5', serif: true, rotateAuthor: false }), width: 34, height: 246 },
+    spine: { src: makeSpineSvg({ id: 'atomic-habits', bg: '#f5f3ed', fg: '#27272a', title: 'Atomic Habits', author: 'James Clear', width: 31, height: 246, border: '#e3dfd5', serif: true, rotateAuthor: false }), width: 31, height: 246 },
   },
   {
     id: '48-laws-of-power',
     title: 'The 48 Laws of Power',
     author: 'Robert Greene',
     cover: { src: 'books/48-laws-of-power.jpg', width: 350, height: 500, alt: 'The 48 Laws of Power by Robert Greene' },
-    spine: { src: makeSpineSvg({ id: '48-laws-of-power', bg: '#1e2c6b', fg: '#e5e7eb', accent: '#c9a64d', topLabel: 'THE 48 LAWS OF', title: 'POWER', author: 'ROBERT GREENE', width: 42, height: 268, verticalWord: 'POWER' }), width: 42, height: 268 },
+    spine: { src: makeSpineSvg({ id: '48-laws-of-power', bg: '#242a6e', fg: '#c7c9e2', accent: '#c9a64d', topLabel: 'THE 48 LAWS OF', title: 'POWER', author: 'ROBERT GREENE', width: 48, height: 274, verticalWord: 'POWER' }), width: 48, height: 274 },
   },
   {
     id: 'steve-jobs',
     title: 'Steve Jobs',
     author: 'Walter Isaacson',
     cover: { src: 'books/steve-jobs.jpg', width: 163, height: 250, alt: 'Steve Jobs by Walter Isaacson' },
-    spine: { src: makeSpineSvg({ id: 'steve-jobs', bg: '#ffffff', fg: '#111111', title: 'Steve Jobs', author: 'Walter Isaacson', width: 40, height: 278, border: '#e4e4e7' }), width: 40, height: 278 },
+    spine: { src: makeSpineSvg({ id: 'steve-jobs', bg: '#ffffff', fg: '#111111', title: 'Steve Jobs', author: 'Walter Isaacson', width: 44, height: 282, border: '#e4e4e7' }), width: 44, height: 282 },
   },
   {
     id: 'subtle-art',
     title: 'The Subtle Art of Not Giving a F*ck',
     author: 'Mark Manson',
     cover: { src: 'books/subtle-art.jpg', width: 327, height: 500, alt: 'The Subtle Art of Not Giving a F*ck by Mark Manson' },
-    spine: { src: makeSpineSvg({ id: 'subtle-art', bg: '#ff4f00', fg: '#111111', title: 'THE SUBTLE ART OF', title2: 'NOT GIVING A F*CK', author: 'MARK MANSON', width: 34, height: 238 }), width: 34, height: 238 },
+    spine: { src: makeSpineSvg({ id: 'subtle-art', bg: '#ff4f00', fg: '#111111', title: 'THE SUBTLE ART OF', title2: 'NOT GIVING A F•CK', author: 'MARK MANSON', width: 34, height: 238 }), width: 34, height: 238 },
   },
   {
     id: 'chanakya-niti',
