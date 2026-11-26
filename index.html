@@ -51,7 +51,7 @@
         height: 100%;
         display: block;
         background-image: url('preloader-sprite.jpg');
-        background-size: 600% 700%;
+        background-size: 500% 800%;
         background-position: 0% 0%;
         background-repeat: no-repeat;
         mix-blend-mode: multiply;
@@ -67,7 +67,7 @@
         if (!preloader || !sprite) return;
         document.documentElement.style.overflow = 'hidden';
 
-        var cols = 6, rows = 7, total = 42, duration = 2800;
+        var cols = 5, rows = 8, total = 40, duration = 2800;
         var start = performance.now();
 
         function tick(now) {
