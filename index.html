@@ -49,28 +49,40 @@
       .preloader-char-img {
         width: 100%;
         height: 100%;
-        object-fit: contain;
         display: block;
+        background-image: url('preloader-sprite.jpg');
+        background-size: 600% 700%;
+        background-position: 0% 0%;
+        background-repeat: no-repeat;
         mix-blend-mode: multiply;
       }
     </style>
     <div class="site-preloader-stack">
-      <video id="preloaderVideo" class="preloader-char-img" autoplay muted playsinline preload="auto" poster="preloader-character-slump.jpg">
-        <source src="preloader.mp4" type="video/mp4" />
-      </video>
+      <div id="preloaderSprite" class="preloader-char-img"></div>
     </div>
     <script>
       (function () {
         var preloader = document.getElementById('sitePreloader');
-        var video = document.getElementById('preloaderVideo');
-        if (!preloader) return;
+        var sprite = document.getElementById('preloaderSprite');
+        if (!preloader || !sprite) return;
         document.documentElement.style.overflow = 'hidden';
 
-        if (video && video.play) {
-          video.play().catch(function () {});
-        }
+        var cols = 6, rows = 7, total = 42, duration = 2800;
+        var start = performance.now();
 
-        // Curtain-lift reveal right after the ~2.80s (1.4x) video finishes
+        function tick(now) {
+          var t = Math.min(1, (now - start) / duration);
+          var frame = Math.min(total - 1, Math.floor(t * total));
+          var col = frame % cols;
+          var row = Math.floor(frame / cols);
+          sprite.style.backgroundPosition = (col * 100 / (cols - 1)) + '% ' + (row * 100 / (rows - 1)) + '%';
+          if (t < 1) {
+            requestAnimationFrame(tick);
+          }
+        }
+        requestAnimationFrame(tick);
+
+        // Curtain-lift reveal right after the ~2.80s (1.4x) sprite finishes
         setTimeout(function () {
           document.documentElement.style.overflow = '';
           preloader.classList.add('is-leaving');
