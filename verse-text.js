@@ -488,8 +488,10 @@
 
     const MAX_TICKS = 144; // 6 seconds at 24fps
 
+    let hovering = false;
+
     function stateAt(t) {
-      if (t >= MAX_TICKS) return 'printed';
+      if (t >= MAX_TICKS && !hovering) return 'printed';
       let age = t - schedule.start;
       if (age < 0) return 'waiting';
       for (const frame of schedule.frames) {
@@ -529,7 +531,7 @@
         if (whole > 0) {
           tick += whole;
           draw(tick);
-          if (tick >= MAX_TICKS) {
+          if (tick >= MAX_TICKS && !hovering) {
             raf = 0;
             return;
           }
@@ -548,6 +550,27 @@
       draw(0);
       raf = requestAnimationFrame(step);
     }
+
+    el.addEventListener('mouseenter', () => {
+      hovering = true;
+      if (!raf && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        if (tick < MAX_TICKS) tick = MAX_TICKS;
+        last = 0;
+        carry = 0;
+        lastStateKey = '';
+        raf = requestAnimationFrame(step);
+      }
+    });
+
+    el.addEventListener('mouseleave', () => {
+      hovering = false;
+      if (tick >= MAX_TICKS) {
+        cancelAnimationFrame(raf);
+        raf = 0;
+        lastStateKey = '';
+        draw(MAX_TICKS);
+      }
+    });
 
     return { el, once: el.hasAttribute('data-verse-once'), replay };
   }
