@@ -486,7 +486,7 @@
       return null;
     }
 
-    const MAX_TICKS = 72; // 3 seconds at 24fps
+    const MAX_TICKS = 144; // 6 seconds at 24fps
 
     function stateAt(t) {
       if (t >= MAX_TICKS) return 'printed';
