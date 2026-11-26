@@ -574,6 +574,18 @@
       if (!inst.once) inst.replay();
     });
   };
+  window.replayAllVerseTexts = () => {
+    mountVerseTargets();
+    instances.forEach((inst) => inst.replay());
+  };
 
-  document.addEventListener('DOMContentLoaded', mountVerseTargets);
+  document.addEventListener('DOMContentLoaded', () => {
+    mountVerseTargets();
+    // If preloader is active, pause/defer until the curtain lifts so the 3s glitch isn't hidden behind it
+    if (document.getElementById('sitePreloader')) {
+      window.addEventListener('preloader:reveal', () => {
+        window.replayAllVerseTexts();
+      }, { once: true });
+    }
+  });
 })();
