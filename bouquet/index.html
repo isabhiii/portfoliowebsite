@@ -138,7 +138,13 @@ document.getElementById('backHomeBtn').addEventListener('click',function(e){
       src.connect(bp); bp.connect(g); g.connect(ctx.destination); src.start(t); src.stop(t+0.025);
     }
   }catch(_){}
-  setTimeout(function(){ location.href='../'; }, 80);
+  setTimeout(function(){
+    if(window.parent && window.parent !== window){
+      window.parent.postMessage('bouquet:close','*');
+    } else {
+      location.href='../';
+    }
+  }, 80);
 });
 </script>
 <div class="app">
