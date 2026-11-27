@@ -1434,6 +1434,18 @@ html.dark .row-icon img {
   padding: 1px;
 }
 
+.row-icon img.cra-icon-light,
+.row-icon img.cra-icon-dark {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+}
+
+html.dark .row-icon img.cra-icon-dark {
+  background-color: transparent;
+  padding: 0;
+}
+
 .row-title {
   color: var(--primary-text);
   white-space: nowrap;
