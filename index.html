@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=133">
+  <link rel="stylesheet" href="style.css?v=134">
   <script>
     try {
       if (localStorage.getItem('theme') === 'dark') {
@@ -382,7 +382,8 @@
           </span>
 
           <span class="intro-p animate-in animate-delay-7 bouquet-line">
-            <span class="bouquet-sprig" aria-hidden="true">
+            <span data-i18n="introBouquet">While you’re here, pick a few blooms and wrap yourself a</span>
+            <a href="bouquet/" class="inline-arrow-link bouquet-garden-link" onclick="if(window.openBouquetOverlay){event.preventDefault();window.openBouquetOverlay();}"><span data-i18n="introBouquetLink">little bouquet 💐</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg><span class="bouquet-sprig" aria-hidden="true">
               <span class="sprig-item sprig-1">
                 <svg class="sprig-stem" width="22" height="34" viewBox="0 0 22 34" fill="none"><path d="M9 4 C10 15, 13 24, 17 33" stroke="#527a39" stroke-width="1.5" stroke-linecap="round"/><path d="M11 19 C6 17, 4 13, 6 11 C9 13, 11 16, 11 19Z" fill="#6b9349" opacity="0.88"/></svg>
                 <img src="bouquet/cuts/orchid-front.webp" alt="" class="sprig-cut" loading="lazy" />
@@ -404,9 +405,7 @@
                 <path d="M28 31 C20 24, 13 20, 5 18 C13 22, 20 25, 26 31Z" fill="#74a14d" opacity="0.88"/>
                 <path d="M34 31 C42 25, 49 22, 57 21 C49 23, 42 26, 36 31Z" fill="#74a14d" opacity="0.85"/>
               </svg>
-            </span>
-            <span data-i18n="introBouquet">While you’re here, pick a few blooms and wrap yourself a</span>
-            <a href="bouquet/" class="inline-arrow-link bouquet-garden-link" onclick="if(window.openBouquetOverlay){event.preventDefault();window.openBouquetOverlay();}"><span data-i18n="introBouquetLink">little bouquet 💐</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
+            </span></a>
           </span>
 
 

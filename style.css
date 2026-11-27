@@ -3464,7 +3464,7 @@ html.dark .vt-root {
 }
 .bouquet-sprig {
   position: absolute;
-  left: -74px;
+  left: calc(100% + 12px);
   top: 50%;
   width: 68px;
   height: 62px;
