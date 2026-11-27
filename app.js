@@ -1001,7 +1001,7 @@ function initWorkFilter() {
     const shown = [];
     entries.forEach((entry) => {
       const cats = (entry.dataset.workCat || '').split(/\s+/);
-      const show = cats.includes(filter);
+      const show = filter === 'all' || cats.includes(filter);
       entry.hidden = !show;
       if (show) {
         lastVisible = entry;
