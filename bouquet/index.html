@@ -1091,16 +1091,18 @@ $('wrapBtn').onclick=wrap; $('unwrapBtn').onclick=unwrap;
 $('undoBtn').onclick=()=>{ const f=[...flowers].reverse().find(f=>f.out===0); if(!f||state!=='build') return; sfxUndo(); f.out=.0001; };
 $('giftNote').addEventListener('input', ()=>{ sfxScribble(); });
 $('noteBtn').onclick=()=>{ sfxNote(); noteOpen=!noteOpen; refreshUI(); if(noteOpen) setTimeout(()=>$('giftNote').focus(),60); };
+const B36 = '0123456789abcdefghijklmnopqrstuvwxyz';
+const keyToIdx = Object.fromEntries(FL.map((f,i)=>[f.key,i]));
 $('shareBtn').onclick=async()=>{
   sfxClick();
-  const keys=flowers.filter(f=>!f.out).map(f=>f.def.key).join(',');
+  const code=flowers.filter(f=>!f.out).map(f=>B36[keyToIdx[f.def.key]]||'').join('');
   const u=new URL(location.href);
   u.search='';
-  if(keys) u.searchParams.set('f',keys);
+  if(code) u.searchParams.set('b',code);
   const note=$('giftNote').value.trim();
   if(note) u.searchParams.set('n',note);
   if(ribbonIdx) u.searchParams.set('r',String(ribbonIdx));
-  if(wrapMode!=='cellophane') u.searchParams.set('w',wrapMode);
+  if(wrapMode!=='cellophane') u.searchParams.set('w','k');
   try{ history.replaceState(null,'',u.toString()); }catch(_){}
   try{ await navigator.clipboard.writeText(u.toString()); toast('Bouquet link copied!'); }
   catch(_){ prompt('Copy your bouquet link:', u.toString()); }
@@ -1206,15 +1208,18 @@ Promise.all(FL.map(async f=>{
 })).then(()=>{
   ready=true; $('loading').classList.add('done');
   const sp=new URLSearchParams(location.search);
-  const fParam=sp.get('f'), nParam=sp.get('n'), rParam=sp.get('r'), wParam=sp.get('w');
+  const bParam=sp.get('b'), fParam=sp.get('f'), nParam=sp.get('n'), rParam=sp.get('r'), wParam=sp.get('w');
   if(rParam && RIBBONS[Number(rParam)]) setRibbon(Number(rParam));
-  if(wParam==='kraft' || wParam==='cellophane') setWrapStyle(wParam);
+  if(wParam==='k' || wParam==='kraft') setWrapStyle('kraft');
+  else if(wParam==='cellophane') setWrapStyle('cellophane');
   if(nParam){ $('giftNote').value=nParam.slice(0,30); noteOpen=true; }
-  if(fParam){
-    const keys=fParam.split(',').filter(k=>byKey[k]).slice(0,18);
-    keys.forEach((k,idx)=>setTimeout(()=>{
+  const restoreKeys = bParam
+    ? bParam.split('').map(c=>FL[B36.indexOf(c)]?.key).filter(Boolean).slice(0,18)
+    : (fParam ? fParam.split(',').filter(k=>byKey[k]).slice(0,18) : []);
+  if(restoreKeys.length){
+    restoreKeys.forEach((k,idx)=>setTimeout(()=>{
       const p=autoPlacement(byKey[k]); addFlower(byKey[k], p);
-      if(idx===keys.length-1) setTimeout(()=>wrap(), 350);
+      if(idx===restoreKeys.length-1) setTimeout(()=>wrap(), 350);
     }, idx*90));
   }
 }).catch(()=>{ $('loading').textContent='Some flowers didn’t load. Reload the page to try again.'; });
