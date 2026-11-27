@@ -2151,7 +2151,7 @@ function initLanguageSwitcher() {
       introAndWord3: 'and',
       introInfra: 'For BI & infra, I use',
       introAndWord4: 'and',
-      introTooling: "Lately, I've been heavily focused on macOS developer tooling and open source with",
+      introTooling: "Lately, I've been heavily focused on macOS developer tooling, browser engineering, and open source with",
       introAndWord5: 'and',
       introBesides: 'Besides, I love',
       introInterests: 'Photography, Minimal Design',
