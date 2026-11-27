@@ -3517,3 +3517,19 @@ html.dark .vt-root {
 @media (max-width: 820px) {
   .bouquet-sprig { display: none; }
 }
+
+/* Prevent iOS/touch double-tap on links with hover popups */
+@media (hover: none), (pointer: coarse) {
+  .social-note,
+  .row-hover-domain,
+  .fav-preview,
+  .bouquet-sprig {
+    display: none !important;
+  }
+  .ruru-row:hover .row-meta {
+    opacity: 1 !important;
+  }
+  .fav-list.is-hovering .fav-row {
+    opacity: 1 !important;
+  }
+}
