@@ -3553,3 +3553,7 @@ html.dark .vt-root {
     opacity: 1 !important;
   }
 }
+
+.cra-icon-dark { display: none !important; }
+html.dark .cra-icon-light { display: none !important; }
+html.dark .cra-icon-dark { display: block !important; }
