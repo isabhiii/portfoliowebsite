@@ -43,6 +43,8 @@ html {
   color: var(--primary-text);
   overscroll-behavior: none;
   transition: background-color 0.2s ease, color 0.2s ease;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 @media (max-width: 640px) {
@@ -1250,6 +1252,8 @@ html.dark .theme-label-dark {
   display: inline-flex;
   align-items: baseline;
   gap: 3px;
+  font-size: inherit;
+  line-height: inherit;
   color: var(--primary-text);
 }
 
@@ -1290,6 +1294,8 @@ html.dark .theme-label-dark {
   display: inline-flex;
   align-items: center;
   gap: 2px;
+  font-size: inherit;
+  line-height: inherit;
   color: var(--primary-text);
   text-decoration: underline;
   text-underline-offset: 2px;
